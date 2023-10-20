@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @unique @default(uuid())
+  email String @unique
+  social_name String
+  password_hash String
+  cpfCnpj String @unique
+  instagram String @unique
+  city_id String
+  city City  @relation(references: [id], fields: [city_id])
+  instagramPosts InstagramPost[]
+  news NewsUsers[]
+}
+
+model InstagramPost {
+  id String @unique @default(uuid())
+  postUrl String
+  description String
+  commentCount Int
+  likeCount Int
+  pubDate DateTime
+  viewCount Int
+  username String
+  imgUrl String
+  postId String
+  query String
+  user_instagram String
+  user User @relation(references: [instagram], fields: [user_instagram])
+  created_at DateTime @default(now())
+}
+
+model Website {
+  id String @unique @default(uuid())
+  name String
+  url String
+  cities WebsiteCity[]
+}
+
+model WebsiteCity {
+  id String @unique @default(uuid())
+  website_id String
+  city_id String
+  city City @relation(references: [id], fields: [city_id])
+  website Website @relation(references: [id], fields: [website_id])
+
+}
+
+model City {
+  id String @unique @default(uuid())
+  name String
+  state String
+  users User[]
+  websites WebsiteCity[]
+}
+
+model News {
+  id String @unique @default(uuid())
+  last_update DateTime
+  title String
+  url String
+  users NewsUsers[]
+  content NewsContent[]
+}
+
+model NewsUsers {
+  id String @unique @default(uuid())
+  user_id String
+  news_id String
+  user User @relation(references: [id], fields: [user_id])
+  news News @relation(references: [id], fields: [news_id])
+}
+
+model NewsContent {
+  id String @unique @default(uuid())
+  content String
+  news_id String
+  news News @relation(references: [id], fields: [news_id])
+}
