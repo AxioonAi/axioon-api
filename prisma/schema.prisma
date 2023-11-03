@@ -286,3 +286,36 @@ model NewsUsers {
   news News @relation(references: [id], fields: [news_id])
 }
 
+model MetaAdvertisingLib {
+  id String @unique @default(uuid())
+  impressions_lower_bound String
+  inpressions_upper_bound String
+  spend_lower_bound String
+  spend_upper_bound String
+  currency String
+  page_name String
+  bylines String
+  ad_snapshot_url String
+  ad_delivery_start_time DateTime
+  ad_delivery_stop_time DateTime
+  ad_creation_time DateTime
+  deliveryByRegion MetaAdvertisingLibDeliveryByRegion[]
+  demographicDistribution MetaAdvertisingLibDemographicDistribution[]
+}
+
+model MetaAdvertisingLibDemographicDistribution {
+  id String @unique @default(uuid())
+  percentage String
+  age String
+  gender String
+  advertising_id String
+  advertising MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
+}
+
+model MetaAdvertisingLibDeliveryByRegion {
+  id String @unique @default(uuid())
+  percentage String
+  region String
+  advertising_id String
+  advertising MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
+}
