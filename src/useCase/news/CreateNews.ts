@@ -1,14 +1,15 @@
+import { AwsNotificationProductionRepository } from "@/repositories/AWS/AwsNotificationProductionRepository";
 import { NewsRepository } from "@/repositories/NewsRepository";
 import { News } from "@prisma/client";
 
 interface CreateNewsUseCaseRequest {
-  news: {
-    title: string;
-    content: string[];
-    last_update: string;
-    url: string;
-    users: string[];
-  };
+  records: {
+    s3: {
+      object: {
+        key: string;
+      };
+    };
+  }[];
 }
 
 interface CreateNewsUseCaseResponse {
@@ -16,16 +17,20 @@ interface CreateNewsUseCaseResponse {
 }
 
 export class CreateNewsUseCase {
-  constructor(private newsRepository: NewsRepository) {}
+  constructor(
+    private newsRepository: NewsRepository,
+    private awsNotificationRepository: AwsNotificationProductionRepository
+  ) {}
 
   async execute({
-    news,
+    records,
   }: CreateNewsUseCaseRequest): Promise<CreateNewsUseCaseResponse> {
-    const createNews = await this.newsRepository.create(news);
+    const data = await this.awsNotificationRepository.S3NewsNotification({
+      records,
+    });
+    console.log(data[0].users);
+    const news = await this.newsRepository.createMany(data);
 
-    return {
-      news: createNews,
-    };
+    return { news };
   }
 }
-6;
