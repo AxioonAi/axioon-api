@@ -2,3 +2,7 @@ node_modules
 .env
 a.json
 ignore.ts
+desktop.ini
+planilhas
+src/sheets
+src/roraima
