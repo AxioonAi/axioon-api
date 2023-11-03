@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
+import moment from "moment";
 import { CreateNewsInterface, NewsRepository } from "../NewsRepository";
 
 export class PrismaNewsRepository implements NewsRepository {
@@ -39,5 +40,27 @@ export class PrismaNewsRepository implements NewsRepository {
     });
 
     return news;
+  }
+
+  async findByUserId(userId: string) {
+    const start = moment().clone().weekday(1).toDate();
+    const end = moment().clone().weekday(5).toDate();
+
+    return await prisma.news.findMany({
+      where: {
+        last_update: {
+          gte: start,
+          lte: end,
+        },
+        users: {
+          some: {
+            user_id: userId,
+          },
+        },
+      },
+      orderBy: {
+        last_update: "desc",
+      },
+    });
   }
 }
