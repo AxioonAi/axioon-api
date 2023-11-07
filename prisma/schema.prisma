@@ -20,7 +20,7 @@ enum NewsScore {
   IRRELEVANT
   NORMAL
   IMPORTANT
-  URGENT
+  URGENT 
 }
 
 model User {
@@ -32,6 +32,9 @@ model User {
   cpfCnpj String @unique
   instagram String @unique
   city_id String
+  youtube String?
+  tiktok String?
+  facebook String?
   city City  @relation(references: [id], fields: [city_id])
   instagramPosts InstagramPost[]
   news NewsUsers[]
@@ -288,6 +291,7 @@ model NewsUsers {
 
 model MetaAdvertisingLib {
   id String @unique @default(uuid())
+  user_id String
   impressions_lower_bound String
   inpressions_upper_bound String
   spend_lower_bound String
