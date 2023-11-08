@@ -123,4 +123,30 @@ export class AwsNotificationProductionRepository
 
     return arrayDeObjetos;
   }
+  async S3FacebookNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData: any[] = [];
+
+    response.forEach((item: any) => {
+      formattedData.push({
+        user_id: item.facebook_id,
+        likes_count: item.likes,
+        followers_count: item.followers,
+        start_of_period: moment().clone().weekday(1).toDate(),
+        end_of_period: moment().clone().weekday(5).toDate(),
+      });
+    });
+
+    return formattedData;
+  }
 }
