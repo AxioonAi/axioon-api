@@ -1,4 +1,4 @@
-export interface S3NewsNotificationInterface {
+export interface S3NotificationInterface {
   records: {
     s3: {
       object: {
@@ -21,6 +21,12 @@ export interface S3NewsNotificationResponseRepository {
 
 export interface AwsNotificationRepository {
   S3NewsNotification(
-    data: S3NewsNotificationInterface
+    data: S3NotificationInterface
+  ): Promise<S3NewsNotificationResponseRepository[]>;
+  S3MetaAdvertisingNotification(
+    data: S3NotificationInterface
+  ): Promise<S3NewsNotificationResponseRepository[]>;
+  S3YoutubeNotification(
+    data: S3NotificationInterface
   ): Promise<S3NewsNotificationResponseRepository[]>;
 }
