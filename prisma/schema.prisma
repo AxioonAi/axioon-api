@@ -155,13 +155,25 @@ model InstagramPost {
   likeCount Int
   pubDate DateTime
   viewCount Int
+  playCount Int
   username String
   imgUrl String
   postId String
-  query String
-  user_instagram String
-  user User @relation(references: [instagram], fields: [user_instagram])
+  user_id String
+  user User @relation(references: [id], fields: [user_id])
   created_at DateTime @default(now())
+  comments InstagramPostComment[]
+}
+
+model InstagramPostComment {
+  id String @unique @default(uuid())
+  text String
+  ownerUsername String
+  ownerProfilePicUrl String
+  timestamp DateTime
+  likeCount Int
+  post_id String
+  post InstagramPost @relation(references: [id], fields: [post_id])
 }
 
 model Website {
