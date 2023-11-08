@@ -19,6 +19,27 @@ export interface S3NewsNotificationResponseRepository {
   ];
 }
 
+export interface S3YoutubeNotificationResponse {
+  id: string;
+  videos: {
+    title: string;
+    description: string;
+    url: string;
+    duration: string;
+    date: Date;
+    imgUrl: string;
+    viewCount: number;
+    commentsCount: number;
+    likes: number;
+  }[];
+  channelData: {
+    channelName: string;
+    channelTotalViews: number;
+    channelTotalSubscribers: number;
+    date: Date;
+  };
+}
+
 export interface AwsNotificationRepository {
   S3NewsNotification(
     data: S3NotificationInterface
@@ -28,5 +49,5 @@ export interface AwsNotificationRepository {
   ): Promise<S3NewsNotificationResponseRepository[]>;
   S3YoutubeNotification(
     data: S3NotificationInterface
-  ): Promise<S3NewsNotificationResponseRepository[]>;
+  ): Promise<S3YoutubeNotificationResponse[]>;
 }

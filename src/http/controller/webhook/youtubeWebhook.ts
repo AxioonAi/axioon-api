@@ -9,7 +9,6 @@ export const youtubeWebhookController = async (
   const { Records } = ZodWebhookBodySchema.parse(request.body);
 
   try {
-    console.log("entrou whebook youtube");
     const youtubeWebhookUseCase = makeYoutubeWebhook();
 
     const data = await youtubeWebhookUseCase.execute({

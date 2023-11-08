@@ -81,7 +81,7 @@ export class AwsNotificationProductionRepository
             channelTotalVideos: dateFilter[key].channelTotalVideos,
             channelTotalViews: dateFilter[key].channelTotalViews,
             channelTotalSubscribers: dateFilter[key].channelTotalSubscribers,
-            date: dateFilter[key].date,
+            date: moment(dateFilter[key].date.replace("~", "")).toDate(),
           },
         };
       }
@@ -93,21 +93,34 @@ export class AwsNotificationProductionRepository
             url: dateFilter[key].url,
             duration: dateFilter[key].duration,
             viewCount: dateFilter[key].viewCount,
-            type: dateFilter[key].type,
+            commentsCount: dateFilter[key].commentsCount,
+            likes: dateFilter[key].likes,
+            date: moment(dateFilter[key].date.replace("~", "")).toDate(),
+            description: dateFilter[key].text,
+            imgUrl: dateFilter[key].thumbnailUrl,
           },
         ],
         channelData: {
           channelName: dateFilter[key].channelName,
-          channelUrl: dateFilter[key].channelUrl,
-          channelDescription: dateFilter[key].channelDescription,
           channelTotalVideos: dateFilter[key].channelTotalVideos,
-          channelTotalViews: dateFilter[key].channelTotalViews,
-          channelTotalSubscribers: dateFilter[key].channelTotalSubscribers,
-          date: dateFilter[key].date,
+          channelTotalSubscribers: dateFilter[key].numberOfSubscribers,
+          date: moment(dateFilter[key].date.replace("~", "")).toDate(),
         },
       };
     }
 
-    return formattedDate;
+    const arrayDeObjetos = [];
+
+    for (const chave in formattedDate) {
+      if (formattedDate.hasOwnProperty(chave)) {
+        arrayDeObjetos.push({
+          id: chave,
+          videos: formattedDate[chave].videos,
+          channelData: formattedDate[chave].channelData,
+        });
+      }
+    }
+
+    return arrayDeObjetos;
   }
 }
