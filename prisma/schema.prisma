@@ -42,6 +42,8 @@ model User {
   ticktokData TicktokBaseData[]
   twitterData TwitterBaseData[]
   facebookData FacebookBaseData[]
+  youtubeBaseData YoutubeBaseData[]
+  youtubeVideoData YoutubeVideoData[]
 }
 
 model InstagramBaseData {
@@ -89,6 +91,32 @@ model TwitterBaseData {
   user User @relation(references: [id], fields: [user_id])
 }
 
+model YoutubeBaseData {
+  id String @unique @default(uuid())
+  channel_name String
+  channel_total_videos Int
+  channel_total_subs Int
+  date DateTime
+  user_id String
+  user User @relation(references: [id], fields: [user_id])
+}
+
+model YoutubeVideoData {
+  id String @unique @default(uuid())
+  title String
+  url String
+  duration String
+  viewCount Int
+  commentsCount Int
+  likes Int
+  date DateTime
+  description String
+  imgUrl String
+  user_id String
+  user User @relation(references: [id], fields: [user_id])
+  created_at DateTime @default(now())
+}
+
 model FacebookBaseData {
   id String @unique @default(uuid())
   user_id String
@@ -99,7 +127,6 @@ model FacebookBaseData {
   created_at DateTime @default(now())
   user User @relation(references: [id], fields: [user_id])
 }
-
 
 model PolicalGroup {
   id String @unique @default(uuid())
@@ -119,7 +146,6 @@ model PolicalPosition {
   name String
   coverage CoverageTypes @default(CITY)
 }
-
 
 model InstagramPost {
   id String @unique @default(uuid())
