@@ -48,6 +48,32 @@ export interface S3FacebookNotificationResponse {
   end_of_period: Date;
 }
 
+export interface S3InstagramCommentsNotificationResponse {
+  postData: {
+    id: string;
+    postUrl: string;
+    description: string;
+    commentCount: number;
+    likeCount: number;
+    pubDate: Date;
+    viewCount: number;
+    username: string;
+    imgUrl: string;
+    playCount: number;
+    postId: string;
+    query: string;
+    user_id: string;
+  }[];
+  commentData: {
+    text: string;
+    ownerProfilePicUrl: string;
+    post_id: string;
+    ownerUsername: string;
+    timestamp: string;
+    likeCount: number;
+  }[];
+}
+
 export interface AwsNotificationRepository {
   S3NewsNotification(
     data: S3NotificationInterface
@@ -61,4 +87,7 @@ export interface AwsNotificationRepository {
   S3FacebookNotification(
     data: S3NotificationInterface
   ): Promise<S3FacebookNotificationResponse[]>;
+  S3InstagramCommentsNotification(
+    data: S3NotificationInterface
+  ): Promise<S3InstagramCommentsNotificationResponse>;
 }

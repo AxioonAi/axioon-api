@@ -12,8 +12,8 @@ export interface InstagramPostRepository {
       username: string;
       imgUrl: string;
       postId: string;
-      query: string;
-      user_instagram: string;
+      user_id: string;
+      playCount: number;
     }[]
   ): Promise<any>;
   // findByUserId(id: string): Promise<InstagramPost[]>;
