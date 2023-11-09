@@ -2,7 +2,7 @@ import { AwsNotificationRepository } from "@/repositories/AwsNotificationReposit
 import { InstagramMentionCommentRepository } from "@/repositories/InstagramMentionCommentRepository";
 import { InstagramMentionRepository } from "@/repositories/InstagramMentionRepository";
 
-interface makeInstagramMentionsWebhookUseCaseRequest {
+interface InstagramMentionsWebhookUseCaseRequest {
   records: {
     s3: {
       object: {
@@ -12,9 +12,9 @@ interface makeInstagramMentionsWebhookUseCaseRequest {
   }[];
 }
 
-interface makeInstagramMentionsWebhookUseCaseResponse {}
+interface InstagramMentionsWebhookUseCaseResponse {}
 
-export class makeInstagramMentionsWebhookUseCase {
+export class InstagramMentionsWebhookUseCase {
   constructor(
     private awsNotificationRepository: AwsNotificationRepository,
     private instagramMentionRepository: InstagramMentionRepository,
@@ -23,7 +23,7 @@ export class makeInstagramMentionsWebhookUseCase {
 
   async execute({
     records,
-  }: makeInstagramMentionsWebhookUseCaseRequest): Promise<makeInstagramMentionsWebhookUseCaseResponse> {
+  }: InstagramMentionsWebhookUseCaseRequest): Promise<InstagramMentionsWebhookUseCaseResponse> {
     const data =
       await this.awsNotificationRepository.S3InstagramMentionsNotification({
         records,
