@@ -51,13 +51,15 @@ model InstagramBaseData {
   id String @unique @default(uuid())
   user_id String
   followers Int
+  follows Int
   posts_count Int
-  posts_comments_count Int
-  posts_likes_count Int
+  profilePicture String
   reels_count Int
-  reels_likes_count Int
-  reels_comments_count Int
-  reels_views_count Int
+  business Boolean
+  fullName String
+  verified Boolean
+  biography String
+  url String
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
