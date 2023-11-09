@@ -102,6 +102,22 @@ export interface S3InstagramMentionsNotificationResponse {
   }[];
 }
 
+interface InstagramBaseDataNotificationResponse {
+  user_id: string;
+  followers: number;
+  follows: number;
+  posts_count: number;
+  reels_count: number;
+  business: boolean;
+  verified: boolean;
+  biography: string;
+  url: string;
+  fullName: string;
+  profilePicture: string;
+  start_of_period: Date;
+  end_of_period: Date;
+}
+
 export interface AwsNotificationRepository {
   S3NewsNotification(
     data: S3NotificationInterface
@@ -121,4 +137,7 @@ export interface AwsNotificationRepository {
   S3InstagramMentionsNotification(
     data: S3NotificationInterface
   ): Promise<S3InstagramMentionsNotificationResponse>;
+  S3InstagramProfileNotification(
+    data: S3NotificationInterface
+  ): Promise<InstagramBaseDataNotificationResponse[]>;
 }

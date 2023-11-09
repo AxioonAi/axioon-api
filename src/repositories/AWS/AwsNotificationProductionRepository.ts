@@ -256,4 +256,37 @@ export class AwsNotificationProductionRepository
       commentData,
     };
   }
+
+  async S3InstagramProfileNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData = response.map((item: any) => {
+      return {
+        user_id: item.instagram_id,
+        followers: item.followersCount,
+        follows: item.followsCount,
+        posts_count: item.postsCount,
+        reels_count: item.igtvVideoCount,
+        business: item.isBusinessAccount,
+        verified: item.verified,
+        biography: item.biography,
+        url: item.url,
+        fullName: item.fullName,
+        profilePicture: item.profilePicUrlHD,
+        start_of_period: moment().clone().weekday(1).toDate(),
+        end_of_period: moment().clone().weekday(5).toDate(),
+      };
+    });
+
+    return formattedData;
+  }
 }
