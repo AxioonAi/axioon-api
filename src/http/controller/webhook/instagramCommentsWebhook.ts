@@ -2,7 +2,7 @@ import { ZodWebhookBodySchema } from "@/lib/zod/global";
 import { makeInstagramCommentsWebhook } from "@/useCase/@factories/webhook/makeInstagramCommentsWebhook";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-export const instagramCommentsController = async (
+export const instagramCommentsWebhookController = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
