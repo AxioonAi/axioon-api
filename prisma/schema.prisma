@@ -38,6 +38,7 @@ model User {
   city City  @relation(references: [id], fields: [city_id])
   instagramPosts InstagramPost[]
   news NewsUsers[]
+  instagramMention InstagramMention[]
   instagramData InstagramBaseData[]
   ticktokData TicktokBaseData[]
   twitterData TwitterBaseData[]
@@ -174,6 +175,36 @@ model InstagramPostComment {
   likeCount Int
   post_id String
   post InstagramPost @relation(references: [id], fields: [post_id])
+}
+
+model InstagramMention {
+  id String @unique @default(uuid())
+  postUrl String
+  description String
+  commentCount Int
+  likeCount Int
+  pubDate DateTime
+  viewCount Int
+  playCount Int
+  username String
+  imgUrl String
+  postId String
+  user_id String
+  ownerFullName String
+  ownerUsername String
+  user User @relation(references: [id], fields: [user_id])
+  comments InstagramMentionComment[]
+}
+
+model InstagramMentionComment {
+  id String @unique @default(uuid())
+  text String
+  ownerUsername String
+  ownerProfilePicUrl String
+  timestamp DateTime
+  likeCount Int
+  post_id String
+  post InstagramMention @relation(references: [id], fields: [post_id])
 }
 
 model Website {
