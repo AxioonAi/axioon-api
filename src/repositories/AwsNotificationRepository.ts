@@ -140,4 +140,7 @@ export interface AwsNotificationRepository {
   S3InstagramProfileNotification(
     data: S3NotificationInterface
   ): Promise<InstagramBaseDataNotificationResponse[]>;
+  S3TiktokProfileNotification(
+    data: S3NotificationInterface
+  ): Promise<InstagramBaseDataNotificationResponse[]>;
 }

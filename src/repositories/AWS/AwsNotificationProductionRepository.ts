@@ -289,4 +289,18 @@ export class AwsNotificationProductionRepository
 
     return formattedData;
   }
+  async S3TiktokProfileNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return response;
+  }
 }
