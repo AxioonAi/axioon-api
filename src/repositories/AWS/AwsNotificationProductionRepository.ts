@@ -1,4 +1,5 @@
 import axios from "axios";
+import { randomUUID } from "crypto";
 import moment from "moment";
 import {
   AwsNotificationRepository,
@@ -148,5 +149,111 @@ export class AwsNotificationProductionRepository
     });
 
     return formattedData;
+  }
+
+  async S3InstagramCommentsNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const postData: any[] = [];
+    const commentData: any[] = [];
+
+    response.forEach((item: any) => {
+      const id = randomUUID();
+      if (item.instagram_id) {
+        postData.push({
+          id,
+          postUrl: item.url,
+          description: item.caption,
+          commentCount: item.commentsCount,
+          likeCount: item.likesCount,
+          pubDate: item.timestamp,
+          viewCount: item.type === "video" ? item.videoViewCount : 0,
+          playCount: item.type === "video" ? item.videoPlayCount : 0,
+          username: item.ownerUsername,
+          imgUrl: item.displayUrl,
+          postId: item.id,
+          user_id: item.instagram_id,
+        });
+
+        item.latestComments.forEach((comment: any) => {
+          commentData.push({
+            text: comment.text,
+            ownerProfilePicUrl: comment.ownerProfilePicUrl,
+            post_id: id,
+            ownerUsername: comment.ownerUsername,
+            timestamp: comment.timestamp,
+            likeCount: comment.likesCount,
+          });
+        });
+      }
+    });
+
+    return {
+      postData,
+      commentData,
+    };
+  }
+
+  async S3InstagramMentionsNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const mentionData: any[] = [];
+    const commentData: any[] = [];
+
+    response.forEach((item: any) => {
+      const id = randomUUID();
+      if (item.instagram_id) {
+        mentionData.push({
+          id,
+          postUrl: item.url,
+          description: item.caption,
+          commentCount: item.commentsCount,
+          likeCount: item.likesCount,
+          pubDate: item.timestamp,
+          viewCount: item.type === "video" ? item.videoViewCount : 0,
+          playCount: item.type === "video" ? item.videoPlayCount : 0,
+          username: item.ownerUsername,
+          imgUrl: item.displayUrl,
+          postId: item.id,
+          user_id: item.instagram_id,
+          ownerFullName: item.ownerFullName,
+          ownerUsername: item.ownerUsername,
+        });
+
+        item.latestComments.forEach((comment: any) => {
+          commentData.push({
+            text: comment.text,
+            ownerProfilePicUrl: comment.ownerProfilePicUrl,
+            post_id: id,
+            ownerUsername: comment.ownerUsername,
+            timestamp: comment.timestamp,
+            likeCount: comment.likesCount,
+          });
+        });
+      }
+    });
+
+    return {
+      mentionData,
+      commentData,
+    };
   }
 }

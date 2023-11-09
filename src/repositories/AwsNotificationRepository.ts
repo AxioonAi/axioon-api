@@ -74,6 +74,34 @@ export interface S3InstagramCommentsNotificationResponse {
   }[];
 }
 
+export interface S3InstagramMentionsNotificationResponse {
+  mentionData: {
+    id: string;
+    postUrl: string;
+    description: string;
+    commentCount: number;
+    likeCount: number;
+    pubDate: Date;
+    viewCount: number;
+    username: string;
+    imgUrl: string;
+    playCount: number;
+    postId: string;
+    query: string;
+    user_id: string;
+    ownerFullName: string;
+    ownerUsername: string;
+  }[];
+  commentData: {
+    text: string;
+    ownerProfilePicUrl: string;
+    post_id: string;
+    ownerUsername: string;
+    timestamp: string;
+    likeCount: number;
+  }[];
+}
+
 export interface AwsNotificationRepository {
   S3NewsNotification(
     data: S3NotificationInterface
@@ -90,4 +118,7 @@ export interface AwsNotificationRepository {
   S3InstagramCommentsNotification(
     data: S3NotificationInterface
   ): Promise<S3InstagramCommentsNotificationResponse>;
+  S3InstagramMentionsNotification(
+    data: S3NotificationInterface
+  ): Promise<S3InstagramMentionsNotificationResponse>;
 }
