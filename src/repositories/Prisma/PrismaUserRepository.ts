@@ -42,6 +42,8 @@ export class PrismaUserRepository implements UserRepository {
         city: {
           include: {
             IBGEData: true,
+            pollingPlace: true,
+            electorate: true,
           },
         },
       },

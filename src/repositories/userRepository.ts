@@ -1,11 +1,20 @@
-import { City, CityIBGEData, Prisma, User } from "@prisma/client";
+import {
+  City,
+  CityElectorateData,
+  CityIBGEData,
+  CityPollingPlace,
+  Prisma,
+  User,
+} from "@prisma/client";
 
-interface UserCityInterface {
-  city: City;
+export interface UserCityInterface {
+  city: CityWithIBGEInterface;
 }
 
 interface CityWithIBGEInterface extends City {
-  IBGEData: CityIBGEData;
+  IBGEData: CityIBGEData[];
+  pollingPlace: CityPollingPlace[];
+  electorate: CityElectorateData[];
 }
 
 interface UserYoutubeChannelInterface {
