@@ -67,6 +67,7 @@ model UserPlan {
   id String @unique @default(uuid())
   user_id String
   plan_id String
+  paymentId String @unique
   expires_in DateTime
   status Status @default(INACTIVE)
   plan SignaturePlan @relation(references: [id], fields: [plan_id])
