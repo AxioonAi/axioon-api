@@ -23,6 +23,22 @@ enum NewsScore {
   URGENT 
 }
 
+enum SexType {
+  MALE
+  FEMALE
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  DISABLED
+}
+
+enum Role {
+  MAYOR
+  ALDERMAN
+}
+
 model User {
   id String @unique @default(uuid())
   name String
@@ -30,26 +46,60 @@ model User {
   social_name String
   password_hash String
   cpfCnpj String @unique
-  instagram String @unique
-  city_id String
+  birth_date DateTime
+  paymentId String
+  mobilePhone String
+  sex SexType @default(MALE)
+  signature UserPlan[]
+}
+
+model SignaturePlan {
+  id String @unique @default(uuid())
+  name String 
+  pixValue Float
+  creditValue Float
+  amount_of_monitoring Int
+  duration Int @default(12)
+  userPlan UserPlan[]
+}
+
+model UserPlan {
+  id String @unique @default(uuid())
+  user_id String
+  plan_id String
+  expires_in DateTime
+  status Status @default(INACTIVE)
+  plan SignaturePlan @relation(references: [id], fields: [plan_id])
+  user User @relation(references: [id], fields: [user_id])
+}
+
+model PoliticianProfile {
+  id String @unique @default(uuid())
+  social_name String
+  full_name String
+  role Role @default(MAYOR)
   youtube String?
   tiktok String?
   facebook String?
+
+  city_id String
+  political_group_id String
   city City  @relation(references: [id], fields: [city_id])
-  instagramPosts InstagramPost[]
+  politicalGroup PolicalGroup @relation(references: [id], fields: [political_group_id])
+
   news NewsUsers[]
-  instagramMention InstagramMention[]
-  instagramData InstagramBaseData[]
   ticktokData TicktokBaseData[]
   twitterData TwitterBaseData[]
+  instagramPosts InstagramPost[]
   facebookData FacebookBaseData[]
+  instagramData InstagramBaseData[]
   youtubeBaseData YoutubeBaseData[]
+  instagramMention InstagramMention[]
   youtubeVideoData YoutubeVideoData[]
 }
 
 model InstagramBaseData {
   id String @unique @default(uuid())
-  user_id String
   followers Int
   follows Int
   posts_count Int
@@ -63,12 +113,12 @@ model InstagramBaseData {
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model TicktokBaseData {
   id String @unique @default(uuid())
-  user_id String
   followers Int
   posts_count Int
   posts_comments_count Int
@@ -76,12 +126,12 @@ model TicktokBaseData {
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model TwitterBaseData {
   id String @unique @default(uuid())
-  user_id String
   followers Int
   posts_count Int
   posts_comments_count Int
@@ -91,7 +141,8 @@ model TwitterBaseData {
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model YoutubeBaseData {
@@ -100,8 +151,8 @@ model YoutubeBaseData {
   channel_total_videos Int
   channel_total_subs Int
   date DateTime
-  user_id String
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model YoutubeVideoData {
@@ -115,20 +166,20 @@ model YoutubeVideoData {
   date DateTime
   description String
   imgUrl String
-  user_id String
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   created_at DateTime @default(now())
 }
 
 model FacebookBaseData {
   id String @unique @default(uuid())
-  user_id String
   likes_count Int
   followers_count Int
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model PolicalGroup {
@@ -142,6 +193,7 @@ model PolicalGroup {
   facebook String?
   twitter String?
   president String
+  politicians PoliticianProfile[]
 }
 
 model PolicalPosition {
@@ -162,8 +214,8 @@ model InstagramPost {
   username String
   imgUrl String
   postId String
-  user_id String
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   created_at DateTime @default(now())
   comments InstagramPostComment[]
 }
@@ -191,10 +243,10 @@ model InstagramMention {
   username String
   imgUrl String
   postId String
-  user_id String
   ownerFullName String
   ownerUsername String
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   comments InstagramMentionComment[]
 }
 
@@ -229,46 +281,11 @@ model City {
   id String @unique @default(uuid())
   name String
   state String
-  illiterate Int @default(0)
-  complete_primary_education Int @default(0) 
-  incomplete_primary_education Int @default(0) 
-  complete_high_school Int @default(0) 
-  incomplete_high_school Int @default(0) 
-  reads_and_writes Int @default(0) 
-  not_informed Int @default(0) 
-  complete_higher_education Int @default(0) 
-  incomplete_higher_education Int @default(0) 
-  hundred_years_or_more Int @default(0) 
-  sixteen_years Int @default(0) 
-  seventeen_years Int @default(0)
-  eighteen_years Int @default(0)
-  nineteen_years Int @default(0)
-  twenty_years Int @default(0)
-  twenty_one_to_twenty_four_years Int @default(0)
-  twenty_five_to_twenty_nine_years Int @default(0)
-  thirty_to_thirty_four_years Int @default(0)
-  thirty_five_to_thirty_nine_years Int @default(0)
-  forty_to_forty_four_years Int @default(0)
-  forty_five_to_forty_nine_years Int @default(0)
-  fifty_to_fifty_four_years Int @default(0)
-  fifty_five_to_fifty_nine_years Int @default(0)
-  sixty_to_sixty_four_years Int @default(0)
-  sixty_five_to_sixty_nine_years Int @default(0)
-  seventy_to_seventy_four_years Int @default(0)
-  seventy_five_to_seventy_nine_years Int @default(0)
-  eighty_to_eighty_four_years Int @default(0)
-  eighty_five_to_eighty_nine_years Int @default(0)
-  ninety_to_ninety_four_years Int @default(0)
-  ninety_five_to_ninety_nine_years Int @default(0) 
-  invalid Int @default(0) 
-  female Int @default(0)
-  male Int @default(0)
-  electorate Int @default(0)
-  with_biometry Int @default(0)
-  with_disability Int @default(0)
-  users User[]
+  politician PoliticianProfile[]
   websites WebsiteCity[]
   IBGEData CityIBGEData[]
+  electorate CityElectorateData[]
+  pollingPlace CityPollingPlace[]
 }
 
 model CityIBGEData {
@@ -343,6 +360,58 @@ model CityIBGEData {
   city City @relation(references: [id], fields: [city_id])
 }
 
+model CityPollingPlace {
+  id String @unique @default(uuid())
+  number String
+  name String
+  quantity Int
+  city_id String
+  city City @relation(references: [id], fields: [city_id])
+}
+
+model CityElectorateData {
+  id String @unique @default(uuid())
+  illiterate Int @default(0)
+  complete_primary_education Int @default(0) 
+  incomplete_primary_education Int @default(0) 
+  complete_high_school Int @default(0) 
+  incomplete_high_school Int @default(0) 
+  reads_and_writes Int @default(0) 
+  not_informed Int @default(0) 
+  complete_higher_education Int @default(0) 
+  incomplete_higher_education Int @default(0) 
+  hundred_years_or_more Int @default(0) 
+  sixteen_years Int @default(0) 
+  seventeen_years Int @default(0)
+  eighteen_years Int @default(0)
+  nineteen_years Int @default(0)
+  twenty_years Int @default(0)
+  twenty_one_to_twenty_four_years Int @default(0)
+  twenty_five_to_twenty_nine_years Int @default(0)
+  thirty_to_thirty_four_years Int @default(0)
+  thirty_five_to_thirty_nine_years Int @default(0)
+  forty_to_forty_four_years Int @default(0)
+  forty_five_to_forty_nine_years Int @default(0)
+  fifty_to_fifty_four_years Int @default(0)
+  fifty_five_to_fifty_nine_years Int @default(0)
+  sixty_to_sixty_four_years Int @default(0)
+  sixty_five_to_sixty_nine_years Int @default(0)
+  seventy_to_seventy_four_years Int @default(0)
+  seventy_five_to_seventy_nine_years Int @default(0)
+  eighty_to_eighty_four_years Int @default(0)
+  eighty_five_to_eighty_nine_years Int @default(0)
+  ninety_to_ninety_four_years Int @default(0)
+  ninety_five_to_ninety_nine_years Int @default(0) 
+  invalid Int @default(0) 
+  female Int @default(0)
+  male Int @default(0)
+  electorate Int @default(0)
+  with_biometry Int @default(0)
+  with_disability Int @default(0)
+  city_id String 
+  city City @relation(references: [id], fields: [city_id])
+}
+
 model News {
   id String @unique @default(uuid())
   last_update DateTime
@@ -354,9 +423,9 @@ model News {
 
 model NewsUsers {
   id String @unique @default(uuid())
-  user_id String
   news_id String
-  user User @relation(references: [id], fields: [user_id])
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   news News @relation(references: [id], fields: [news_id])
 }
 
