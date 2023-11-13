@@ -1,3 +1,4 @@
+import { AuthenticateError } from "@/helper/errors/AuthenticateError";
 import { UserRepository } from "@/repositories/userRepository";
 import { User } from "@prisma/client";
 import { compare } from "bcryptjs";
@@ -20,12 +21,12 @@ export class AuthenticateUserUseCase {
     const userExists = await this.userRepository.findByEmail(email);
 
     if (!userExists) {
-      throw new Error("User not found");
+      throw new AuthenticateError();
     }
 
-    const isPasswordValid = compare(password, userExists.password_hash);
+    const isPasswordValid = await compare(password, userExists.password_hash);
     if (!isPasswordValid) {
-      throw new Error("Invalid password");
+      throw new AuthenticateError();
     }
 
     return { user: userExists };
