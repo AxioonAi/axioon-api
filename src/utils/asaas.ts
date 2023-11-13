@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import { env } from "process";
 import request from "request";
 dotenv.config();
 
@@ -8,21 +7,21 @@ interface HttpResponse {
   body: any;
 }
 
-export const createConnection = async (data: {
-  endpoint: string;
-  body?: any;
-  method: string;
-  key?: string;
-}): Promise<HttpResponse> => {
+export const createConnection = async (
+  endpoint: string,
+  req?: any,
+  method = "POST",
+  key = process.env.ASAAS_KEY
+): Promise<HttpResponse> => {
   return new Promise((resolve, reject) => {
     request(
       {
-        method: data.method ? data.method : "POST",
-        url: ` ${env.ASAAS}${data.endpoint}`,
+        method: method,
+        url: ` ${process.env.ASAAS}${endpoint}`,
         headers: {
-          access_token: data.key ? data.key : env.ASAAS_KEY,
+          access_token: key,
         },
-        body: data.body ? JSON.stringify(data.body) : null,
+        body: JSON.stringify(req),
       },
       function (error, response, body) {
         const status = response.statusCode;
