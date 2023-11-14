@@ -51,6 +51,7 @@ model User {
   mobilePhone String
   sex SexType @default(MALE)
   signature UserPlan[]
+  user PoliticianProfileMonitoring[]
 }
 
 model SignaturePlan {
@@ -78,7 +79,9 @@ model PoliticianProfile {
   id String @unique @default(uuid())
   social_name String
   full_name String
+  cpf String @unique
   role Role @default(MAYOR)
+  instagram String
   youtube String?
   tiktok String?
   facebook String?
@@ -86,9 +89,10 @@ model PoliticianProfile {
   city_id String
   political_group_id String
   city City  @relation(references: [id], fields: [city_id])
-  politicalGroup PolicalGroup @relation(references: [id], fields: [political_group_id])
+  politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
 
   news NewsUsers[]
+  user PoliticianProfileMonitoring[]
   ticktokData TicktokBaseData[]
   twitterData TwitterBaseData[]
   instagramPosts InstagramPost[]
@@ -97,6 +101,16 @@ model PoliticianProfile {
   youtubeBaseData YoutubeBaseData[]
   instagramMention InstagramMention[]
   youtubeVideoData YoutubeVideoData[]
+}
+
+model PoliticianProfileMonitoring {
+  id String @unique @default(uuid())
+  user_id String
+  politician_profile_id String
+  primary Boolean @default(true)
+  user User @relation(references: [id], fields: [user_id])
+  politicianProfile PoliticianProfile @relation(fields: [politician_profile_id], references: [id])
+
 }
 
 model InstagramBaseData {
@@ -183,7 +197,7 @@ model FacebookBaseData {
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
-model PolicalGroup {
+model PoliticalGroup {
   id String @unique @default(uuid())
   name String
   acronym String
