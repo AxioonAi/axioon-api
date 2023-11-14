@@ -35,4 +35,40 @@ export const messages = [
     field: "birth_date",
     message: "Insira uma data de nascimento válida",
   },
+  {
+    field: "cpf",
+    message: "Insira uma CPF válido",
+  },
+  {
+    field: "instagram",
+    message: "Insira um instagram valido",
+  },
+  {
+    field: "youtube",
+    message: "Insira um youtube valido",
+  },
+  {
+    field: "tiktok",
+    message: "Insira um tiktok valido",
+  },
+  {
+    field: "facebook",
+    message: "Insira um facebook valido",
+  },
+  {
+    field: "city",
+    message: "Insira uma cidade válida",
+  },
+  {
+    field: "state",
+    message: "Insira um estado válido",
+  },
+  {
+    field: "role",
+    message: "Insira um cargo válido",
+  },
+  {
+    field: "political_group_id",
+    message: "Insira um partido politico valido",
+  },
 ];

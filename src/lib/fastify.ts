@@ -1,8 +1,10 @@
 import { AsaasError } from "@/helper/errors/AsaasError";
 import { AuthenticateError } from "@/helper/errors/AuthenticateError";
+import { CityNotFoundError } from "@/helper/errors/CityNotFoundError";
 import { CpfAlreadyExistsError } from "@/helper/errors/CpfAlreadyExists";
 import { EmailAlreadyExistsError } from "@/helper/errors/EmailAlreadyExists";
 import { PlanNotFoundError } from "@/helper/errors/PlanNotFoundError";
+import { ProfileNotFoundError } from "@/helper/errors/ProfileNotFoundError";
 import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import { ZodError } from "zod";
@@ -25,7 +27,11 @@ export const fastifyErrorHandler = (
     error instanceof CpfAlreadyExistsError ||
     error instanceof AsaasError ||
     error instanceof PlanNotFoundError ||
-    error instanceof UserNotFoundError
+    error instanceof UserNotFoundError ||
+    error instanceof ProfileNotFoundError ||
+    error instanceof CityNotFoundError ||
+    error instanceof ProfileNotFoundError ||
+    error instanceof ProfileNotFoundError
   ) {
     return reply.status(401).send(error.message);
   }
