@@ -1,4 +1,4 @@
-import { makeUserYoutubeChannel } from "@/useCase/@factories/user/makeUserYoutubeChannel";
+import { makePoliticianProfileYoutubeChannelList } from "@/useCase/@factories/politicianProfile/makePoliticianProfileYoutubeChannelList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userYoutubeController = async (
@@ -6,7 +6,7 @@ export const userYoutubeController = async (
   reply: FastifyReply
 ) => {
   try {
-    const userYoutubeUseCase = makeUserYoutubeChannel();
+    const userYoutubeUseCase = makePoliticianProfileYoutubeChannelList();
 
     const channel = await userYoutubeUseCase.execute({});
 

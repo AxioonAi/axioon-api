@@ -1,4 +1,4 @@
-import { makeUserFacebookList } from "@/useCase/@factories/user/makeUserFacebookList";
+import { makeFindPoliticianProfileFacebookList } from "@/useCase/@factories/politicianProfile/makeFindPoliticianProfileFacebookList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userFacebookController = async (
@@ -6,7 +6,7 @@ export const userFacebookController = async (
   reply: FastifyReply
 ) => {
   try {
-    const userFacebookUseCase = makeUserFacebookList();
+    const userFacebookUseCase = makeFindPoliticianProfileFacebookList();
 
     const facebook = await userFacebookUseCase.execute({});
 

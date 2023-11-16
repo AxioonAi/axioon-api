@@ -1,4 +1,4 @@
-import { makeUserInstagramList } from "@/useCase/@factories/user/makeUserInstagramList";
+import { makePoliticianProfileInstagramList } from "@/useCase/@factories/politicianProfile/makePoliticianProfileInstagramList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userInstagramController = async (
@@ -6,7 +6,7 @@ export const userInstagramController = async (
   reply: FastifyReply
 ) => {
   try {
-    const userInstagramUseCase = makeUserInstagramList();
+    const userInstagramUseCase = makePoliticianProfileInstagramList();
 
     const instagram = await userInstagramUseCase.execute({});
 

@@ -1,4 +1,4 @@
-import { makeUserTikTokList } from "@/useCase/@factories/user/makeUserTikTokList";
+import { makePoliticianProfileTiktokList } from "@/useCase/@factories/politicianProfile/makePoliticianProfileTiktokList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userTikTokController = async (
@@ -6,7 +6,7 @@ export const userTikTokController = async (
   reply: FastifyReply
 ) => {
   try {
-    const userTikTokUseCase = makeUserTikTokList();
+    const userTikTokUseCase = makePoliticianProfileTiktokList();
 
     const tiktok = await userTikTokUseCase.execute({});
 

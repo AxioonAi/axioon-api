@@ -29,4 +29,72 @@ export class PrismaPoliticianProfileRepository
       },
     });
   }
+
+  async findUserCity(id: string) {
+    return await prisma.politicianProfile.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        city: {
+          include: {
+            IBGEData: true,
+            pollingPlace: true,
+            electorate: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findYoutubeChannelList() {
+    return await prisma.politicianProfile.findMany({
+      where: {
+        youtube: {
+          not: null,
+        },
+      },
+      select: {
+        youtube: true,
+        id: true,
+      },
+    });
+  }
+
+  async findInstagramList() {
+    return await prisma.politicianProfile.findMany({
+      select: {
+        instagram: true,
+        id: true,
+      },
+    });
+  }
+
+  async findTikTokList() {
+    return await prisma.politicianProfile.findMany({
+      where: {
+        tiktok: {
+          not: null,
+        },
+      },
+      select: {
+        tiktok: true,
+        id: true,
+      },
+    });
+  }
+
+  async findFacebookList() {
+    return await prisma.politicianProfile.findMany({
+      where: {
+        facebook: {
+          not: null,
+        },
+      },
+      select: {
+        facebook: true,
+        id: true,
+      },
+    });
+  }
 }
