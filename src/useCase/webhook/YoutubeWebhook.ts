@@ -33,6 +33,6 @@ export class YoutubeWebhookUseCase {
       this.youtubeVideoBaseDataRepository.createMany(data),
     ]);
 
-    return data;
+    return {};
   }
 }
