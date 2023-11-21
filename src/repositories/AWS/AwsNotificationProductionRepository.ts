@@ -69,11 +69,11 @@ export class AwsNotificationProductionRepository
       return item;
     });
 
-    const formattedDate: any = {};
+    const formattedData: any = {};
 
     for (const key in dateFilter) {
-      if (!formattedDate[dateFilter[key].channel_id]) {
-        formattedDate[dateFilter[key].channel_id] = {
+      if (!formattedData[dateFilter[key].channel_id]) {
+        formattedData[dateFilter[key].channel_id] = {
           videos: [],
           channelData: {
             channelName: dateFilter[key].channelName,
@@ -82,14 +82,15 @@ export class AwsNotificationProductionRepository
             channelTotalVideos: dateFilter[key].channelTotalVideos,
             channelTotalViews: dateFilter[key].channelTotalViews,
             channelTotalSubscribers: dateFilter[key].channelTotalSubscribers,
-            date: moment(dateFilter[key].date.replace("~", "")).toDate(),
+            date: moment().toDate(),
           },
         };
       }
-      formattedDate[dateFilter[key].channel_id] = {
+      formattedData[dateFilter[key].channel_id] = {
         videos: [
-          ...formattedDate[dateFilter[key].channel_id].videos,
+          ...formattedData[dateFilter[key].channel_id].videos,
           {
+            id: dateFilter[key].id,
             title: dateFilter[key].title,
             url: dateFilter[key].url,
             duration: dateFilter[key].duration,
@@ -105,19 +106,19 @@ export class AwsNotificationProductionRepository
           channelName: dateFilter[key].channelName,
           channelTotalVideos: dateFilter[key].channelTotalVideos,
           channelTotalSubscribers: dateFilter[key].numberOfSubscribers,
-          date: moment(dateFilter[key].date.replace("~", "")).toDate(),
+          date: moment().toDate(),
         },
       };
     }
 
     const arrayDeObjetos = [];
 
-    for (const chave in formattedDate) {
-      if (formattedDate.hasOwnProperty(chave)) {
+    for (const chave in formattedData) {
+      if (formattedData.hasOwnProperty(chave)) {
         arrayDeObjetos.push({
           id: chave,
-          videos: formattedDate[chave].videos,
-          channelData: formattedDate[chave].channelData,
+          videos: formattedData[chave].videos,
+          channelData: formattedData[chave].channelData,
         });
       }
     }
@@ -301,6 +302,56 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    return response;
+    const formattedData: any = {};
+
+    for (const item of response) {
+      if (!formattedData[item.tiktok_id]) {
+        formattedData[item.tiktok_id] = {
+          videos: [],
+          profile: {
+            fans: item.authorMeta.fans,
+            videos: item.authorMeta.video,
+            verified: item.authorMeta.verified,
+            start_of_period: moment().clone().weekday(1).toDate(),
+            end_of_period: moment().clone().weekday(5).toDate(),
+            politician_id: item.tiktok_id,
+            avatar: item.authorMeta.avatar,
+            heart: item.authorMeta.heart,
+          },
+        };
+      }
+
+      formattedData[item.tiktok_id].videos = [
+        ...formattedData[item.tiktok_id].videos,
+        {
+          id: item.id,
+          text: item.text,
+          diggCount: item.diggCount,
+          shareCount: item.shareCount,
+          playCount: item.playCount,
+          commentCount: item.commentCount,
+          date: item.createTimeISO,
+          url: item.webVideoUrl,
+          politician_id: item.tiktok_id,
+        },
+      ];
+    }
+
+    const profileFinalData: any = [];
+    const videoFinalData: any = [];
+
+    for (const key in formattedData) {
+      if (formattedData.hasOwnProperty(key)) {
+        videoFinalData.push(...formattedData[key].videos);
+        profileFinalData.push(formattedData[key].profile);
+      }
+    }
+
+    const finalData: any = {
+      profileData: profileFinalData,
+      videoData: videoFinalData,
+    };
+
+    return finalData;
   }
 }
