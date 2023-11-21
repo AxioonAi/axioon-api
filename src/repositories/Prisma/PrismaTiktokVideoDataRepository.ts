@@ -40,8 +40,6 @@ export class PrismaTiktokVideoDataRepository
       }
     });
 
-    console.log(createVideoData);
-
     await prisma.$transaction([
       prisma.tiktokVideoData.createMany({ data: createVideoData }),
       ...updateVideoData.map((update: any) =>
@@ -94,5 +92,21 @@ export class PrismaTiktokVideoDataRepository
         },
       }),
     ]);
+  }
+
+  async findDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any> {
+    return await prisma.tiktokVideoData.findMany({
+      where: {
+        politician_id: data.id,
+        date: {
+          gte: data.startDate,
+          lte: data.endDate,
+        },
+      },
+    });
   }
 }

@@ -18,4 +18,9 @@ export interface TiktokVideoDataRepository {
     startDate: Date;
     endDate: Date;
   }): Promise<any>;
+  findDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any>;
 }

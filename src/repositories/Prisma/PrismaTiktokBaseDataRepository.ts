@@ -18,4 +18,23 @@ export class PrismaTiktokBaseDataRepository
       data,
     });
   }
+
+  async findDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any> {
+    return await prisma.tiktokBaseData.findFirst({
+      where: {
+        politician_id: data.id,
+        start_of_period: {
+          gte: data.startDate,
+          lte: data.endDate,
+        },
+      },
+      orderBy: {
+        end_of_period: "asc",
+      },
+    });
+  }
 }
