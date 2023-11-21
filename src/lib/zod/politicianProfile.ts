@@ -19,3 +19,8 @@ export const ZodCreatePoliticianProfileBodySchema = z.object({
   }),
   political_group_id: z.string(),
 });
+
+export const ZodFindPoliticianProfileDetailsQuerySchema = z.object({
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+});

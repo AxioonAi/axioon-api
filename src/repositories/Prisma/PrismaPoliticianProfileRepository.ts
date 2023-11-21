@@ -97,4 +97,34 @@ export class PrismaPoliticianProfileRepository
       },
     });
   }
+
+  async findYoutubeDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }) {
+    return await prisma.politicianProfile.findUnique({
+      where: {
+        id: data.id,
+      },
+      select: {
+        youtubeBaseData: {
+          where: {
+            date: {
+              gte: data.startDate,
+              lte: data.endDate,
+            },
+          },
+        },
+        youtubeVideoData: {
+          where: {
+            date: {
+              gte: data.startDate,
+              lte: data.endDate,
+            },
+          },
+        },
+      },
+    });
+  }
 }
