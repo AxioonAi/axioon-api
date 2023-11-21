@@ -93,12 +93,13 @@ model PoliticianProfile {
 
   news NewsUsers[]
   user PoliticianProfileMonitoring[]
-  ticktokData TicktokBaseData[]
+  ticktokData TiktokBaseData[]
   twitterData TwitterBaseData[]
   instagramPosts InstagramPost[]
   facebookData FacebookBaseData[]
   instagramData InstagramBaseData[]
   youtubeBaseData YoutubeBaseData[]
+  tiktokVideoData TiktokVideoData[]
   instagramMention InstagramMention[]
   youtubeVideoData YoutubeVideoData[]
 }
@@ -132,15 +133,29 @@ model InstagramBaseData {
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
-model TicktokBaseData {
+model TiktokBaseData {
   id String @unique @default(uuid())
-  followers Int
-  posts_count Int
-  posts_comments_count Int
-  posts_likes_count Int
+  fans Float
+  videos Float
+  verified Boolean
+  avatar String
+  heart Float
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+}
+
+model TiktokVideoData {
+  id String @unique @default(uuid())
+  text String
+  diggCount Int
+  shareCount Int
+  playCount Int
+  commentCount Int
+  date DateTime
+  url String
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
