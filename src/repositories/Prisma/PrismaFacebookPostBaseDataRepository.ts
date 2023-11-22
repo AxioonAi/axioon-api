@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import moment from "moment";
 import { FacebookPostBaseDataRepository } from "../FacebookPostBaseDataRepository";
 
 export class PrismaFacebookPostBaseDataRepository
@@ -67,5 +68,42 @@ export class PrismaFacebookPostBaseDataRepository
         },
       },
     });
+  }
+
+  async findHomeData(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any> {
+    return await Promise.all([
+      prisma.facebookPostBaseData.aggregate({
+        where: {
+          politician_id: data.id,
+          date: {
+            gte: data.startDate,
+            lte: data.endDate,
+          },
+        },
+        _sum: {
+          like: true,
+          comments: true,
+          shares: true,
+        },
+      }),
+      prisma.facebookPostBaseData.aggregate({
+        where: {
+          politician_id: data.id,
+          date: {
+            gte: moment(data.startDate).subtract(7, "day").toDate(),
+            lte: moment(data.endDate).subtract(7, "day").toDate(),
+          },
+        },
+        _sum: {
+          like: true,
+          comments: true,
+          shares: true,
+        },
+      }),
+    ]);
   }
 }
