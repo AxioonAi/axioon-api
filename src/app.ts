@@ -4,9 +4,15 @@ import fastify from "fastify";
 import { env } from "./env";
 import { cityRoutes } from "./http/controller/city/routes";
 import { newsRoutes } from "./http/controller/news/routes";
+import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
+import { politicianProfileRoutes } from "./http/controller/politicianProfile/routes";
+import { purchaseRoutes } from "./http/controller/purchase/routes";
 import { scrapeRoutes } from "./http/controller/scrape/routes";
+import { scriptsRoutes } from "./http/controller/scripts/routes";
+import { signaturePlanRoutes } from "./http/controller/signaturePlan/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
+import { fastifyErrorHandler } from "./lib/fastify";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -28,4 +34,10 @@ app.register(userRoutes);
 app.register(newsRoutes);
 app.register(cityRoutes);
 app.register(scrapeRoutes);
+app.register(scriptsRoutes);
 app.register(webhookRoutes);
+app.register(purchaseRoutes);
+app.register(signaturePlanRoutes);
+app.register(politicalGroupRoutes);
+app.register(politicianProfileRoutes);
+app.setErrorHandler(fastifyErrorHandler);
