@@ -40,7 +40,7 @@ export interface S3YoutubeNotificationResponse {
   };
 }
 
-export interface S3FacebookNotificationResponse {
+export interface S3FacebookProfileNotificationResponse {
   user_id: string;
   likes_count: number;
   followers_count: number;
@@ -128,9 +128,9 @@ export interface AwsNotificationRepository {
   S3YoutubeNotification(
     data: S3NotificationInterface
   ): Promise<S3YoutubeNotificationResponse[]>;
-  S3FacebookNotification(
+  S3FacebookProfileNotification(
     data: S3NotificationInterface
-  ): Promise<S3FacebookNotificationResponse[]>;
+  ): Promise<S3FacebookProfileNotificationResponse[]>;
   S3InstagramCommentsNotification(
     data: S3NotificationInterface
   ): Promise<S3InstagramCommentsNotificationResponse>;
@@ -141,4 +141,5 @@ export interface AwsNotificationRepository {
     data: S3NotificationInterface
   ): Promise<InstagramBaseDataNotificationResponse[]>;
   S3TiktokProfileNotification(data: S3NotificationInterface): Promise<any>;
+  S3FacebookPostNotification(data: S3NotificationInterface): Promise<any>;
 }

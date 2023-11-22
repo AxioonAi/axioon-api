@@ -127,4 +127,17 @@ export class PrismaPoliticianProfileRepository
       },
     });
   }
+
+  async findNamesAndRoles() {
+    return await prisma.politicianProfile.findMany({
+      include: {
+        facebookData: {
+          take: 1,
+          select: {
+            title: true,
+          },
+        },
+      },
+    });
+  }
 }

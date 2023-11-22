@@ -1,12 +1,12 @@
 import { UserRepository } from "@/repositories/userRepository";
-import { City } from "@prisma/client";
+import { CityDataFormatter } from "@/utils/dataFormatter/city";
 
 interface CityStatisticsUseCaseRequest {
   userId: string;
 }
 
 interface CityStatisticsUseCaseResponse {
-  city: City;
+  city: any;
 }
 
 export class CityStatisticsUseCase {
@@ -21,6 +21,8 @@ export class CityStatisticsUseCase {
       throw new Error("User not found");
     }
 
-    return { city: user.city };
+    const formattedData = CityDataFormatter(user);
+
+    return { city: formattedData };
   }
 }

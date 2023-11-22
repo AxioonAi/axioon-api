@@ -125,7 +125,7 @@ export class AwsNotificationProductionRepository
 
     return arrayDeObjetos;
   }
-  async S3FacebookNotification(data: S3NotificationInterface) {
+  async S3FacebookProfileNotification(data: S3NotificationInterface) {
     const response = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
@@ -141,7 +141,8 @@ export class AwsNotificationProductionRepository
 
     response.forEach((item: any) => {
       formattedData.push({
-        user_id: item.facebook_id,
+        politician_id: item.facebook_id,
+        title: item.title,
         likes_count: item.likes,
         followers_count: item.followers,
         start_of_period: moment().clone().weekday(1).toDate(),
@@ -353,5 +354,39 @@ export class AwsNotificationProductionRepository
     };
 
     return finalData;
+  }
+
+  async S3FacebookPostNotification(
+    data: S3NotificationInterface
+  ): Promise<any> {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData = response.map((item: any) => {
+      return {
+        id: item.postId,
+        text: item.text,
+        url: item.url,
+        date: item.time,
+        like: item.likes,
+        shares: item.shares,
+        comments: item.comments,
+        thumbnail:
+          item.media && item.media[0]
+            ? item.media[0].thumbnail
+            : "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
+        politician_id: item.facebook_id,
+      };
+    });
+
+    return formattedData;
   }
 }

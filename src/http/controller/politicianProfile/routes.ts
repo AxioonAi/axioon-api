@@ -2,6 +2,7 @@ import { verifyJwt } from "@/http/middleware/verify-jwt";
 import { FastifyInstance } from "fastify";
 import { createPoliticianProfileController } from "./createPoliticianProfile";
 import { findPoliticianProfileByCpfController } from "./findPoliticianProfileByCpf";
+import { findPoliticianProfileFacebookDetailsController } from "./findPoliticianProfileFacebookDetails";
 import { findPoliticianProfileSocialMediaHomeDataController } from "./findPoliticianProfileSocialMediaHomeData";
 import { findPoliticianProfileTiktokDetailsController } from "./findPoliticianProfileTiktokDetails";
 import { findPoliticianProfileYoutubeDetailsController } from "./findPoliticianProfileYoutubeDetails";
@@ -26,5 +27,10 @@ export async function politicianProfileRoutes(app: FastifyInstance) {
     "/profile/tiktok/:id",
     { onRequest: [verifyJwt] },
     findPoliticianProfileTiktokDetailsController
+  );
+
+  app.get(
+    "/profile/facebook/:id",
+    findPoliticianProfileFacebookDetailsController
   );
 }

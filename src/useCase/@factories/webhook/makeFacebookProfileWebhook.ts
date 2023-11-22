@@ -1,11 +1,11 @@
 import { AwsNotificationProductionRepository } from "@/repositories/AWS/AwsNotificationProductionRepository";
 import { PrismaFacebookBaseDataRepository } from "@/repositories/Prisma/PrismaFacebookBaseDataRepository";
-import { FacebookWebhookUseCase } from "@/useCase/webhook/FacebookWebhook";
+import { FacebookProfileWebhookUseCase } from "@/useCase/webhook/FacebookProfileWebhook";
 
-export function makeFacebookWebhook() {
+export function makeFacebookProfileWebhook() {
   const awsNotificationRepository = new AwsNotificationProductionRepository();
   const facebookBaseDataRepository = new PrismaFacebookBaseDataRepository();
-  return new FacebookWebhookUseCase(
+  return new FacebookProfileWebhookUseCase(
     awsNotificationRepository,
     facebookBaseDataRepository
   );

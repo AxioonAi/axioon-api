@@ -60,4 +60,5 @@ export interface PoliticianProfileRepository {
     startDate: Date;
     endDate: Date;
   }): Promise<any>;
+  findNamesAndRoles(): Promise<any>;
 }
