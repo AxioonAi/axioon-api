@@ -169,10 +169,9 @@ export class AwsNotificationProductionRepository
     const commentData: any[] = [];
 
     response.forEach((item: any) => {
-      const id = randomUUID();
       if (item.instagram_id) {
         postData.push({
-          id,
+          id: item.id,
           postUrl: item.url,
           description: item.caption,
           commentCount: item.commentsCount,
@@ -183,14 +182,16 @@ export class AwsNotificationProductionRepository
           username: item.ownerUsername,
           imgUrl: item.displayUrl,
           postId: item.id,
-          user_id: item.instagram_id,
+          politician_id: item.instagram_id,
         });
 
         item.latestComments.forEach((comment: any) => {
           commentData.push({
+            id: comment.id,
             text: comment.text,
             ownerProfilePicUrl: comment.ownerProfilePicUrl,
-            post_id: id,
+            post_id: item.id,
+            politician_id: item.instagram_id,
             ownerUsername: comment.ownerUsername,
             timestamp: comment.timestamp,
             likeCount: comment.likesCount,
@@ -273,7 +274,7 @@ export class AwsNotificationProductionRepository
 
     const formattedData = response.map((item: any) => {
       return {
-        user_id: item.instagram_id,
+        politician_id: item.instagram_id,
         followers: item.followersCount,
         follows: item.followsCount,
         posts_count: item.postsCount,
@@ -388,5 +389,65 @@ export class AwsNotificationProductionRepository
     });
 
     return formattedData;
+  }
+
+  async S3FacebookAdsNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const advertisingData: any = [];
+    const deliveryRegionData: any = [];
+    const demographicDistributionData: any = [];
+
+    response.forEach((element: any) => {
+      element.data.forEach((item: any) => {
+        advertisingData.push({
+          id: item.id,
+          politician_id: element.Meta_id,
+          ad_creation_time: moment(item.ad_creation_time).toDate(),
+          ad_delivery_stop_time: moment(item.ad_delivery_stop_time).toDate(),
+          ad_delivery_start_time: moment(item.ad_delivery_start_time).toDate(),
+          ad_snapshot_url: item.ad_snapshot_url,
+          currency: item.currency,
+          page_name: item.page_name,
+          bylines: item.bylines,
+          spend_lower_bound: item.spend.lower_bound,
+          spend_upper_bound: item.spend.upper_bound,
+          impressions_lower_bound: item.impressions.lower_bound,
+          impressions_upper_bound: item.impressions.upper_bound,
+        });
+
+        item.delivery_by_region.forEach((region: any) => {
+          deliveryRegionData.push({
+            region: region.region,
+            advertising_id: item.id,
+            percentage: region.percentage,
+          });
+        });
+
+        item.demographic_distribution.forEach((distribution: any) => {
+          demographicDistributionData.push({
+            advertising_id: item.id,
+            age: distribution.age,
+            gender: distribution.gender,
+            percentage: distribution.percentage,
+          });
+        });
+      });
+    });
+
+    return {
+      advertisingData,
+      deliveryRegionData,
+      demographicDistributionData,
+    };
   }
 }

@@ -6,7 +6,7 @@ export class PrismaInstagramBaseDataRepository
 {
   async createMany(
     data: {
-      user_id: string;
+      politician_id: string;
       followers: number;
       follows: number;
       posts_count: number;

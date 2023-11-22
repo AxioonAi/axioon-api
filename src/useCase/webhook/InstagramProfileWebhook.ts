@@ -28,6 +28,7 @@ export class InstagramProfileWebhookUseCase {
       });
 
     await this.instagramBaseDataRepository.createMany(data);
+
     return data;
   }
 }

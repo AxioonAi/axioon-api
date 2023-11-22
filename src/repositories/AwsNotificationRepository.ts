@@ -62,10 +62,12 @@ export interface S3InstagramCommentsNotificationResponse {
     playCount: number;
     postId: string;
     query: string;
-    user_id: string;
+    politician_id: string;
   }[];
   commentData: {
     text: string;
+    id: string;
+    politician_id: string;
     ownerProfilePicUrl: string;
     post_id: string;
     ownerUsername: string;
@@ -103,7 +105,7 @@ export interface S3InstagramMentionsNotificationResponse {
 }
 
 interface InstagramBaseDataNotificationResponse {
-  user_id: string;
+  politician_id: string;
   followers: number;
   follows: number;
   posts_count: number;
@@ -142,4 +144,5 @@ export interface AwsNotificationRepository {
   ): Promise<InstagramBaseDataNotificationResponse[]>;
   S3TiktokProfileNotification(data: S3NotificationInterface): Promise<any>;
   S3FacebookPostNotification(data: S3NotificationInterface): Promise<any>;
+  S3FacebookAdsNotification(data: S3NotificationInterface): Promise<any>;
 }

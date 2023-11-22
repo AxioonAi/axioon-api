@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+import { facebookAdsWebhookController } from "./facebookAdsWebhook";
 import { facebookPostsWebhookController } from "./facebookPostsWebhook";
 import { facebookProfileWebhookController } from "./facebookProfileWebhook";
 import { instagramCommentsWebhookController } from "./instagramCommentsWebhook";
@@ -15,4 +16,5 @@ export async function webhookRoutes(app: FastifyInstance) {
   app.post("/webhook/instagram/mentions", instagramMentionsWebhookController);
   app.post("/webhook/tiktok", tiktokProfileWebhookController);
   app.post("/webhook/facebook/posts", facebookPostsWebhookController);
+  app.post("/webhook/facebook/ads", facebookAdsWebhookController);
 }

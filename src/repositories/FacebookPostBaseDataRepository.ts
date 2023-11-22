@@ -17,4 +17,9 @@ export interface FacebookPostBaseDataRepository {
     startDate: Date;
     endDate: Date;
   }): Promise<any>;
+  findHomeData(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any>;
 }

@@ -15,4 +15,9 @@ export interface YoutubeVideoDataRepository {
       }[];
     }[]
   ): Promise<void>;
+  findHomeData(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any>;
 }
