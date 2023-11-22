@@ -92,6 +92,7 @@ model PoliticianProfile {
   politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
 
   news NewsUsers[]
+  facebookPosts FacebookPostBaseData[]
   user PoliticianProfileMonitoring[]
   ticktokData TiktokBaseData[]
   twitterData TwitterBaseData[]
@@ -187,7 +188,7 @@ model YoutubeBaseData {
 
 model YoutubeVideoData {
   id String @unique @default(uuid())
-  title String
+  title String 
   url String
   duration String
   viewCount Int
@@ -203,11 +204,25 @@ model YoutubeVideoData {
 
 model FacebookBaseData {
   id String @unique @default(uuid())
+  title String
   likes_count Int
   followers_count Int
   start_of_period DateTime
   end_of_period DateTime
   created_at DateTime @default(now())
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+}
+
+model FacebookPostBaseData {
+  id String @unique @default(uuid())
+  url String
+  text String
+  date DateTime
+  like Int
+  comments Int
+  shares Int
+  thumbnail String
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
