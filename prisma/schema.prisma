@@ -92,17 +92,20 @@ model PoliticianProfile {
   politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
 
   news NewsUsers[]
-  facebookPosts FacebookPostBaseData[]
-  user PoliticianProfileMonitoring[]
   ticktokData TiktokBaseData[]
   twitterData TwitterBaseData[]
   instagramPosts InstagramPost[]
   facebookData FacebookBaseData[]
+  advertising MetaAdvertisingLib[]
   instagramData InstagramBaseData[]
   youtubeBaseData YoutubeBaseData[]
   tiktokVideoData TiktokVideoData[]
+  user PoliticianProfileMonitoring[]
   instagramMention InstagramMention[]
   youtubeVideoData YoutubeVideoData[]
+  facebookPosts FacebookPostBaseData[]
+  instagramPostComments InstagramPostComment[]
+  instagramMentionComments InstagramMentionComment[]
 }
 
 model PoliticianProfileMonitoring {
@@ -273,7 +276,10 @@ model InstagramPostComment {
   timestamp DateTime
   likeCount Int
   post_id String
+  politician_id String
+  sentimentAnalysis Float
   post InstagramPost @relation(references: [id], fields: [post_id])
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model InstagramMention {
@@ -291,6 +297,7 @@ model InstagramMention {
   ownerFullName String
   ownerUsername String
   politician_id String
+  sentimentAnalysis Float
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   comments InstagramMentionComment[]
 }
@@ -303,6 +310,9 @@ model InstagramMentionComment {
   timestamp DateTime
   likeCount Int
   post_id String
+  sentimentAnalysis Float
+  politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   post InstagramMention @relation(references: [id], fields: [post_id])
 }
 
@@ -476,9 +486,9 @@ model NewsUsers {
 
 model MetaAdvertisingLib {
   id String @unique @default(uuid())
-  user_id String
+  politician_id String
   impressions_lower_bound String
-  inpressions_upper_bound String
+  impressions_upper_bound String
   spend_lower_bound String
   spend_upper_bound String
   currency String
@@ -488,6 +498,8 @@ model MetaAdvertisingLib {
   ad_delivery_start_time DateTime
   ad_delivery_stop_time DateTime
   ad_creation_time DateTime
+
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   deliveryByRegion MetaAdvertisingLibDeliveryByRegion[]
   demographicDistribution MetaAdvertisingLibDemographicDistribution[]
 }
