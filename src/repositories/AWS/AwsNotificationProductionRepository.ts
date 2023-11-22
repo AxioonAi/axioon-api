@@ -1,5 +1,4 @@
 import axios from "axios";
-import { randomUUID } from "crypto";
 import moment from "moment";
 import {
   AwsNotificationRepository,
@@ -222,10 +221,9 @@ export class AwsNotificationProductionRepository
     const commentData: any[] = [];
 
     response.forEach((item: any) => {
-      const id = randomUUID();
       if (item.instagram_id) {
         mentionData.push({
-          id,
+          id: item.id,
           postUrl: item.url,
           description: item.caption,
           commentCount: item.commentsCount,
@@ -236,16 +234,18 @@ export class AwsNotificationProductionRepository
           username: item.ownerUsername,
           imgUrl: item.displayUrl,
           postId: item.id,
-          user_id: item.instagram_id,
+          politician_id: item.instagram_id,
           ownerFullName: item.ownerFullName,
           ownerUsername: item.ownerUsername,
         });
 
         item.latestComments.forEach((comment: any) => {
           commentData.push({
+            id: comment.id,
             text: comment.text,
             ownerProfilePicUrl: comment.ownerProfilePicUrl,
-            post_id: id,
+            post_id: item.id,
+            politician_id: item.instagram_id,
             ownerUsername: comment.ownerUsername,
             timestamp: comment.timestamp,
             likeCount: comment.likesCount,

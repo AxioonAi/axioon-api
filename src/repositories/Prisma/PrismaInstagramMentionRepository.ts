@@ -6,6 +6,7 @@ export class PrismaInstagramMentionRepository
 {
   async createMany(
     data: {
+      id: string;
       postUrl: string;
       description: string;
       commentCount: number;
@@ -15,33 +16,49 @@ export class PrismaInstagramMentionRepository
       username: string;
       imgUrl: string;
       postId: string;
-      user_id: string;
+      politician_id: string;
       playCount: number;
       ownerFullName: string;
       ownerUsername: string;
     }[]
   ) {
-    // for (let i = 0; i < 13; i++) {
-    //   await prisma.instagramPost.create({
-    //     data: {
-    //       postUrl: data[i].postUrl,
-    //       description: data[i].description,
-    //       commentCount: data[i].commentCount,
-    //       likeCount: data[i].likeCount,
-    //       pubDate: data[i].pubDate,
-    //       viewCount: data[i].viewCount,
-    //       username: data[i].username,
-    //       imgUrl: data[i].imgUrl,
-    //       postId: data[i].postId,
-    //       user_id: data[i].user_id,
-    //       playCount: data[i].playCount,
-    //     },
-    //   });
-    // }
+    const idExists = data.map((item) => item.id);
 
-    await prisma.instagramMention.createMany({
-      data,
+    const mentionExists = await prisma.instagramMention.findMany({
+      where: {
+        id: {
+          in: idExists,
+        },
+      },
     });
-    return;
+
+    const createData: any[] = [];
+    const updateData: any[] = [];
+
+    data.forEach((item) => {
+      if (!mentionExists.find((mention) => mention.id === item.id)) {
+        createData.push({
+          ...item,
+          sentimentAnalysis: Math.floor(Math.random() * (100 - 1000) + 100),
+        });
+      } else {
+        updateData.push({
+          ...item,
+          sentimentAnalysis: Math.floor(Math.random() * (1000 - 100) + 100),
+        });
+      }
+    });
+
+    await prisma.$transaction([
+      prisma.instagramMention.createMany({ data: createData }),
+      ...updateData.map((update) =>
+        prisma.instagramMention.update({
+          where: {
+            id: update.id,
+          },
+          data: update,
+        })
+      ),
+    ]);
   }
 }

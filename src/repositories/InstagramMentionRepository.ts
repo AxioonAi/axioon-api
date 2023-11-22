@@ -1,6 +1,7 @@
 export interface InstagramMentionRepository {
   createMany(
     data: {
+      id: string;
       postUrl: string;
       description: string;
       commentCount: number;
@@ -10,7 +11,7 @@ export interface InstagramMentionRepository {
       username: string;
       imgUrl: string;
       postId: string;
-      user_id: string;
+      politician_id: string;
       playCount: number;
       ownerFullName: string;
       ownerUsername: string;
