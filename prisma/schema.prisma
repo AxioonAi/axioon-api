@@ -316,32 +316,7 @@ model InstagramMentionComment {
   post InstagramMention @relation(references: [id], fields: [post_id])
 }
 
-model Website {
-  id String @unique @default(uuid())
-  name String
-  url String
-  cities WebsiteCity[]
-}
 
-model WebsiteCity {
-  id String @unique @default(uuid())
-  website_id String
-  city_id String
-  city City @relation(references: [id], fields: [city_id])
-  website Website @relation(references: [id], fields: [website_id])
-
-}
-
-model City {
-  id String @unique @default(uuid())
-  name String
-  state String
-  politician PoliticianProfile[]
-  websites WebsiteCity[]
-  IBGEData CityIBGEData[]
-  electorate CityElectorateData[]
-  pollingPlace CityPollingPlace[]
-}
 
 model CityIBGEData {
   id String @unique @default(uuid())
@@ -519,4 +494,23 @@ model MetaAdvertisingLibDeliveryByRegion {
   region String
   advertising_id String
   advertising MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
+}
+
+model Website {
+  id String @unique @default(uuid())
+  name String
+  url String
+  state_capital_id String
+  city City @relation(references: [id], fields: [state_capital_id])
+}
+
+model City {
+  id String @unique @default(uuid())
+  name String
+  state String
+  politician PoliticianProfile[]
+  IBGEData CityIBGEData[]
+  website Website[]
+  electorate CityElectorateData[]
+  pollingPlace CityPollingPlace[]
 }
