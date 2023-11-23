@@ -140,4 +140,13 @@ export class PrismaPoliticianProfileRepository
       },
     });
   }
+  async findByState(state: string) {
+    return await prisma.politicianProfile.findMany({
+      where: {
+        city: {
+          state: state,
+        },
+      },
+    });
+  }
 }

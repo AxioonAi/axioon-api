@@ -33,8 +33,6 @@ export class PrismaNewsRepository implements NewsRepository {
       data: createData,
     });
 
-    console.log(createUserData);
-
     await prisma.newsUsers.createMany({
       data: createUserData,
     });

@@ -55,6 +55,7 @@ export interface PoliticianProfileRepository {
   findInstagramList(): Promise<UserInstagramInterface[]>;
   findTikTokList(): Promise<UserTikTokInterface[]>;
   findFacebookList(): Promise<UserFacebookInterface[]>;
+  findByState(state: string): Promise<PoliticianProfile[]>;
   findYoutubeDetails(data: {
     id: string;
     startDate: Date;

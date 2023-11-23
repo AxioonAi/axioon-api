@@ -1,6 +1,9 @@
-import { Prisma, Website } from "@prisma/client";
+import { City, Website } from "@prisma/client";
+
+interface websiteWithCity extends Website {
+  city: City;
+}
 
 export interface WebSiteRepository {
-  findById(id: string): Promise<Website>;
-  create(data: Prisma.WebsiteCreateInput): Promise<Website>;
+  findById(id: string): Promise<websiteWithCity | null>;
 }
