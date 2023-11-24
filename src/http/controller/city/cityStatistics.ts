@@ -7,6 +7,7 @@ export const cityStatisticsController = async (
 ) => {
   try {
     const cityStatisticsUseCase = makeCityStatistics();
+    console.log(request.user.sub);
 
     const { city } = await cityStatisticsUseCase.execute({
       userId: request.user.sub,

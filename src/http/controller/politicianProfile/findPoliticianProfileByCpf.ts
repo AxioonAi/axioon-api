@@ -7,7 +7,6 @@ export const findPoliticianProfileByCpfController = async (
   reply: FastifyReply
 ) => {
   const { id } = ZodIdParamsSchema.parse(request.params);
-  console.log(id);
   try {
     const findPoliticianProfileByCpf = makeFindPoliticianProfileByCpf();
 
