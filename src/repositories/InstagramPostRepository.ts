@@ -16,5 +16,10 @@ export interface InstagramPostRepository {
       playCount: number;
     }[]
   ): Promise<any>;
+  findDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any>;
   // findByUserId(id: string): Promise<InstagramPost[]>;
 }

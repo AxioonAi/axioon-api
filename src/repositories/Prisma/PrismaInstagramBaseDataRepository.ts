@@ -25,4 +25,16 @@ export class PrismaInstagramBaseDataRepository
       data,
     });
   }
+
+  async findDetails(data: { id: string; startDate: Date; endDate: Date }) {
+    return await prisma.instagramBaseData.findFirst({
+      where: {
+        politician_id: data.id,
+        start_of_period: {
+          gte: data.startDate,
+          lte: data.endDate,
+        },
+      },
+    });
+  }
 }

@@ -17,4 +17,9 @@ export interface InstagramMentionRepository {
       ownerUsername: string;
     }[]
   ): Promise<any>;
+  findDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any>;
 }

@@ -16,4 +16,9 @@ export interface InstagramBaseDataRepository {
       end_of_period: Date;
     }[]
   ): Promise<any>;
+  findDetails(data: {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+  }): Promise<any>;
 }

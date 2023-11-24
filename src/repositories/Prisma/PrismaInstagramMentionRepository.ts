@@ -61,4 +61,19 @@ export class PrismaInstagramMentionRepository
       ),
     ]);
   }
+
+  async findDetails(data: { id: string; startDate: Date; endDate: Date }) {
+    return await prisma.instagramMention.findMany({
+      where: {
+        politician_id: data.id,
+        pubDate: {
+          gte: data.startDate,
+          lte: data.endDate,
+        },
+      },
+      include: {
+        comments: true,
+      },
+    });
+  }
 }

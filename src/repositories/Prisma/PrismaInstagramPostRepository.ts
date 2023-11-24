@@ -50,4 +50,19 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
     ]);
     return;
   }
+
+  async findDetails(data: { id: string; startDate: Date; endDate: Date }) {
+    return await prisma.instagramPost.findMany({
+      where: {
+        politician_id: data.id,
+        pubDate: {
+          gte: data.startDate,
+          lte: data.endDate,
+        },
+      },
+      include: {
+        comments: true,
+      },
+    });
+  }
 }
