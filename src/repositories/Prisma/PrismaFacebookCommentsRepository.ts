@@ -1,32 +1,22 @@
 import { prisma } from "@/lib/prisma";
-import { InstagramPostCommentRepository } from "../InstagramPostCommentRepository";
+import { FacebookPostCommentsRepository } from "../FacebookPostCommentsRepository";
 
-export class PrismaInstagramCommentRepository
-  implements InstagramPostCommentRepository
+export class PrismaFacebookCommentsRepository
+  implements FacebookPostCommentsRepository
 {
-  async createMany(
-    data: {
-      id: string;
-      text: string;
-      ownerProfilePicUrl: string;
-      post_id: string;
-      ownerUsername: string;
-      timestamp: string;
-      likeCount: number;
-    }[]
-  ) {
-    const idExists = data.map((item) => item.id);
+  async createMany(data: any[]): Promise<any> {
     const postId = data.map((item) => item.post_id);
+    const idExists = data.map((item) => item.id);
 
     const [postExists, commentExists] = await Promise.all([
-      prisma.instagramPost.findMany({
+      prisma.facebookPostBaseData.findMany({
         where: {
           id: {
             in: postId,
           },
         },
       }),
-      prisma.instagramPostComment.findMany({
+      prisma.facebookPostComments.findMany({
         where: {
           id: {
             in: idExists,
@@ -55,9 +45,9 @@ export class PrismaInstagramCommentRepository
     });
 
     await prisma.$transaction([
-      prisma.instagramPostComment.createMany({ data: createData }),
+      prisma.facebookPostComments.createMany({ data: createData }),
       ...updateData.map((update: any) =>
-        prisma.instagramPostComment.update({
+        prisma.facebookPostComments.update({
           where: {
             id: update.id,
           },
@@ -65,6 +55,7 @@ export class PrismaInstagramCommentRepository
         })
       ),
     ]);
+
     return;
   }
 }

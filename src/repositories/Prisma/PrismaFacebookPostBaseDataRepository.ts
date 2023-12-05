@@ -54,17 +54,13 @@ export class PrismaFacebookPostBaseDataRepository
     return;
   }
 
-  async findDetails(data: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-  }): Promise<any> {
+  async findDetails(data: { id: string; period: number }): Promise<any> {
     return await prisma.facebookPostBaseData.findMany({
       where: {
         politician_id: data.id,
         date: {
-          gte: data.startDate,
-          lte: data.endDate,
+          gte: moment().subtract(data.period, "day").toDate(),
+          lte: moment().toDate(),
         },
       },
     });

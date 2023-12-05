@@ -1,4 +1,4 @@
-import { AwsNotificationProductionRepository } from "@/repositories/AWS/AwsNotificationProductionRepository";
+import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
 import { YoutubeBaseDataRepository } from "@/repositories/YoutubeBaseDataRepository";
 import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepository";
 
@@ -16,7 +16,7 @@ interface YoutubeWebhookUseCaseResponse {}
 
 export class YoutubeWebhookUseCase {
   constructor(
-    private awsNotificationRepository: AwsNotificationProductionRepository,
+    private awsNotificationRepository: AwsNotificationRepository,
     private youtubeBaseDataRepository: YoutubeBaseDataRepository,
     private youtubeVideoBaseDataRepository: YoutubeVideoDataRepository
   ) {}
@@ -24,14 +24,12 @@ export class YoutubeWebhookUseCase {
   async execute({
     records,
   }: YoutubeWebhookUseCaseRequest): Promise<YoutubeWebhookUseCaseResponse> {
-    const data = await this.awsNotificationRepository.S3YoutubeNotification({
-      records,
-    });
+    const data =
+      await this.awsNotificationRepository.S3YoutubeVideoNotification({
+        records,
+      });
 
-    await Promise.all([
-      this.youtubeBaseDataRepository.createMany(data),
-      this.youtubeVideoBaseDataRepository.createMany(data),
-    ]);
+    await this.youtubeVideoBaseDataRepository.createMany(data);
 
     return {};
   }

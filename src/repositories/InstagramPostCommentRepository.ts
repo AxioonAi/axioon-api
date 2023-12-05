@@ -8,7 +8,6 @@ export interface InstagramPostCommentRepository {
       ownerUsername: string;
       timestamp: string;
       likeCount: number;
-      politician_id: string;
     }[]
   ): Promise<void>;
 }

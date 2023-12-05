@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import moment from "moment";
 import { FacebookBaseDataRepository } from "../FacebookBaseDataRepository";
 
 export class PrismaFacebookBaseDataRepository
@@ -21,13 +22,13 @@ export class PrismaFacebookBaseDataRepository
     return;
   }
 
-  async findDetails(data: { id: string; startDate: Date; endDate: Date }) {
+  async findDetails(data: { id: string; period: number }) {
     return await prisma.facebookBaseData.findFirst({
       where: {
         politician_id: data.id,
         start_of_period: {
-          gte: data.startDate,
-          lte: data.endDate,
+          gte: moment().subtract(data.period, "days").toDate(),
+          lte: moment().toDate(),
         },
       },
       orderBy: {

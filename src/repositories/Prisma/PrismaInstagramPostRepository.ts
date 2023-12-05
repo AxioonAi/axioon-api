@@ -37,6 +37,9 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
       }
     });
 
+    console.log(createData.length);
+    console.log(updateData.length);
+
     await prisma.$transaction([
       prisma.instagramPost.createMany({ data: createData }),
       ...updateData.map((update: any) =>
@@ -48,6 +51,8 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
         })
       ),
     ]);
+
+    console.log("saiu");
     return;
   }
 

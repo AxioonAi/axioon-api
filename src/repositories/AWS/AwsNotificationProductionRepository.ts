@@ -8,6 +8,107 @@ import {
 export class AwsNotificationProductionRepository
   implements AwsNotificationRepository
 {
+  async S3YoutubeCommentsNotification(
+    data: S3NotificationInterface
+  ): Promise<any> {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData: any = [];
+    response.forEach((item: any) => {
+      if (item.comment) {
+        formattedData.push({
+          id: item.cid,
+          video_id: item.videoId,
+          text: item.comment,
+          likeCount: item.voteCount ? item.voteCount : 0,
+          replyCount: item.replyCount ? item.replyCount : 0,
+          author: item.author,
+        });
+      }
+    });
+
+    return formattedData.filter((item: any) => {
+      for (const chave in item) {
+        if (item[chave] === null) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  async S3TiktokCommentsNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData: any = [];
+
+    response.forEach((item: any) => {
+      if (item.text && item.cid) {
+        formattedData.push({
+          id: item.cid,
+          video_id: item.submittedVideoUrl.split("/").pop(),
+          text: item.comment,
+          diggCount: item.diggCount,
+          date: item.createTimeISO,
+          replyCount: item.replyCommentTotal,
+          author: item.uniqueId,
+        });
+      }
+    });
+
+    return formattedData;
+  }
+
+  async S3InstagramPostNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData = response.map((item: any) => {
+      return {
+        id: item.id,
+        postUrl: item.url,
+        description: item.caption,
+        commentCount: item.commentsCount,
+        likeCount: item.likesCount,
+        pubDate: item.timestamp,
+        viewCount: item.type === "Video" ? item.videoViewCount : 0,
+        playCount: item.type === "Video" ? item.videoPlayCount : 0,
+        username: item.ownerUsername,
+        imgUrl: item.displayUrl,
+        postId: item.id,
+        politician_id: item.instagram_id,
+      };
+    });
+
+    return formattedData.filter((item) => item.politician_id);
+  }
+
   async S3NewsNotification(data: S3NotificationInterface) {
     const response = await axios
       .get(
@@ -51,7 +152,7 @@ export class AwsNotificationProductionRepository
     return response;
   }
 
-  async S3YoutubeNotification(data: S3NotificationInterface) {
+  async S3YoutubeVideoNotification(data: S3NotificationInterface) {
     const response = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
@@ -68,61 +169,23 @@ export class AwsNotificationProductionRepository
       return item;
     });
 
-    const formattedData: any = {};
-
-    for (const key in dateFilter) {
-      if (!formattedData[dateFilter[key].channel_id]) {
-        formattedData[dateFilter[key].channel_id] = {
-          videos: [],
-          channelData: {
-            channelName: dateFilter[key].channelName,
-            channelUrl: dateFilter[key].channelUrl,
-            channelDescription: dateFilter[key].channelDescription,
-            channelTotalVideos: dateFilter[key].channelTotalVideos,
-            channelTotalViews: dateFilter[key].channelTotalViews,
-            channelTotalSubscribers: dateFilter[key].channelTotalSubscribers,
-            date: moment().toDate(),
-          },
-        };
-      }
-      formattedData[dateFilter[key].channel_id] = {
-        videos: [
-          ...formattedData[dateFilter[key].channel_id].videos,
-          {
-            id: dateFilter[key].id,
-            title: dateFilter[key].title,
-            url: dateFilter[key].url,
-            duration: dateFilter[key].duration,
-            viewCount: dateFilter[key].viewCount,
-            commentsCount: dateFilter[key].commentsCount,
-            likes: dateFilter[key].likes,
-            date: moment(dateFilter[key].date.replace("~", "")).toDate(),
-            description: dateFilter[key].text,
-            imgUrl: dateFilter[key].thumbnailUrl,
-          },
-        ],
-        channelData: {
-          channelName: dateFilter[key].channelName,
-          channelTotalVideos: dateFilter[key].channelTotalVideos,
-          channelTotalSubscribers: dateFilter[key].numberOfSubscribers,
-          date: moment().toDate(),
-        },
+    const formattedData = response.map((item: any) => {
+      return {
+        id: item.id,
+        title: item.title,
+        url: item.url,
+        duration: item.duration,
+        viewCount: item.viewCount,
+        commentsCount: item.commentsCount,
+        likes: item.likes ? item.likes : 0,
+        date: moment(item.date.replace("~", "")).toDate(),
+        description: item.text,
+        imgUrl: item.thumbnailUrl,
+        politician_id: item.channel_id,
       };
-    }
+    });
 
-    const arrayDeObjetos = [];
-
-    for (const chave in formattedData) {
-      if (formattedData.hasOwnProperty(chave)) {
-        arrayDeObjetos.push({
-          id: chave,
-          videos: formattedData[chave].videos,
-          channelData: formattedData[chave].channelData,
-        });
-      }
-    }
-
-    return arrayDeObjetos;
+    return formattedData;
   }
   async S3FacebookProfileNotification(data: S3NotificationInterface) {
     const response = await axios
@@ -139,14 +202,16 @@ export class AwsNotificationProductionRepository
     const formattedData: any[] = [];
 
     response.forEach((item: any) => {
-      formattedData.push({
-        politician_id: item.facebook_id,
-        title: item.title,
-        likes_count: item.likes,
-        followers_count: item.followers,
-        start_of_period: moment().clone().weekday(1).toDate(),
-        end_of_period: moment().clone().weekday(5).toDate(),
-      });
+      if (item.likes) {
+        formattedData.push({
+          politician_id: item.facebook_id,
+          title: item.title,
+          likes_count: item.likes,
+          followers_count: item.followers,
+          start_of_period: moment().clone().weekday(1).toDate(),
+          end_of_period: moment().clone().weekday(5).toDate(),
+        });
+      }
     });
 
     return formattedData;
@@ -164,45 +229,22 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const postData: any[] = [];
     const commentData: any[] = [];
 
     response.forEach((item: any) => {
-      if (item.instagram_id) {
-        postData.push({
-          id: item.id,
-          postUrl: item.url,
-          description: item.caption,
-          commentCount: item.commentsCount,
-          likeCount: item.likesCount,
-          pubDate: item.timestamp,
-          viewCount: item.type === "video" ? item.videoViewCount : 0,
-          playCount: item.type === "video" ? item.videoPlayCount : 0,
-          username: item.ownerUsername,
-          imgUrl: item.displayUrl,
-          postId: item.id,
-          politician_id: item.instagram_id,
-        });
-
-        item.latestComments.forEach((comment: any) => {
-          commentData.push({
-            id: comment.id,
-            text: comment.text,
-            ownerProfilePicUrl: comment.ownerProfilePicUrl,
-            post_id: item.id,
-            politician_id: item.instagram_id,
-            ownerUsername: comment.ownerUsername,
-            timestamp: comment.timestamp,
-            likeCount: comment.likesCount,
-          });
-        });
-      }
+      commentData.push({
+        id: item.id,
+        text: item.text,
+        ownerProfilePicUrl: item.ownerProfilePicUrl,
+        post_id: item.postUrl.replace("https://www.instagram.com/p/", ""),
+        politician_id: item.instagram_id,
+        ownerUsername: item.ownerUsername,
+        timestamp: item.timestamp,
+        likeCount: item.likesCount,
+      });
     });
 
-    return {
-      postData,
-      commentData,
-    };
+    return commentData;
   }
 
   async S3InstagramMentionsNotification(data: S3NotificationInterface) {
@@ -449,5 +491,63 @@ export class AwsNotificationProductionRepository
       deliveryRegionData,
       demographicDistributionData,
     };
+  }
+
+  async S3FacebookCommentsNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData = response.map((item: any) => {
+      return {
+        id: item.id,
+        postUrl: item.facebookUrl,
+        text: item.text,
+        likeCount: item.likesCount,
+        date: item.date,
+        username: item.profileName,
+        post_id: item.facebookId,
+      };
+    });
+
+    return formattedData;
+  }
+
+  async S3YoutubeChannelNotification(data: S3NotificationInterface) {
+    const response = await axios
+      .get(
+        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+      )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const formattedData = response.map((item: any) => {
+      return {
+        id: item.id,
+        channel_name: item.channelName,
+        channel_total_views: parseFloat(
+          item.channelTotalViews.replace(",", "")
+        ),
+        channel_total_subs: item.numberOfSubscribers
+          ? item.numberOfSubscribers
+          : 0,
+        channel_total_videos: item.channelTotalVideos,
+        date: moment().toDate(),
+        politician_id: item.channel_id,
+      };
+    });
+
+    return formattedData;
   }
 }

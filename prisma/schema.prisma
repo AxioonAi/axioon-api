@@ -100,10 +100,13 @@ model PoliticianProfile {
   instagramData InstagramBaseData[]
   youtubeBaseData YoutubeBaseData[]
   tiktokVideoData TiktokVideoData[]
+  tiktokComments TiktokCommentData[]
   user PoliticianProfileMonitoring[]
   instagramMention InstagramMention[]
   youtubeVideoData YoutubeVideoData[]
   facebookPosts FacebookPostBaseData[]
+  youtubeCommentData YoutubeCommentData[]
+  facebookPostComments FacebookPostComments[]
   instagramPostComments InstagramPostComment[]
   instagramMentionComments InstagramMentionComment[]
 }
@@ -151,6 +154,20 @@ model TiktokBaseData {
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
+model FacebookPostComments {
+  id String @unique @default(uuid())
+  postUrl String
+  text String
+  likeCount Int
+  date DateTime
+  username String
+  post_id String
+  politician_id String
+  sentimentAnalysis Float
+  post FacebookPostBaseData @relation(references: [id], fields: [post_id])
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+}
+
 model TiktokVideoData {
   id String @unique @default(uuid())
   text String
@@ -161,6 +178,20 @@ model TiktokVideoData {
   date DateTime
   url String
   politician_id String
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  comments TiktokCommentData[]
+}
+
+model TiktokCommentData {
+  id String @unique @default(uuid())
+  diggCount Int
+  date DateTime
+  replyCount Int
+  author String
+  video_id String
+  politician_id String
+  sentimentAnalysis Int
+  video TiktokVideoData @relation(references: [id], fields: [video_id])
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
@@ -184,6 +215,7 @@ model YoutubeBaseData {
   channel_name String
   channel_total_videos Int
   channel_total_subs Int
+  channel_total_views Int @default(0)
   date DateTime
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
@@ -203,6 +235,20 @@ model YoutubeVideoData {
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   created_at DateTime @default(now())
+  comment YoutubeCommentData[]
+}
+
+model YoutubeCommentData {
+  id String @unique @default(uuid())
+  text String
+  likeCount Int
+  replyCount Int
+  author String
+  video_id String
+  politician_id String
+  sentimentAnalysis Int
+  video YoutubeVideoData @relation(references: [id], fields: [video_id])
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model FacebookBaseData {
@@ -228,6 +274,7 @@ model FacebookPostBaseData {
   thumbnail String
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  comment_list FacebookPostComments[]
 }
 
 model PoliticalGroup {

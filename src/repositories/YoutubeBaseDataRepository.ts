@@ -1,12 +1,11 @@
 export interface createManyYoutubeBaseDataInterface {
+  channel_name: string;
+  channel_total_views: number;
+  channel_total_subs: number;
+  channel_total_videos: number;
+  date: Date;
   id: string;
-  channelData: {
-    channelName: string;
-    channelTotalViews: number;
-    channelTotalSubscribers: number;
-    channelTotalVideos: number;
-    date: Date;
-  };
+  politician_id: string;
 }
 
 export interface YoutubeBaseDataRepository {

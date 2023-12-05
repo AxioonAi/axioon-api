@@ -8,42 +8,19 @@ export class PrismaYoutubeVideoDataRepository
   async createMany(
     data: {
       id: string;
-      videos: {
-        id: string;
-        title: string;
-        description: string;
-        url: string;
-        duration: string;
-        date: Date;
-        imgUrl: string;
-        viewCount: number;
-        commentsCount: number;
-        likes: number;
-      }[];
+      title: string;
+      description: string;
+      url: string;
+      duration: string;
+      date: Date;
+      imgUrl: string;
+      viewCount: number;
+      commentsCount: number;
+      likes: number;
     }[]
   ) {
-    const createData: any[] = [];
-
-    data.forEach((item) => {
-      item.videos.forEach((video) => {
-        createData.push({
-          id: video.id,
-          politician_id: item.id,
-          title: video.title,
-          description: video.description,
-          url: video.url,
-          duration: video.duration,
-          date: video.date,
-          imgUrl: video.imgUrl,
-          viewCount: video.viewCount,
-          commentsCount: video.commentsCount,
-          likes: video.likes,
-          created_at: new Date(),
-        });
-      });
-    });
-
-    const idExists = createData.map((item) => item.id);
+    console.log(data);
+    const idExists = data.map((item) => item.id);
 
     const videoExists = await prisma.youtubeVideoData.findMany({
       where: {
@@ -56,7 +33,7 @@ export class PrismaYoutubeVideoDataRepository
     const createVideoData: any = [];
     const updateVideoData: any = [];
 
-    createData.forEach((item) => {
+    data.forEach((item) => {
       if (!videoExists.find((video) => video.id === item.id)) {
         createVideoData.push(item);
       } else {

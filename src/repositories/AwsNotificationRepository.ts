@@ -127,22 +127,23 @@ export interface AwsNotificationRepository {
   S3MetaAdvertisingNotification(
     data: S3NotificationInterface
   ): Promise<S3NewsNotificationResponseRepository[]>;
-  S3YoutubeNotification(
-    data: S3NotificationInterface
-  ): Promise<S3YoutubeNotificationResponse[]>;
   S3FacebookProfileNotification(
     data: S3NotificationInterface
   ): Promise<S3FacebookProfileNotificationResponse[]>;
-  S3InstagramCommentsNotification(
-    data: S3NotificationInterface
-  ): Promise<S3InstagramCommentsNotificationResponse>;
   S3InstagramMentionsNotification(
     data: S3NotificationInterface
   ): Promise<S3InstagramMentionsNotificationResponse>;
   S3InstagramProfileNotification(
     data: S3NotificationInterface
   ): Promise<InstagramBaseDataNotificationResponse[]>;
+  S3InstagramCommentsNotification(data: S3NotificationInterface): Promise<any>;
+  S3YoutubeVideoNotification(data: S3NotificationInterface): Promise<any[]>;
   S3TiktokProfileNotification(data: S3NotificationInterface): Promise<any>;
   S3FacebookPostNotification(data: S3NotificationInterface): Promise<any>;
   S3FacebookAdsNotification(data: S3NotificationInterface): Promise<any>;
+  S3FacebookCommentsNotification(data: S3NotificationInterface): Promise<any>;
+  S3YoutubeChannelNotification(data: S3NotificationInterface): Promise<any>;
+  S3YoutubeCommentsNotification(data: S3NotificationInterface): Promise<any>;
+  S3TiktokCommentsNotification(data: S3NotificationInterface): Promise<any>;
+  S3InstagramPostNotification(data: S3NotificationInterface): Promise<any>;
 }

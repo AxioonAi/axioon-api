@@ -9,9 +9,5 @@ export interface FacebookBaseDataRepository {
       end_of_period: Date;
     }[]
   ): Promise<void>;
-  findDetails(data: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-  }): Promise<any>;
+  findDetails(data: { id: string; period: number }): Promise<any>;
 }
