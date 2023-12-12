@@ -24,11 +24,11 @@ jobs:
           cache: "npm"
       - run: rm -rf node_modules
       - run: yarn
-      - run: yarn prisma migrate deploy
-      - run: yarn build
       - run: |
           touch .env
           echo "${{secrets.PROD_ENV_FILE}}" > .env
+      - run: yarn prisma migrate deploy
+      - run: yarn build
       - run: pm2 stop server
       - run: pm2 delete server
       - run: pm2 start /build/server.js --name server
