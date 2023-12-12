@@ -29,7 +29,7 @@ jobs:
           echo "${{secrets.PROD_ENV_FILE}}" > .env
       - run: yarn prisma migrate deploy
       - run: yarn build
-      - run: pm2 stop server
-      - run: pm2 delete server
+      - run: pm2 stop all
+      - run: pm2 delete all
       - run: pm2 start /build/server.js --name server
       - run: pm2 save
