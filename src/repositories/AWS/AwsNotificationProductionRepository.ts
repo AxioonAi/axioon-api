@@ -1,3 +1,28 @@
+import {
+  AwsNotificationFacebookCommentsAwsDataInterface,
+  AwsNotificationFacebookCommentsResponseInterface,
+  AwsNotificationFacebookPostAwsDataInterface,
+  AwsNotificationFacebookPostResponseInterface,
+  AwsNotificationFacebookProfileAwsDataInterface,
+  AwsNotificationFacebookProfileResponseInterface,
+  AwsNotificationInstagramCommentsAwsDataInterface,
+  AwsNotificationInstagramCommentsResponseInterface,
+  AwsNotificationInstagramPostAwsDataInterface,
+  AwsNotificationInstagramPostResponseInterface,
+  AwsNotificationInstagramProfileAwsDataInterface,
+  AwsNotificationInstagramProfileResponseInterface,
+  AwsNotificationTiktokCommentsAwsDataInterface,
+  AwsNotificationTiktokCommentsResponseInterface,
+  AwsNotificationTiktokProfileAwsDataInterface,
+  AwsNotificationTiktokProfileFormattedDataInterface,
+  AwsNotificationTiktokProfileResponseInterface,
+  AwsNotificationYoutubeChannelAwsDataInterface,
+  AwsNotificationYoutubeChannelResponseInterface,
+  AwsNotificationYoutubeCommentsAwsDataInterface,
+  AwsNotificationYoutubeCommentsResponseInterface,
+  AwsNotificationYoutubeVideoAwsDataInterface,
+  AwsNotificationYoutubeVideoResponseInterface,
+} from "@/@types/awsNotificationInterfaces";
 import axios from "axios";
 import moment from "moment";
 import {
@@ -8,22 +33,19 @@ import {
 export class AwsNotificationProductionRepository
   implements AwsNotificationRepository
 {
-  async S3YoutubeCommentsNotification(
-    data: S3NotificationInterface
-  ): Promise<any> {
-    const response = await axios
-      .get(
-        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
-      )
-      .then(({ data }) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  async S3YoutubeCommentsNotification(data: S3NotificationInterface) {
+    const awsData: AwsNotificationYoutubeCommentsAwsDataInterface[] =
+      await axios
+        .get(
+          `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+        )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {});
 
-    const formattedData: any = [];
-    response.forEach((item: any) => {
+    const formattedData: AwsNotificationYoutubeCommentsResponseInterface[] = [];
+    awsData.forEach((item) => {
       if (item.comment) {
         formattedData.push({
           id: item.cid,
@@ -36,7 +58,7 @@ export class AwsNotificationProductionRepository
       }
     });
 
-    return formattedData.filter((item: any) => {
+    return formattedData.filter((item) => {
       for (const chave in item) {
         if (item[chave] === null) {
           return false;
@@ -47,24 +69,22 @@ export class AwsNotificationProductionRepository
   }
 
   async S3TiktokCommentsNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData: AwsNotificationTiktokCommentsAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
       .then(({ data }) => {
         return data;
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
 
-    const formattedData: any = [];
+    const formattedData: AwsNotificationTiktokCommentsResponseInterface[] = [];
 
-    response.forEach((item: any) => {
-      if (item.text && item.cid) {
+    awsData.forEach((item) => {
+      if (item.comment && item.cid) {
         formattedData.push({
           id: item.cid,
-          video_id: item.submittedVideoUrl.split("/").pop(),
+          video_id: `${item.submittedVideoUrl.split("/").pop()}`,
           text: item.comment,
           diggCount: item.diggCount,
           date: item.createTimeISO,
@@ -78,7 +98,7 @@ export class AwsNotificationProductionRepository
   }
 
   async S3InstagramPostNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData: AwsNotificationInstagramPostAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -89,28 +109,29 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const formattedData = response.map((item: any) => {
-      return {
-        id: item.id,
-        postUrl: item.url,
-        description: item.caption,
-        commentCount: item.commentsCount,
-        likeCount: item.likesCount,
-        pubDate: item.timestamp,
-        viewCount: item.type === "Video" ? item.videoViewCount : 0,
-        playCount: item.type === "Video" ? item.videoPlayCount : 0,
-        username: item.ownerUsername,
-        imgUrl: item.displayUrl,
-        postId: item.id,
-        politician_id: item.instagram_id,
-      };
-    });
+    const formattedData: AwsNotificationInstagramPostResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          id: item.id,
+          postUrl: item.url,
+          description: item.caption,
+          commentCount: item.commentsCount,
+          likeCount: item.likesCount,
+          pubDate: item.timestamp,
+          viewCount: item.type === "Video" ? item.videoViewCount : 0,
+          playCount: item.type === "Video" ? item.videoPlayCount : 0,
+          username: item.ownerUsername,
+          imgUrl: item.displayUrl,
+          postId: item.id,
+          politician_id: item.instagram_id,
+        };
+      });
 
     return formattedData.filter((item) => item.politician_id);
   }
 
   async S3NewsNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -121,7 +142,7 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const format = response.map((item: any) => {
+    const format = awsData.map((item: any) => {
       return {
         title: item.title,
         url: item.link,
@@ -138,7 +159,7 @@ export class AwsNotificationProductionRepository
   }
 
   async S3MetaAdvertisingNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -149,11 +170,11 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    return response;
+    return awsData;
   }
 
   async S3YoutubeVideoNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData: AwsNotificationYoutubeVideoAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -164,52 +185,47 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const dateFilter = response.filter((item: any) => {
-      // return item.date.includes("day");
-      return item;
-    });
-
-    const formattedData = response.map((item: any) => {
-      return {
-        id: item.id,
-        title: item.title,
-        url: item.url,
-        duration: item.duration,
-        viewCount: item.viewCount,
-        commentsCount: item.commentsCount,
-        likes: item.likes ? item.likes : 0,
-        date: moment(item.date.replace("~", "")).toDate(),
-        description: item.text,
-        imgUrl: item.thumbnailUrl,
-        politician_id: item.channel_id,
-      };
-    });
+    const formattedData: AwsNotificationYoutubeVideoResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          id: item.id,
+          title: item.title,
+          url: item.url,
+          duration: item.duration,
+          viewCount: item.viewCount,
+          commentsCount: item.commentsCount,
+          likes: item.likes ? item.likes : 0,
+          date: moment(item.date.replace("~", "")).toDate(),
+          description: item.text,
+          imgUrl: item.thumbnailUrl,
+          politician_id: item.channel_id,
+        };
+      });
 
     return formattedData;
   }
   async S3FacebookProfileNotification(data: S3NotificationInterface) {
-    const response = await axios
-      .get(
-        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
-      )
-      .then(({ data }) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const awsData: AwsNotificationFacebookProfileAwsDataInterface[] =
+      await axios
+        .get(
+          `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+        )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-    const formattedData: any[] = [];
+    const formattedData: AwsNotificationFacebookProfileResponseInterface[] = [];
 
-    response.forEach((item: any) => {
+    awsData.forEach((item) => {
       if (item.likes) {
         formattedData.push({
           politician_id: item.facebook_id,
           title: item.title,
           likes_count: item.likes,
           followers_count: item.followers,
-          start_of_period: moment().clone().weekday(1).toDate(),
-          end_of_period: moment().clone().weekday(5).toDate(),
         });
       }
     });
@@ -218,20 +234,21 @@ export class AwsNotificationProductionRepository
   }
 
   async S3InstagramCommentsNotification(data: S3NotificationInterface) {
-    const response = await axios
-      .get(
-        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
-      )
-      .then(({ data }) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const awsData: AwsNotificationInstagramCommentsAwsDataInterface[] =
+      await axios
+        .get(
+          `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+        )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-    const commentData: any[] = [];
+    const commentData: AwsNotificationInstagramCommentsResponseInterface[] = [];
 
-    response.forEach((item: any) => {
+    awsData.forEach((item) => {
       commentData.push({
         id: item.id,
         text: item.text,
@@ -248,7 +265,7 @@ export class AwsNotificationProductionRepository
   }
 
   async S3InstagramMentionsNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -262,7 +279,7 @@ export class AwsNotificationProductionRepository
     const mentionData: any[] = [];
     const commentData: any[] = [];
 
-    response.forEach((item: any) => {
+    awsData.forEach((item: any) => {
       if (item.instagram_id) {
         mentionData.push({
           id: item.id,
@@ -303,39 +320,39 @@ export class AwsNotificationProductionRepository
   }
 
   async S3InstagramProfileNotification(data: S3NotificationInterface) {
-    const response = await axios
-      .get(
-        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
-      )
-      .then(({ data }) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const awsData: AwsNotificationInstagramProfileAwsDataInterface[] =
+      await axios
+        .get(
+          `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+        )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-    const formattedData = response.map((item: any) => {
-      return {
-        politician_id: item.instagram_id,
-        followers: item.followersCount,
-        follows: item.followsCount,
-        posts_count: item.postsCount,
-        reels_count: item.igtvVideoCount,
-        business: item.isBusinessAccount,
-        verified: item.verified,
-        biography: item.biography,
-        url: item.url,
-        fullName: item.fullName,
-        profilePicture: item.profilePicUrlHD,
-        start_of_period: moment().clone().weekday(1).toDate(),
-        end_of_period: moment().clone().weekday(5).toDate(),
-      };
-    });
+    const formattedData: AwsNotificationInstagramProfileResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          politician_id: item.instagram_id,
+          followers: item.followersCount,
+          follows: item.followsCount,
+          posts_count: item.postsCount,
+          reels_count: item.igtvVideoCount,
+          business: item.isBusinessAccount,
+          verified: item.verified,
+          biography: item.biography,
+          url: item.url,
+          fullName: item.fullName,
+          profilePicture: item.profilePicUrlHD,
+        };
+      });
 
     return formattedData;
   }
   async S3TiktokProfileNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData: AwsNotificationTiktokProfileAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -346,9 +363,10 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const formattedData: any = {};
+    const formattedData: AwsNotificationTiktokProfileFormattedDataInterface =
+      {};
 
-    for (const item of response) {
+    for (const item of awsData) {
       if (!formattedData[item.tiktok_id]) {
         formattedData[item.tiktok_id] = {
           videos: [],
@@ -356,8 +374,6 @@ export class AwsNotificationProductionRepository
             fans: item.authorMeta.fans,
             videos: item.authorMeta.video,
             verified: item.authorMeta.verified,
-            start_of_period: moment().clone().weekday(1).toDate(),
-            end_of_period: moment().clone().weekday(5).toDate(),
             politician_id: item.tiktok_id,
             avatar: item.authorMeta.avatar,
             heart: item.authorMeta.heart,
@@ -381,28 +397,23 @@ export class AwsNotificationProductionRepository
       ];
     }
 
-    const profileFinalData: any = [];
-    const videoFinalData: any = [];
+    const finalData: AwsNotificationTiktokProfileResponseInterface = {
+      profileData: [],
+      videoData: [],
+    };
 
     for (const key in formattedData) {
       if (formattedData.hasOwnProperty(key)) {
-        videoFinalData.push(...formattedData[key].videos);
-        profileFinalData.push(formattedData[key].profile);
+        finalData.videoData.push(...formattedData[key].videos);
+        finalData.profileData.push(formattedData[key].profile);
       }
     }
-
-    const finalData: any = {
-      profileData: profileFinalData,
-      videoData: videoFinalData,
-    };
 
     return finalData;
   }
 
-  async S3FacebookPostNotification(
-    data: S3NotificationInterface
-  ): Promise<any> {
-    const response = await axios
+  async S3FacebookPostNotification(data: S3NotificationInterface) {
+    const awsData: AwsNotificationFacebookPostAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -413,28 +424,29 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const formattedData = response.map((item: any) => {
-      return {
-        id: item.postId,
-        text: item.text,
-        url: item.url,
-        date: item.time,
-        like: item.likes,
-        shares: item.shares,
-        comments: item.comments,
-        thumbnail:
-          item.media && item.media[0]
-            ? item.media[0].thumbnail
-            : "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
-        politician_id: item.facebook_id,
-      };
-    });
+    const formattedData: AwsNotificationFacebookPostResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          id: item.postId,
+          text: item.text,
+          url: item.url,
+          date: item.time,
+          like: item.likes,
+          shares: item.shares,
+          comments: item.comments,
+          thumbnail:
+            item.media && item.media[0]
+              ? item.media[0].thumbnail
+              : "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
+          politician_id: item.facebook_id,
+        };
+      });
 
     return formattedData;
   }
 
   async S3FacebookAdsNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -449,7 +461,7 @@ export class AwsNotificationProductionRepository
     const deliveryRegionData: any = [];
     const demographicDistributionData: any = [];
 
-    response.forEach((element: any) => {
+    awsData.forEach((element: any) => {
       element.data.forEach((item: any) => {
         advertisingData.push({
           id: item.id,
@@ -494,34 +506,36 @@ export class AwsNotificationProductionRepository
   }
 
   async S3FacebookCommentsNotification(data: S3NotificationInterface) {
-    const response = await axios
-      .get(
-        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
-      )
-      .then(({ data }) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const awsData: AwsNotificationFacebookCommentsAwsDataInterface[] =
+      await axios
+        .get(
+          `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+        )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-    const formattedData = response.map((item: any) => {
-      return {
-        id: item.id,
-        postUrl: item.facebookUrl,
-        text: item.text,
-        likeCount: item.likesCount,
-        date: item.date,
-        username: item.profileName,
-        post_id: item.facebookId,
-      };
-    });
+    const formattedData: AwsNotificationFacebookCommentsResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          id: item.id,
+          postUrl: item.facebookUrl,
+          text: item.text,
+          likeCount: item.likesCount,
+          date: item.date,
+          username: item.profileName,
+          post_id: item.facebookId,
+        };
+      });
 
     return formattedData;
   }
 
   async S3YoutubeChannelNotification(data: S3NotificationInterface) {
-    const response = await axios
+    const awsData: AwsNotificationYoutubeChannelAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -532,21 +546,22 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const formattedData = response.map((item: any) => {
-      return {
-        id: item.id,
-        channel_name: item.channelName,
-        channel_total_views: parseFloat(
-          item.channelTotalViews.replace(",", "")
-        ),
-        channel_total_subs: item.numberOfSubscribers
-          ? item.numberOfSubscribers
-          : 0,
-        channel_total_videos: item.channelTotalVideos,
-        date: moment().toDate(),
-        politician_id: item.channel_id,
-      };
-    });
+    const formattedData: AwsNotificationYoutubeChannelResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          id: item.id,
+          channel_name: item.channelName,
+          channel_total_views: parseFloat(
+            item.channelTotalViews.replace(",", "")
+          ),
+          channel_total_subs: item.numberOfSubscribers
+            ? item.numberOfSubscribers
+            : 0,
+          channel_total_videos: item.channelTotalVideos,
+          date: moment().toDate(),
+          politician_id: item.channel_id,
+        };
+      });
 
     return formattedData;
   }
