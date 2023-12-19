@@ -1,4 +1,6 @@
-export const zodErrorHandler = (error: { errors: any }) => {
+export const zodErrorHandler = (error: {
+  errors: { path: (string | number)[] }[];
+}) => {
   const field = messages.find((m) => m.field === error.errors[0].path[0]);
 
   return field

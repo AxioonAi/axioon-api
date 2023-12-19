@@ -6,8 +6,11 @@ import { EmailAlreadyExistsError } from "@/helper/errors/EmailAlreadyExists";
 import { PlanNotFoundError } from "@/helper/errors/PlanNotFoundError";
 import { ProfileNotFoundError } from "@/helper/errors/ProfileNotFoundError";
 import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
+import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import { ZodError } from "zod";
+import { prismaErrorHandler } from "./prisma";
 import { zodErrorHandler } from "./zod/errorHandler";
 
 export const fastifyErrorHandler = (
@@ -35,19 +38,14 @@ export const fastifyErrorHandler = (
   ) {
     return reply.status(401).send(error.message);
   }
-  //   if (env.NODE_ENV !== "production") {
-  //     // console.error(error);
-  //   } else {
-  //     // TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry
-  //   }
 
-  // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-  //   const e: any = error;
-  //   const field: any = e.meta?.target[0];
-  //   if (error.code === "P2002") {
-  //     return reply.status(400).send(prismaErrorHandler(field));
-  //   }
-  // }
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    const e: PrismaClientKnownRequestError = error;
+    const field = e.meta;
+    if (error.code === "P2002") {
+      return reply.status(400).send(prismaErrorHandler(field));
+    }
+  }
 
   console.log(error);
 
