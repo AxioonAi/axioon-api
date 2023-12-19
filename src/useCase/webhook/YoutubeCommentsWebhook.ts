@@ -1,5 +1,7 @@
+import { YoutubeCommentCreateInterface } from "@/@types/databaseInterfaces";
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
 import { YoutubeCommentsRepository } from "@/repositories/YoutubeCommentRepository";
+import { GptRepository } from "@/repositories/gptRepository";
 
 interface YoutubeCommentsWebhookUseCaseRequest {
   records: {
@@ -16,7 +18,8 @@ interface YoutubeCommentsWebhookUseCaseResponse {}
 export class YoutubeCommentsWebhookUseCase {
   constructor(
     private awsNotificationRepository: AwsNotificationRepository,
-    private youtubeCommentsRepository: YoutubeCommentsRepository
+    private youtubeCommentsRepository: YoutubeCommentsRepository,
+    private gptRepository: GptRepository
   ) {}
 
   async execute({
@@ -27,7 +30,21 @@ export class YoutubeCommentsWebhookUseCase {
         records,
       });
 
-    await this.youtubeCommentsRepository.createMany(data);
+    const gptAnalysis = await this.gptRepository.commentAnalysis(data);
+
+    const createData: YoutubeCommentCreateInterface[] = [];
+
+    data.forEach((item) => {
+      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+      if (analysis) {
+        createData.push({
+          ...item,
+          ...analysis,
+        });
+      }
+    });
+
+    await this.youtubeCommentsRepository.createMany(createData);
     return data;
   }
 }

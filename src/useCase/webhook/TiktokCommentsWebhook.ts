@@ -1,5 +1,7 @@
+import { TiktokCommentsCreateInterface } from "@/@types/databaseInterfaces";
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
 import { TiktokCommentDataRepository } from "@/repositories/TiktokCommentDataRepository";
+import { GptRepository } from "@/repositories/gptRepository";
 
 interface TiktokCommentsWebhookUseCaseRequest {
   records: {
@@ -16,7 +18,8 @@ interface TiktokCommentsWebhookUseCaseResponse {}
 export class TiktokCommentsWebhookUseCase {
   constructor(
     private awsNotificationRepository: AwsNotificationRepository,
-    private tiktokCommentsRepository: TiktokCommentDataRepository
+    private tiktokCommentsRepository: TiktokCommentDataRepository,
+    private gptRepository: GptRepository
   ) {}
 
   async execute({
@@ -27,7 +30,21 @@ export class TiktokCommentsWebhookUseCase {
         records,
       });
 
-    await this.tiktokCommentsRepository.createMany(data);
+    const gptAnalysis = await this.gptRepository.commentAnalysis(data);
+
+    const createData: TiktokCommentsCreateInterface[] = [];
+
+    data.forEach((item) => {
+      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+      if (analysis) {
+        createData.push({
+          ...item,
+          ...analysis,
+        });
+      }
+    });
+
+    await this.tiktokCommentsRepository.createMany(createData);
 
     return data;
   }
