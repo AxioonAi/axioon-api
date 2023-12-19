@@ -1,11 +1,5 @@
-import { Prisma } from "@prisma/client";
+import { TiktokBaseDataCreateInterface } from "@/@types/databaseInterfaces";
 
 export interface TiktokBaseDataRepository {
-  findByUserId(userId: string): Promise<any>;
-  createMany(data: Prisma.TiktokBaseDataCreateManyInput): Promise<any>;
-  findDetails(data: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-  }): Promise<any>;
+  createMany(data: TiktokBaseDataCreateInterface[]): Promise<void>;
 }

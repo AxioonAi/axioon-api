@@ -1,3 +1,5 @@
+import { TiktokCommentsCreateInterface } from "@/@types/databaseInterfaces";
+
 export interface TiktokCommentDataRepository {
-  createMany(data: any[]): Promise<any>;
+  createMany(data: TiktokCommentsCreateInterface[]): Promise<void>;
 }

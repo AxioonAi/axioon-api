@@ -1,7 +1,11 @@
+import { TiktokCommentsCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 
+interface CreateCommentProps extends TiktokCommentsCreateInterface {
+  politician_id: string;
+}
 export class PrismaTiktokCommentDataRepository {
-  async createMany(data: any[]) {
+  async createMany(data: TiktokCommentsCreateInterface[]) {
     const videoId = data.map((item) => item.video_id);
     const idExists = data.map((item) => item.id);
 
@@ -22,8 +26,8 @@ export class PrismaTiktokCommentDataRepository {
       }),
     ]);
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: CreateCommentProps[] = [];
+    const updateData: TiktokCommentsCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!commentExists.find((comment) => comment.id === item.id)) {
@@ -31,7 +35,6 @@ export class PrismaTiktokCommentDataRepository {
         if (video) {
           createData.push({
             ...item,
-            sentimentAnalysis: Math.floor(Math.random() * (100 - 1000) + 100),
             politician_id: video.politician_id,
           });
         } else {
@@ -43,7 +46,7 @@ export class PrismaTiktokCommentDataRepository {
 
     await prisma.$transaction([
       prisma.tiktokCommentData.createMany({ data: createData }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update) =>
         prisma.tiktokCommentData.update({
           where: {
             id: update.id,

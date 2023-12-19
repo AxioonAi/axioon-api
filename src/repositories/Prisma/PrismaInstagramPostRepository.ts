@@ -1,3 +1,4 @@
+import { InstagramPostCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { InstagramPostRepository } from "../InstagramPostRepository";
 
@@ -26,23 +27,26 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
       },
     });
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: InstagramPostCreateInterface[] = [];
+    const updateData: InstagramPostCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!idExits.find((d) => d.id === item.id)) {
-        createData.push(item);
+        createData.push({
+          ...item,
+          playCount: item.playCount ? item.playCount : 0,
+        });
       } else {
-        updateData.push(item);
+        updateData.push({
+          ...item,
+          playCount: item.playCount ? item.playCount : 0,
+        });
       }
     });
 
-    console.log(createData.length);
-    console.log(updateData.length);
-
     await prisma.$transaction([
       prisma.instagramPost.createMany({ data: createData }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update: InstagramPostCreateInterface) =>
         prisma.instagramPost.update({
           where: {
             id: update.id,
@@ -52,22 +56,6 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
       ),
     ]);
 
-    console.log("saiu");
     return;
-  }
-
-  async findDetails(data: { id: string; startDate: Date; endDate: Date }) {
-    return await prisma.instagramPost.findMany({
-      where: {
-        politician_id: data.id,
-        pubDate: {
-          gte: data.startDate,
-          lte: data.endDate,
-        },
-      },
-      include: {
-        comments: true,
-      },
-    });
   }
 }

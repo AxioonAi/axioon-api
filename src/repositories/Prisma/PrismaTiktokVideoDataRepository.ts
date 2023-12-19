@@ -1,24 +1,11 @@
+import { TiktokVideoCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
-import moment from "moment";
 import { TiktokVideoDataRepository } from "../TiktokVideoDataRepository";
 
 export class PrismaTiktokVideoDataRepository
   implements TiktokVideoDataRepository
 {
-  async createMany(
-    data: {
-      id: string;
-      title: string;
-      description: string;
-      url: string;
-      duration: string;
-      date: Date;
-      imgUrl: string;
-      viewCount: number;
-      commentsCount: number;
-      likes: number;
-    }[]
-  ): Promise<any> {
+  async createMany(data: TiktokVideoCreateInterface[]): Promise<any> {
     const idExists = data.map((item) => item.id);
 
     const videoExists = await prisma.tiktokVideoData.findMany({
@@ -29,8 +16,8 @@ export class PrismaTiktokVideoDataRepository
       },
     });
 
-    const createVideoData: any = [];
-    const updateVideoData: any = [];
+    const createVideoData: TiktokVideoCreateInterface[] = [];
+    const updateVideoData: TiktokVideoCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!videoExists.find((video) => video.id === item.id)) {
@@ -42,7 +29,7 @@ export class PrismaTiktokVideoDataRepository
 
     await prisma.$transaction([
       prisma.tiktokVideoData.createMany({ data: createVideoData }),
-      ...updateVideoData.map((update: any) =>
+      ...updateVideoData.map((update) =>
         prisma.tiktokVideoData.update({
           where: {
             id: update.id,
@@ -53,60 +40,5 @@ export class PrismaTiktokVideoDataRepository
     ]);
 
     return;
-  }
-
-  async findHomeData(data: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-  }): Promise<any> {
-    return await Promise.all([
-      prisma.tiktokVideoData.aggregate({
-        where: {
-          politician_id: data.id,
-          date: {
-            gte: data.startDate,
-            lte: data.endDate,
-          },
-        },
-        _sum: {
-          diggCount: true,
-          commentCount: true,
-          playCount: true,
-          shareCount: true,
-        },
-      }),
-      prisma.tiktokVideoData.aggregate({
-        where: {
-          politician_id: data.id,
-          date: {
-            gte: moment(data.startDate).subtract(7, "day").toDate(),
-            lte: moment(data.endDate).subtract(7, "day").toDate(),
-          },
-        },
-        _sum: {
-          diggCount: true,
-          commentCount: true,
-          playCount: true,
-          shareCount: true,
-        },
-      }),
-    ]);
-  }
-
-  async findDetails(data: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-  }): Promise<any> {
-    return await prisma.tiktokVideoData.findMany({
-      where: {
-        politician_id: data.id,
-        date: {
-          gte: data.startDate,
-          lte: data.endDate,
-        },
-      },
-    });
   }
 }

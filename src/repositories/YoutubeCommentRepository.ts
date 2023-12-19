@@ -1,3 +1,5 @@
+import { YoutubeCommentCreateInterface } from "@/@types/databaseInterfaces";
+
 export interface YoutubeCommentsRepository {
-  createMany(data: any[]): Promise<any>;
+  createMany(data: YoutubeCommentCreateInterface[]): Promise<void>;
 }

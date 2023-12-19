@@ -1,27 +1,25 @@
+import { InstagramCommentCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { InstagramPostCommentRepository } from "../InstagramPostCommentRepository";
+
+interface CreateCommentProps extends InstagramCommentCreateInterface {
+  politician_id: string;
+  sentimentAnalysis: number;
+}
 
 export class PrismaInstagramCommentRepository
   implements InstagramPostCommentRepository
 {
-  async createMany(
-    data: {
-      id: string;
-      text: string;
-      ownerProfilePicUrl: string;
-      post_id: string;
-      ownerUsername: string;
-      timestamp: string;
-      likeCount: number;
-    }[]
-  ) {
+  async createMany(data: InstagramCommentCreateInterface[]) {
     const idExists = data.map((item) => item.id);
-    const postId = data.map((item) => item.post_id);
+    const postId = data.map((item) => {
+      return `https://www.instagram.com/p/${item.post_id}`;
+    });
 
     const [postExists, commentExists] = await Promise.all([
       prisma.instagramPost.findMany({
         where: {
-          id: {
+          postUrl: {
             in: postId,
           },
         },
@@ -35,28 +33,40 @@ export class PrismaInstagramCommentRepository
       }),
     ]);
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: CreateCommentProps[] = [];
+    const updateData: InstagramCommentCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!commentExists.find((comment) => comment.id === item.id)) {
-        const post = postExists.find((post) => post.id === item.post_id);
+        const post = postExists.find(
+          (post) =>
+            post.postUrl === `https://www.instagram.com/p/${item.post_id}`
+        );
         if (post && item.text) {
           createData.push({
             ...item,
-            sentimentAnalysis: Math.floor(Math.random() * (100 - 1000) + 100),
+            post_id: post.id,
             politician_id: post.politician_id,
           });
         } else {
         }
       } else {
-        updateData.push(item);
+        const post = postExists.find(
+          (post) =>
+            post.postUrl === `https://www.instagram.com/p/${item.post_id}`
+        );
+        if (post) {
+          updateData.push({
+            ...item,
+            post_id: post.id,
+          });
+        }
       }
     });
 
     await prisma.$transaction([
       prisma.instagramPostComment.createMany({ data: createData }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update) =>
         prisma.instagramPostComment.update({
           where: {
             id: update.id,

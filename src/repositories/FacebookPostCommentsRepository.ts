@@ -1,3 +1,5 @@
+import { FacebookPostCommentsCreateInterface } from "@/@types/databaseInterfaces";
+
 export interface FacebookPostCommentsRepository {
-  createMany(data: any[]): Promise<any>;
+  createMany(data: FacebookPostCommentsCreateInterface[]): Promise<void>;
 }

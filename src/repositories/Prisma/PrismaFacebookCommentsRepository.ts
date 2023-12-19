@@ -1,10 +1,15 @@
+import { FacebookPostCommentsCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { FacebookPostCommentsRepository } from "../FacebookPostCommentsRepository";
+
+interface CreateCommentProps extends FacebookPostCommentsCreateInterface {
+  politician_id: string;
+}
 
 export class PrismaFacebookCommentsRepository
   implements FacebookPostCommentsRepository
 {
-  async createMany(data: any[]): Promise<any> {
+  async createMany(data: FacebookPostCommentsCreateInterface[]) {
     const postId = data.map((item) => item.post_id);
     const idExists = data.map((item) => item.id);
 
@@ -25,8 +30,8 @@ export class PrismaFacebookCommentsRepository
       }),
     ]);
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: CreateCommentProps[] = [];
+    const updateData: FacebookPostCommentsCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!commentExists.find((comment) => comment.id === item.id)) {
@@ -34,7 +39,6 @@ export class PrismaFacebookCommentsRepository
         if (post && item.text) {
           createData.push({
             ...item,
-            sentimentAnalysis: Math.floor(Math.random() * (100 - 1000) + 100),
             politician_id: post.politician_id,
           });
         } else {
@@ -46,7 +50,7 @@ export class PrismaFacebookCommentsRepository
 
     await prisma.$transaction([
       prisma.facebookPostComments.createMany({ data: createData }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update) =>
         prisma.facebookPostComments.update({
           where: {
             id: update.id,

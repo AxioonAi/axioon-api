@@ -1,14 +1,11 @@
+import { YoutubeBaseDataCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
-import {
-  YoutubeBaseDataRepository,
-  createManyYoutubeBaseDataInterface,
-} from "../YoutubeBaseDataRepository";
+import { YoutubeBaseDataRepository } from "../YoutubeBaseDataRepository";
 
 export class PrismaYoutubeBaseDataRepository
   implements YoutubeBaseDataRepository
 {
-  async createMany(data: createManyYoutubeBaseDataInterface[]) {
-    console.log(data);
+  async createMany(data: YoutubeBaseDataCreateInterface[]) {
     await prisma.youtubeBaseData.createMany({
       data: data,
     });

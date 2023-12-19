@@ -1,13 +1,5 @@
+import { InstagramCommentCreateInterface } from "@/@types/databaseInterfaces";
+
 export interface InstagramPostCommentRepository {
-  createMany(
-    data: {
-      id: string;
-      text: string;
-      ownerProfilePicUrl: string;
-      post_id: string;
-      ownerUsername: string;
-      timestamp: string;
-      likeCount: number;
-    }[]
-  ): Promise<void>;
+  createMany(data: InstagramCommentCreateInterface[]): Promise<void>;
 }
