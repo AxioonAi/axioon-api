@@ -1,45 +1,48 @@
-import { TiktokDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
+import { InstagramDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
 
-export const tiktokDataFormatter = (data: {
-  tiktokData: {
+export const instagramDataFormatter = (data: {
+  instagramData: {
     id: string;
-    fans: number;
-    videos: number;
-    verified: boolean;
-    avatar: string;
-    heart: number;
+    followers: number;
+    follows: number;
+    posts_count: number;
+    profile_picture: string;
+    reels_count: number;
   }[];
-  tiktokVideoData: {
+  instagramPosts: {
     id: string;
-    text: string;
-    url: string;
-    diggCount: number;
+    postUrl: string;
+    description: string;
     commentCount: number;
-    shareCount: number;
+    likeCount: number;
+    pubDate: Date;
+    viewCount: number;
     playCount: number;
-    date: Date;
   }[];
-  tiktokComments: {
+  instagramPostComments: {
     id: string;
-    diggCount: number;
-    date: Date;
-    replyCount: number;
-    author: string;
-    video_id: string;
     text: string;
+    post_id: string;
+    ownerUsername: string;
+    ownerProfilePicUrl: string;
+    timestamp: string;
+    likeCount: number;
     sentimentAnalysis: number;
   }[];
 }) => {
-  const { tiktokData, tiktokVideoData, tiktokComments } = data;
+  const { instagramData, instagramPosts, instagramPostComments } = data;
 
-  const commentStatisticsData = tiktokComments.reduce(
+  const currentFacebookData = instagramData[0];
+
+  const commentStatisticsData = instagramPostComments.reduce(
     (accumulator, comment) => {
       const sentiment = comment.sentimentAnalysis;
+      const time = new Date(comment.timestamp).getHours();
 
-      const time = new Date(comment.date).getHours();
       // Calcula a média
       accumulator.sentimentStatistics.totalSentiment += sentiment;
 
+      // Conta a quantidade de comentários em diferentes faixas de tempo
       if (time >= 0 && time < 4) {
         accumulator.commentTime.midnight_to_four_am++;
       } else if (time >= 4 && time < 10) {
@@ -53,8 +56,6 @@ export const tiktokDataFormatter = (data: {
       } else {
         accumulator.commentTime.nine_pm_to_midnight++;
       }
-
-      // Conta a quantidade de comentários em diferentes faixas de tempo
 
       // Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
       if (sentiment >= 0 && sentiment <= 350) {
@@ -88,56 +89,46 @@ export const tiktokDataFormatter = (data: {
 
   commentStatisticsData.sentimentStatistics.sentimentAverage =
     commentStatisticsData.sentimentStatistics.totalSentiment /
-    tiktokComments.length;
+    instagramPostComments.length;
 
-  const mostWatchedVideo = tiktokVideoData.sort(
-    (a, b) => b.playCount - a.playCount
+  const mostLikedPost = instagramPosts.sort(
+    (a, b) => b.likeCount - a.commentCount
   )[0];
-  const mostLikedVideo = tiktokVideoData.sort(
-    (a, b) => b.diggCount - a.diggCount
-  )[0];
-  const mostCommentedVideo = tiktokVideoData.sort(
+  const mostCommentedPost = instagramPosts.sort(
     (a, b) => b.commentCount - a.commentCount
   )[0];
-  const mostOldVideo = tiktokVideoData.sort((a, b) => {
-    return a.date < b.date ? -1 : 1;
+  const mostOldPost = instagramPosts.sort((a, b) => {
+    return a.pubDate < b.pubDate ? -1 : 1;
   })[0];
-  const mostSharedVideo = tiktokVideoData.sort(
-    (a, b) => b.shareCount - a.shareCount
-  )[0];
 
-  const oldVideoDateDiff = Math.ceil(
-    Math.abs(Date.now() - new Date(mostOldVideo.date).getTime()) /
+  const oldPostDateDiff = Math.ceil(
+    Math.abs(Date.now() - new Date(mostOldPost.pubDate).getTime()) /
       (1000 * 60 * 60 * 24)
   );
 
   const dataWithEngagement = [];
 
-  const videoEngagementData = {
+  const postEngagementData = {
     like: 0,
     comments: 0,
-    views: 0,
     sentiment: commentStatisticsData.sentimentStatistics.sentimentAverage,
   };
 
-  for (const key in tiktokVideoData) {
-    videoEngagementData.like += tiktokVideoData[key].diggCount;
-    videoEngagementData.comments += tiktokVideoData[key].commentCount;
-    videoEngagementData.views += tiktokVideoData[key].playCount;
+  for (const key in instagramPosts) {
+    postEngagementData.like += instagramPosts[key].likeCount;
+    postEngagementData.comments += instagramPosts[key].commentCount;
+
     const timeDiff =
-      Math.abs(Date.now() - new Date(tiktokVideoData[key].date).getTime()) /
+      Math.abs(Date.now() - new Date(instagramPosts[key].pubDate).getTime()) /
       (1000 * 60 * 60 * 24);
 
     const engagementSum =
-      tiktokVideoData[key].diggCount * 1 +
-      tiktokVideoData[key].commentCount * 1 +
-      tiktokVideoData[key].shareCount * 1 +
-      tiktokVideoData[key].playCount * 1;
+      instagramPosts[key].commentCount * 1 + instagramPosts[key].likeCount * 1;
 
-    const dataDiffRelation = 1 - timeDiff / oldVideoDateDiff;
+    const dateDiffRelation = 1 - timeDiff / oldPostDateDiff;
 
-    const comments = data.tiktokComments.filter(
-      (comment) => comment.video_id === tiktokVideoData[key].id
+    const comments = data.instagramPostComments.filter(
+      (comment) => comment.post_id === data.instagramPosts[key].id
     );
 
     let sentimentSum = 0;
@@ -147,10 +138,12 @@ export const tiktokDataFormatter = (data: {
     }
 
     const engagement =
-      (engagementSum * dataDiffRelation) / (tiktokData[0].fans * timeDiff);
+      (engagementSum * dateDiffRelation) /
+      100 /
+      (currentFacebookData.followers / 1000);
 
     dataWithEngagement.push({
-      ...tiktokVideoData[key],
+      ...instagramPosts[key],
       engagement,
       comments,
       sentiment: sentimentSum / comments.length,
@@ -161,19 +154,23 @@ export const tiktokDataFormatter = (data: {
     return b.engagement - a.engagement;
   });
 
-  const mostRankedVideo = rankByEngagement[0];
+  const mostRankedPost = rankByEngagement[0];
 
-  const finalData: TiktokDataFormatterFinalDataInterface[] = [];
+  const finalData: InstagramDataFormatterFinalDataInterface[] = [];
   rankByEngagement.forEach((item) => {
     return finalData.push({
       ...item,
-      percentage: (item.engagement / mostRankedVideo.engagement) * 100,
+      percentage: (item.engagement / mostRankedPost.engagement) * 100,
     });
   });
 
   return {
-    commentsStatistics: commentStatisticsData,
-    videoEngagementData,
-    videos: finalData,
+    commentStatistics: commentStatisticsData,
+    postEngagementData,
+    // mostLikedPost,
+    // mostCommentedPost,
+    // mostSharedPost,
+    // mostOldPost,
+    posts: finalData,
   };
 };

@@ -1,5 +1,14 @@
-export const youtubeDataFormatter = (
-  data: {
+import { YoutubeDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
+
+export const youtubeDataFormatter = (data: {
+  youtubeBaseData: {
+    id: string;
+    channel_name: string;
+    channel_total_views: number;
+    channel_total_subs: number;
+    channel_total_videos: number;
+  }[];
+  youtubeVideoData: {
     id: string;
     title: string;
     url: string;
@@ -10,17 +19,55 @@ export const youtubeDataFormatter = (
     date: Date;
     description: string;
     imgUrl: string;
-    politician_id: string;
-    created_at: Date;
-  }[],
-  channelFollowers: number
-) => {
-  const mostWatchedVideo = data.sort((a, b) => b.viewCount - a.viewCount)[0];
-  const mostLikedVideo = data.sort((a, b) => b.likes - a.likes)[0];
-  const mostCommentedVideo = data.sort(
-    (a, b) => b.commentsCount - a.commentsCount
+  }[];
+  youtubeCommentData: {
+    id: string;
+    text: string;
+    likeCount: number;
+    replyCount: number;
+    author: string;
+    video_id: string;
+    sentimentAnalysis: number;
+  }[];
+}) => {
+  const { youtubeBaseData, youtubeVideoData, youtubeCommentData } = data;
+
+  const commentStatisticsData = youtubeCommentData.reduce(
+    (accumulator, comment) => {
+      const sentiment = comment.sentimentAnalysis;
+
+      // Calcula a média
+      accumulator.sentimentStatistics.totalSentiment += sentiment;
+
+      // Conta a quantidade de comentários em diferentes faixas de tempo
+
+      // Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
+      if (sentiment >= 0 && sentiment <= 350) {
+        accumulator.sentimentStatistics.countSentiment0To350++;
+      } else if (sentiment > 350 && sentiment <= 650) {
+        accumulator.sentimentStatistics.countSentiment351To650++;
+      } else if (sentiment > 650 && sentiment <= 1000) {
+        accumulator.sentimentStatistics.countSentiment651To1000++;
+      }
+
+      return accumulator;
+    },
+    {
+      sentimentStatistics: {
+        totalSentiment: 0,
+        countSentiment0To350: 0,
+        countSentiment351To650: 0,
+        countSentiment651To1000: 0,
+        sentimentAverage: 0,
+      },
+    }
   );
-  const mostOldVideo = data.sort((a, b) => {
+
+  commentStatisticsData.sentimentStatistics.sentimentAverage =
+    commentStatisticsData.sentimentStatistics.totalSentiment /
+    youtubeCommentData.length;
+
+  const mostOldVideo = data.youtubeVideoData.sort((a, b) => {
     return a.date < b.date ? -1 : 1;
   })[0];
   const oldVideoDateDiff = Math.ceil(
@@ -30,24 +77,50 @@ export const youtubeDataFormatter = (
 
   const dataWithEngagement = [];
 
-  for (const key in data) {
+  const videoEngagementData = {
+    like: 0,
+    comments: 0,
+    views: 0,
+    sentiment: commentStatisticsData.sentimentStatistics.sentimentAverage,
+  };
+
+  for (const key in data.youtubeVideoData) {
+    videoEngagementData.like += youtubeVideoData[key].likes;
+    videoEngagementData.comments += youtubeVideoData[key].commentsCount;
+    videoEngagementData.views += youtubeVideoData[key].viewCount;
     const timeDiff =
-      Math.abs(Date.now() - new Date(data[key].date).getTime()) /
+      Math.abs(
+        Date.now() - new Date(data.youtubeVideoData[key].date).getTime()
+      ) /
       (1000 * 60 * 60 * 24);
 
     const engagementSum =
-      data[key].commentsCount * 1 +
-      data[key].likes * 1.2 +
-      data[key].viewCount * 1;
+      data.youtubeVideoData[key].commentsCount * 1 +
+      data.youtubeVideoData[key].likes * 1.2 +
+      data.youtubeVideoData[key].viewCount * 1;
 
     const dateDiffRelation = 1 - timeDiff / oldVideoDateDiff;
 
+    const comments = data.youtubeCommentData.filter(
+      (comment) => comment.video_id === data.youtubeVideoData[key].id
+    );
+
+    let sentimentSum = 0;
+
+    for (const comment of comments) {
+      sentimentSum += comment.sentimentAnalysis;
+    }
+
     const engagement =
-      (engagementSum * dateDiffRelation) / 100 / (channelFollowers / 1000);
+      (engagementSum * dateDiffRelation) /
+      100 /
+      (data.youtubeBaseData[0].channel_total_subs / 1000);
 
     dataWithEngagement.push({
-      ...data[key],
+      ...data.youtubeVideoData[key],
       engagement,
+      comments,
+      sentiment: sentimentSum / comments.length,
     });
   }
 
@@ -57,7 +130,7 @@ export const youtubeDataFormatter = (
 
   const mostRankedVideo = rankByEngagement[0];
 
-  const finalData: any = [];
+  const finalData: YoutubeDataFormatterFinalDataInterface[] = [];
   rankByEngagement.forEach((item) => {
     return finalData.push({
       ...item,
@@ -66,11 +139,8 @@ export const youtubeDataFormatter = (
   });
 
   return {
-    mostWatchedVideo,
-    mostLikedVideo,
-    mostCommentedVideo,
-    mostOldVideo,
-    mostRankedVideo,
-    finalData,
+    commentsStatistics: commentStatisticsData,
+    videoEngagementData,
+    videos: finalData,
   };
 };
