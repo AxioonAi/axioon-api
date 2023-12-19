@@ -8,8 +8,9 @@ export const findPoliticianProfileTiktokDetailsController = async (
   reply: FastifyReply
 ) => {
   const { id } = ZodIdParamsSchema.parse(request.params);
-  const { startDate, endDate } =
-    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
+  const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
+    request.query
+  );
 
   try {
     const findPoliticianProfileTiktokDetails =
@@ -17,8 +18,7 @@ export const findPoliticianProfileTiktokDetailsController = async (
 
     const data = await findPoliticianProfileTiktokDetails.execute({
       id,
-      startDate,
-      endDate,
+      period,
     });
 
     return reply.send(data);

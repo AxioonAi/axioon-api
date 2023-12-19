@@ -8,15 +8,15 @@ export const findPoliticianProfileInstagramDetailsController = async (
   reply: FastifyReply
 ) => {
   const { id } = ZodIdParamsSchema.parse(request.params);
-  const { startDate, endDate } =
-    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
+  const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
+    request.query
+  );
   try {
     const findPoliticianProfileInstagramDetails =
       makeFindPoliticianProfileInstagramDetails();
     const data = await findPoliticianProfileInstagramDetails.execute({
       id,
-      startDate,
-      endDate,
+      period,
     });
 
     return reply.status(200).send(data);

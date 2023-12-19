@@ -8,16 +8,16 @@ export const findPoliticianProfileYoutubeDetailsController = async (
   reply: FastifyReply
 ) => {
   const { id } = ZodIdParamsSchema.parse(request.params);
-  const { startDate, endDate } =
-    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
+  const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
+    request.query
+  );
   try {
     const findPoliticianProfileYoutubeDetailsUseCase =
       makeFindPoliticianYoutubeDetails();
 
     const data = await findPoliticianProfileYoutubeDetailsUseCase.execute({
       id,
-      startDate,
-      endDate,
+      period,
     });
 
     return reply.status(200).send(data);

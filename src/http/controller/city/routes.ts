@@ -4,7 +4,7 @@ import { cityStatisticsController } from "./cityStatistics";
 
 export async function cityRoutes(app: FastifyInstance) {
   app.get(
-    "/city/statistics",
+    "/city/statistics/:id",
     { onRequest: [verifyJwt] },
     cityStatisticsController
   );

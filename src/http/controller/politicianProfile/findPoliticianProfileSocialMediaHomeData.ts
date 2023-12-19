@@ -8,16 +8,16 @@ export const findPoliticianProfileSocialMediaHomeDataController = async (
   reply: FastifyReply
 ) => {
   const { id } = ZodIdParamsSchema.parse(request.params);
-  const { endDate, startDate } =
-    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
+  const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
+    request.query
+  );
   try {
     const findPoliticianProfileSocialMediaHomeDataUseCase =
       makeFindPoliticianProfileSocialMediaHomeData();
 
     const data = await findPoliticianProfileSocialMediaHomeDataUseCase.execute({
       id,
-      endDate,
-      startDate,
+      period,
     });
 
     return reply.status(200).send(data);
