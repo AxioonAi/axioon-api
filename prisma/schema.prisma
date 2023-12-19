@@ -23,6 +23,15 @@ enum NewsScore {
   URGENT 
 }
 
+enum NotificationType {
+  FACEBOOK
+  INSTAGRAM
+  TIKTOK
+  YOUTUBE
+  NEWS
+  LEGAL
+}
+
 enum SexType {
   MALE
   FEMALE
@@ -50,7 +59,9 @@ model User {
   paymentId String
   mobilePhone String
   sex SexType @default(MALE)
+  subUser SubUser[]
   signature UserPlan[]
+  notification Notification[]
   user PoliticianProfileMonitoring[]
 }
 
@@ -92,7 +103,8 @@ model PoliticianProfile {
   politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
 
   news NewsUsers[]
-  ticktokData TiktokBaseData[]
+  notification Notification[]
+  tiktokData TiktokBaseData[]
   twitterData TwitterBaseData[]
   instagramPosts InstagramPost[]
   facebookData FacebookBaseData[]
@@ -133,8 +145,7 @@ model InstagramBaseData {
   verified Boolean
   biography String
   url String
-  start_of_period DateTime
-  end_of_period DateTime
+  date DateTime @default(now())
   created_at DateTime @default(now())
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
@@ -147,8 +158,7 @@ model TiktokBaseData {
   verified Boolean
   avatar String
   heart Float
-  start_of_period DateTime
-  end_of_period DateTime
+  date DateTime @default(now())
   created_at DateTime @default(now())
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
@@ -187,6 +197,7 @@ model TiktokCommentData {
   diggCount Int
   date DateTime
   replyCount Int
+  text String @default("")
   author String
   video_id String
   politician_id String
@@ -203,8 +214,7 @@ model TwitterBaseData {
   posts_likes_count Int
   retweet_count Int
   favorite_count Int
-  start_of_period DateTime
-  end_of_period DateTime
+  date DateTime @default(now())
   created_at DateTime @default(now())
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
@@ -247,6 +257,7 @@ model YoutubeCommentData {
   video_id String
   politician_id String
   sentimentAnalysis Int
+  created_at DateTime @default(now())
   video YoutubeVideoData @relation(references: [id], fields: [video_id])
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
@@ -256,8 +267,7 @@ model FacebookBaseData {
   title String
   likes_count Int
   followers_count Int
-  start_of_period DateTime
-  end_of_period DateTime
+  date DateTime @default(now())
   created_at DateTime @default(now())
   politician_id String
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
@@ -560,4 +570,33 @@ model City {
   website Website[]
   electorate CityElectorateData[]
   pollingPlace CityPollingPlace[]
+}
+
+model tutorialVideo {
+  id String @unique @default(uuid())
+  title String
+  url String
+  description String
+}
+
+model Notification {
+  id String @unique @default(uuid())
+  description String
+  date DateTime @default(now())
+  user_id String
+  opened Boolean @default(false)
+  type NotificationType
+  politician_profile_id String
+  user User @relation(references: [id], fields: [user_id])
+  politician PoliticianProfile @relation(references: [id], fields: [politician_profile_id])
+}
+
+model SubUser {
+  id String @unique @default(uuid())
+  name String
+  email String
+  password_hash String
+  user_id String
+  active Boolean
+  user User @relation(references: [id], fields: [user_id])
 }
