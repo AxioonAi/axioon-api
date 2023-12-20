@@ -1,10 +1,13 @@
 import {
+  AwsNotificationFacebookAdsResponseInterface,
   AwsNotificationFacebookCommentsResponseInterface,
   AwsNotificationFacebookPostResponseInterface,
   AwsNotificationFacebookProfileResponseInterface,
   AwsNotificationInstagramCommentsResponseInterface,
+  AwsNotificationInstagramMentionResponseInterface,
   AwsNotificationInstagramPostResponseInterface,
   AwsNotificationInstagramProfileResponseInterface,
+  AwsNotificationNewsResponseInterface,
   AwsNotificationTiktokCommentsResponseInterface,
   AwsNotificationTiktokProfileResponseInterface,
   AwsNotificationYoutubeChannelResponseInterface,
@@ -56,8 +59,16 @@ export interface AwsNotificationRepository {
   S3InstagramPostNotification(
     data: S3NotificationInterface
   ): Promise<AwsNotificationInstagramPostResponseInterface[]>;
-  S3InstagramMentionsNotification(data: S3NotificationInterface): Promise<any>;
-  S3NewsNotification(data: S3NotificationInterface): Promise<any[]>;
-  S3MetaAdvertisingNotification(data: S3NotificationInterface): Promise<any[]>;
-  S3FacebookAdsNotification(data: S3NotificationInterface): Promise<any>;
+  S3InstagramMentionsNotification(
+    data: S3NotificationInterface
+  ): Promise<AwsNotificationInstagramMentionResponseInterface[]>;
+  S3InstagramMentionsNotification(
+    data: S3NotificationInterface
+  ): Promise<AwsNotificationInstagramMentionResponseInterface[]>;
+  S3FacebookAdsNotification(
+    data: S3NotificationInterface
+  ): Promise<AwsNotificationFacebookAdsResponseInterface>;
+  S3NewsNotification(
+    data: S3NotificationInterface
+  ): Promise<AwsNotificationNewsResponseInterface[]>;
 }

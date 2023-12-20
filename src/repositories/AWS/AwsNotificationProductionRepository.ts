@@ -1,4 +1,6 @@
 import {
+  AwsNotificationFacebookAdsAwsDataInterface,
+  AwsNotificationFacebookAdsResponseInterface,
   AwsNotificationFacebookCommentsAwsDataInterface,
   AwsNotificationFacebookCommentsResponseInterface,
   AwsNotificationFacebookPostAwsDataInterface,
@@ -7,10 +9,14 @@ import {
   AwsNotificationFacebookProfileResponseInterface,
   AwsNotificationInstagramCommentsAwsDataInterface,
   AwsNotificationInstagramCommentsResponseInterface,
+  AwsNotificationInstagramMentionAwsDataInterface,
+  AwsNotificationInstagramMentionResponseInterface,
   AwsNotificationInstagramPostAwsDataInterface,
   AwsNotificationInstagramPostResponseInterface,
   AwsNotificationInstagramProfileAwsDataInterface,
   AwsNotificationInstagramProfileResponseInterface,
+  AwsNotificationNewsAwsDataInterface,
+  AwsNotificationNewsResponseInterface,
   AwsNotificationTiktokCommentsAwsDataInterface,
   AwsNotificationTiktokCommentsResponseInterface,
   AwsNotificationTiktokProfileAwsDataInterface,
@@ -131,7 +137,7 @@ export class AwsNotificationProductionRepository
   }
 
   async S3NewsNotification(data: S3NotificationInterface) {
-    const awsData = await axios
+    const awsData: AwsNotificationNewsAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -142,18 +148,22 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const format = awsData.map((item: any) => {
-      return {
-        title: item.title,
-        url: item.link,
-        last_update: moment(item.updated).toDate(),
-        users: item.users.map((user: any) => {
-          return {
-            user_id: user.id,
-          };
-        }),
-      };
-    });
+    const format: AwsNotificationNewsResponseInterface[] = awsData.map(
+      (item) => {
+        return {
+          title: item.title,
+          url: item.link,
+          content: item.content,
+          last_update: moment(item.updated).toDate(),
+          users: item.users.map((user) => {
+            return {
+              name: user.name,
+              user_id: user.id,
+            };
+          }),
+        };
+      }
+    );
 
     return format;
   }
@@ -204,6 +214,7 @@ export class AwsNotificationProductionRepository
 
     return formattedData;
   }
+
   async S3FacebookProfileNotification(data: S3NotificationInterface) {
     const awsData: AwsNotificationFacebookProfileAwsDataInterface[] =
       await axios
@@ -265,21 +276,21 @@ export class AwsNotificationProductionRepository
   }
 
   async S3InstagramMentionsNotification(data: S3NotificationInterface) {
-    const awsData = await axios
-      .get(
-        `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
-      )
-      .then(({ data }) => {
-        return data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const awsData: AwsNotificationInstagramMentionAwsDataInterface[] =
+      await axios
+        .get(
+          `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
+        )
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-    const mentionData: any[] = [];
-    const commentData: any[] = [];
+    const mentionData: AwsNotificationInstagramMentionResponseInterface[] = [];
 
-    awsData.forEach((item: any) => {
+    awsData.forEach((item) => {
       if (item.instagram_id) {
         mentionData.push({
           id: item.id,
@@ -297,26 +308,10 @@ export class AwsNotificationProductionRepository
           ownerFullName: item.ownerFullName,
           ownerUsername: item.ownerUsername,
         });
-
-        item.latestComments.forEach((comment: any) => {
-          commentData.push({
-            id: comment.id,
-            text: comment.text,
-            ownerProfilePicUrl: comment.ownerProfilePicUrl,
-            post_id: item.id,
-            politician_id: item.instagram_id,
-            ownerUsername: comment.ownerUsername,
-            timestamp: comment.timestamp,
-            likeCount: comment.likesCount,
-          });
-        });
       }
     });
 
-    return {
-      mentionData,
-      commentData,
-    };
+    return mentionData;
   }
 
   async S3InstagramProfileNotification(data: S3NotificationInterface) {
@@ -351,6 +346,7 @@ export class AwsNotificationProductionRepository
 
     return formattedData;
   }
+
   async S3TiktokProfileNotification(data: S3NotificationInterface) {
     const awsData: AwsNotificationTiktokProfileAwsDataInterface[] = await axios
       .get(
@@ -446,7 +442,7 @@ export class AwsNotificationProductionRepository
   }
 
   async S3FacebookAdsNotification(data: S3NotificationInterface) {
-    const awsData = await axios
+    const awsData: AwsNotificationFacebookAdsAwsDataInterface[] = await axios
       .get(
         `https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`
       )
@@ -457,13 +453,15 @@ export class AwsNotificationProductionRepository
         console.log(err);
       });
 
-    const advertisingData: any = [];
-    const deliveryRegionData: any = [];
-    const demographicDistributionData: any = [];
+    const formattedData: AwsNotificationFacebookAdsResponseInterface = {
+      advertisingData: [],
+      deliveryRegionData: [],
+      demographicDistributionData: [],
+    };
 
-    awsData.forEach((element: any) => {
-      element.data.forEach((item: any) => {
-        advertisingData.push({
+    awsData.forEach((element) => {
+      element.data.forEach((item) => {
+        formattedData.advertisingData.push({
           id: item.id,
           politician_id: element.Meta_id,
           ad_creation_time: moment(item.ad_creation_time).toDate(),
@@ -479,30 +477,28 @@ export class AwsNotificationProductionRepository
           impressions_upper_bound: item.impressions.upper_bound,
         });
 
-        item.delivery_by_region.forEach((region: any) => {
-          deliveryRegionData.push({
+        item.delivery_by_region.forEach((region) => {
+          formattedData.deliveryRegionData.push({
             region: region.region,
             advertising_id: item.id,
             percentage: region.percentage,
           });
         });
 
-        item.demographic_distribution.forEach((distribution: any) => {
-          demographicDistributionData.push({
-            advertising_id: item.id,
-            age: distribution.age,
-            gender: distribution.gender,
-            percentage: distribution.percentage,
-          });
-        });
+        item.demographic_distribution.forEach(
+          (distribution: { age: any; gender: any; percentage: any }) => {
+            formattedData.demographicDistributionData.push({
+              advertising_id: item.id,
+              age: distribution.age,
+              gender: distribution.gender,
+              percentage: distribution.percentage,
+            });
+          }
+        );
       });
     });
 
-    return {
-      advertisingData,
-      deliveryRegionData,
-      demographicDistributionData,
-    };
+    return formattedData;
   }
 
   async S3FacebookCommentsNotification(data: S3NotificationInterface) {
