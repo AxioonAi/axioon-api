@@ -21,6 +21,5 @@ export const ZodCreatePoliticianProfileBodySchema = z.object({
 });
 
 export const ZodFindPoliticianProfileDetailsQuerySchema = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
+  period: z.coerce.number().default(7),
 });
