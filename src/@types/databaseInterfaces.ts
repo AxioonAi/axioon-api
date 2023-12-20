@@ -61,20 +61,6 @@ export interface FacebookPostCommentsCreateInterface {
   sentimentAnalysis: number;
 }
 
-export interface FacebookPostCommentsCreateInterface {
-  id: string;
-  text: string;
-  likeCount: number;
-  replies: number;
-  postUrl: string;
-  date: Date;
-  username: string;
-  author: string;
-  post_id: string;
-  sentimentAnalysis: number;
-  created_at: Date;
-}
-
 export interface TiktokCommentsCreateInterface {
   id: string;
   diggCount: number;
@@ -163,4 +149,50 @@ export interface FacebookBaseDataCreateInterface {
   title: string;
   followers_count: number;
   politician_id: string;
+}
+
+export interface InstagramMentionCreateInterface {
+  id: string;
+  postUrl: string;
+  description: string;
+  commentCount: number;
+  likeCount: number;
+  pubDate: Date;
+  viewCount: number;
+  username: string;
+  imgUrl: string;
+  postId: string;
+  politician_id: string;
+  playCount: number;
+  ownerFullName: string;
+  ownerUsername: string;
+  sentimentAnalysis: number;
+}
+
+export interface GptMentionDataInterface {
+  id: string;
+  description: string;
+}
+
+export interface GptMentionResponseInterface {
+  id: string;
+  description: string;
+  sentimentAnalysis: number;
+}
+
+export interface GptNewsDataInterface {
+  title: string;
+  url: string;
+  content: string[];
+  last_update: Date;
+  users: {
+    name: string;
+    user_id: string;
+  }[];
+}
+
+export interface GptNewsResponseInterface {
+  id: string;
+  description: string;
+  sentimentAnalysis: number;
 }

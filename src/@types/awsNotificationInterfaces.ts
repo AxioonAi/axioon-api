@@ -138,7 +138,7 @@ export interface AwsNotificationInstagramProfileAwsDataInterface {
   followersCount: number;
   followsCount: number;
   postsCount: number;
-  igtvVideoCount: string;
+  igtvVideoCount: number;
   isBusinessAccount: boolean;
   verified: boolean;
   biography: string;
@@ -289,4 +289,113 @@ export interface AwsNotificationYoutubeChannelResponseInterface {
   channel_total_videos: number;
   date: Date;
   politician_id: string;
+}
+
+export interface AwsNotificationInstagramMentionAwsDataInterface {
+  instagram_id: string;
+  id: string;
+  url: string;
+  caption: string;
+  commentsCount: number;
+  likesCount: number;
+  timestamp: Date;
+  type: string;
+  videoViewCount: number;
+  videoPlayCount: number;
+  ownerUsername: string;
+  displayUrl: string;
+  ownerFullName: string;
+}
+
+export interface AwsNotificationInstagramMentionResponseInterface {
+  id: string;
+  postUrl: string;
+  description: string;
+  commentCount: number;
+  likeCount: number;
+  pubDate: Date;
+  viewCount: number;
+  playCount: number;
+  username: string;
+  imgUrl: string;
+  postId: string;
+  politician_id: string;
+  ownerFullName: string;
+  ownerUsername: string;
+}
+
+export interface AwsNotificationFacebookAdsAwsDataInterface {
+  data: {
+    id: string;
+    ad_creation_time: Date;
+    ad_delivery_stop_time: Date;
+    ad_delivery_start_time: Date;
+    ad_snapshot_url: string;
+    currency: string;
+    page_name: string;
+    bylines: string;
+    spend: { lower_bound: string; upper_bound: string };
+    impressions: { lower_bound: string; upper_bound: string };
+    delivery_by_region: {
+      region: string;
+      percentage: string;
+    }[];
+    demographic_distribution: {
+      age: string;
+      gender: string;
+      percentage: string;
+    }[];
+  }[];
+  Meta_id: string;
+}
+
+export interface AwsNotificationFacebookAdsResponseInterface {
+  advertisingData: {
+    id: string;
+    politician_id: string;
+    ad_creation_time: Date;
+    ad_delivery_stop_time: Date;
+    ad_delivery_start_time: Date;
+    ad_snapshot_url: string;
+    currency: string;
+    page_name: string;
+    bylines: string;
+    spend_lower_bound: string;
+    spend_upper_bound: string;
+    impressions_lower_bound: string;
+    impressions_upper_bound: string;
+  }[];
+  deliveryRegionData: {
+    region: string;
+    advertising_id: string;
+    percentage: string;
+  }[];
+  demographicDistributionData: {
+    advertising_id: string;
+    age: string;
+    gender: string;
+    percentage: string;
+  }[];
+}
+
+export interface AwsNotificationNewsAwsDataInterface {
+  title: string;
+  link: string;
+  content: string[];
+  updated: Date;
+  users: {
+    name: string;
+    id: string;
+  }[];
+}
+
+export interface AwsNotificationNewsResponseInterface {
+  title: string;
+  url: string;
+  content: string[];
+  last_update: Date;
+  users: {
+    name: string;
+    user_id: string;
+  }[];
 }
