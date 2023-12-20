@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { TutorialVideoRepository } from "../tutorialVideoRepository";
+import { TutorialVideoRepository } from "../TutorialVideoRepository";
 
 export class PrismaTutorialVideoRepository implements TutorialVideoRepository {
   async findAll() {

@@ -1,45 +1,66 @@
+import { InstagramCommentCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { InstagramMentionCommentRepository } from "../InstagramMentionCommentRepository";
+
+interface CreateCommentProps extends InstagramCommentCreateInterface {
+  politician_id: string;
+  sentimentAnalysis: number;
+}
 
 export class PrismaInstagramMentionCommentRepository
   implements InstagramMentionCommentRepository
 {
-  async createMany(
-    data: {
-      id: string;
-      text: string;
-      ownerProfilePicUrl: string;
-      post_id: string;
-      politician_id: string;
-      ownerUsername: string;
-      timestamp: string;
-      likeCount: number;
-    }[]
-  ) {
+  async createMany(data: InstagramCommentCreateInterface[]) {
     const idExists = data.map((item) => item.id);
-
-    const commentExists = await prisma.instagramMentionComment.findMany({
-      where: {
-        id: {
-          in: idExists,
-        },
-      },
+    const postId = data.map((item) => {
+      return `https://www.instagram.com/p/${item.post_id}`;
     });
 
-    const createData: any[] = [];
-    const updateData: any[] = [];
+    const [postExists, commentExists] = await Promise.all([
+      prisma.instagramMention.findMany({
+        where: {
+          postUrl: {
+            in: postId,
+          },
+        },
+      }),
+      prisma.instagramMentionComment.findMany({
+        where: {
+          id: {
+            in: idExists,
+          },
+        },
+      }),
+    ]);
+
+    const createData: CreateCommentProps[] = [];
+    const updateData: InstagramCommentCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!commentExists.find((comment) => comment.id === item.id)) {
-        createData.push({
-          ...item,
-          sentimentAnalysis: Math.floor(Math.random() * (100 - 1000) + 100),
-        });
+        const post = postExists.find(
+          (post) =>
+            post.postUrl === `https://www.instagram.com/p/${item.post_id}`
+        );
+        if (post && item.text) {
+          createData.push({
+            ...item,
+            post_id: post.id,
+            politician_id: post.politician_id,
+          });
+        } else {
+        }
       } else {
-        updateData.push({
-          ...item,
-          sentimentAnalysis: Math.floor(Math.random() * (1000 - 100) + 100),
-        });
+        const post = postExists.find(
+          (post) =>
+            post.postUrl === `https://www.instagram.com/p/${item.post_id}`
+        );
+        if (post) {
+          updateData.push({
+            ...item,
+            post_id: post.id,
+          });
+        }
       }
     });
 
