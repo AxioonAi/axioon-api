@@ -1,4 +1,4 @@
-import { UserRepository } from "@/repositories/userRepository";
+import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { CityDataFormatter } from "@/utils/dataFormatter/city";
 
 interface CityStatisticsUseCaseRequest {
@@ -10,12 +10,14 @@ interface CityStatisticsUseCaseResponse {
 }
 
 export class CityStatisticsUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private politicianProfileRepository: PoliticianProfileRepository
+  ) {}
 
   async execute({
     userId,
   }: CityStatisticsUseCaseRequest): Promise<CityStatisticsUseCaseResponse> {
-    const user = await this.userRepository.findUserCity(userId);
+    const user = await this.politicianProfileRepository.findUserCity(userId);
 
     if (!user) {
       throw new Error("User not found");

@@ -32,4 +32,23 @@ export class PrismaUserRepository implements UserRepository {
       },
     });
   }
+
+  async update(
+    id: string,
+    data: {
+      name: string;
+      email?: string;
+      mobilePhone?: string;
+      cpfCnpj?: string;
+      birthDate?: string;
+      password_hash: string;
+    }
+  ) {
+    return await prisma.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
 }

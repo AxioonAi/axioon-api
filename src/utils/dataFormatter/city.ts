@@ -1,7 +1,6 @@
 import { UserCityInterface } from "@/repositories/PoliticianProfileRepository";
 
-export const CityDataFormatter = ({ city }: UserCityInterface) => {
-  console.log(city.IBGEData);
+export const CityDataFormatter = ({ city, role }: UserCityInterface) => {
   return {
     id: city.id,
     name: city.name,
@@ -163,5 +162,8 @@ export const CityDataFormatter = ({ city }: UserCityInterface) => {
       },
     },
     pollingPlace: {},
+    politician: city.politician.filter((politician) => {
+      return politician.role === role;
+    }).length,
   };
 };
