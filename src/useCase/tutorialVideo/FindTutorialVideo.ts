@@ -1,4 +1,4 @@
-import { TutorialVideoRepository } from "@/repositories/tutorialVideoRepository";
+import { TutorialVideoRepository } from "@/repositories/TutorialVideoRepository";
 
 interface FindTutorialVideoUseCaseRequest {}
 
