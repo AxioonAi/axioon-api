@@ -1,5 +1,6 @@
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
 import { MetaAdvertisingLibDeliveryByRegionRepository } from "@/repositories/MetaAdvertisingLibDeliveryByRegionRepository";
+import { MetaAdvertisingLibDemographicDistributionRepository } from "@/repositories/MetaAdvertisingLibDemographicDistributionRepository";
 import { MetaAdvertisingLibRepository } from "@/repositories/MetaAdvertisingLibRepository";
 
 interface FacebookAdsWebhookUseCaseRequest {
@@ -19,7 +20,7 @@ export class FacebookAdsWebhookUseCase {
     private awsNotificationRepository: AwsNotificationRepository,
     private metaAdvertisingLibRepository: MetaAdvertisingLibRepository,
     private metaAdvertisingLibDeliveryByRegionRepository: MetaAdvertisingLibDeliveryByRegionRepository,
-    private metaAdvertisingLibDemographicDistributionRepository: MetaAdvertisingLibDeliveryByRegionRepository
+    private metaAdvertisingLibDemographicDistributionRepository: MetaAdvertisingLibDemographicDistributionRepository
   ) {}
 
   async execute({

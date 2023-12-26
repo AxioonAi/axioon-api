@@ -5,7 +5,7 @@ import { TiktokVideoDataRepository } from "../TiktokVideoDataRepository";
 export class PrismaTiktokVideoDataRepository
   implements TiktokVideoDataRepository
 {
-  async createMany(data: TiktokVideoCreateInterface[]): Promise<any> {
+  async createMany(data: TiktokVideoCreateInterface[]) {
     const idExists = data.map((item) => item.id);
 
     const videoExists = await prisma.tiktokVideoData.findMany({

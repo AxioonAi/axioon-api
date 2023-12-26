@@ -1,3 +1,5 @@
+import { EmailAlreadyExistsError } from "@/helper/errors/EmailAlreadyExists";
+import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { SubUserRepository } from "@/repositories/SubUserRepository";
 import { UserRepository } from "@/repositories/userRepository";
 import { hash } from "bcryptjs";
@@ -29,8 +31,8 @@ export class CreateSubUserUseCase {
       this.subUserRepository.findByEmail(email),
     ]);
 
-    if (!userExists) throw new Error("User not found");
-    if (subUserExists) throw new Error("SubUser already exists");
+    if (!userExists) throw new UserNotFoundError();
+    if (subUserExists) throw new EmailAlreadyExistsError();
 
     const password_hash = await hash(password, 6);
 

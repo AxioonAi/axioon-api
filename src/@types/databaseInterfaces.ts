@@ -196,3 +196,32 @@ export interface GptNewsResponseInterface {
   description: string;
   sentimentAnalysis: number;
 }
+
+export interface MetaAdvertisingLibCreateInterface {
+  id: string;
+  politician_id: string;
+  impressions_lower_bound: string;
+  impressions_upper_bound: string;
+  spend_lower_bound: string;
+  spend_upper_bound: string;
+  currency: string;
+  page_name: string;
+  bylines: string;
+  ad_snapshot_url: string;
+  ad_delivery_start_time: Date;
+  ad_delivery_stop_time: Date;
+  ad_creation_time: Date;
+}
+
+export interface MetaAdvertisingLibDemographicDistributionCreateInterface {
+  age: string;
+  gender: string;
+  percentage: string;
+  advertising_id: string;
+}
+
+export interface MetaAdvertisingLibDeliveryByRegionCreateInterface {
+  region: string;
+  percentage: string;
+  advertising_id: string;
+}

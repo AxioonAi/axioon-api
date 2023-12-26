@@ -1,41 +1,42 @@
-import { TiktokBaseDataRepository } from "@/repositories/TiktokBaseDataRepository";
-import { TiktokVideoDataRepository } from "@/repositories/TiktokVideoDataRepository";
+import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { tiktokDataFormatter } from "@/utils/dataFormatter/tiktok";
 
 interface FindPoliticianProfileTiktokDetailsUseCaseRequest {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  period: number;
 }
 
 interface FindPoliticianProfileTiktokDetailsUseCaseResponse {}
 
 export class FindPoliticianProfileTiktokDetailsUseCase {
   constructor(
-    private tiktokBaseDataRepository: TiktokBaseDataRepository,
-    private tiktokVideoDataRepository: TiktokVideoDataRepository
+    private politicianProfileRepository: PoliticianProfileRepository
   ) {}
 
   async execute({
     id,
-    startDate,
-    endDate,
+    period,
   }: FindPoliticianProfileTiktokDetailsUseCaseRequest): Promise<FindPoliticianProfileTiktokDetailsUseCaseResponse> {
-    const [video, profile] = await Promise.all([
-      this.tiktokVideoDataRepository.findDetails({
+    const { previous, current } =
+      await this.politicianProfileRepository.findTiktokStatistics({
         id,
-        startDate,
-        endDate,
-      }),
-      this.tiktokBaseDataRepository.findDetails({
-        id,
-        startDate,
-        endDate,
-      }),
-    ]);
+        period,
+      });
 
-    const format = tiktokDataFormatter(video, profile.fans);
+    const formatCurrent = !current ? null : tiktokDataFormatter(current);
+    const formatPrevious = !previous ? null : tiktokDataFormatter(previous);
 
-    return format;
+    const finalStatistics = {
+      keyIndicators: {
+        current: !formatCurrent ? null : formatCurrent.videoEngagementData,
+        previous: !formatPrevious ? null : formatPrevious.videoEngagementData,
+      },
+      commentsStatistics: !formatCurrent
+        ? null
+        : formatCurrent.commentsStatistics,
+      videos: !formatPrevious ? null : formatPrevious.videos,
+    };
+
+    return finalStatistics;
   }
 }

@@ -1,10 +1,18 @@
+import { MetaAdvertisingLibDemographicDistributionCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { MetaAdvertisingLibDemographicDistributionRepository } from "../MetaAdvertisingLibDemographicDistributionRepository";
+
+interface UpdateDataProps
+  extends MetaAdvertisingLibDemographicDistributionCreateInterface {
+  id: string;
+}
 
 export class PrismaMetaAdvertisingLibDemographicDistributionRepository
   implements MetaAdvertisingLibDemographicDistributionRepository
 {
-  async createMany(data: any[]) {
+  async createMany(
+    data: MetaAdvertisingLibDemographicDistributionCreateInterface[]
+  ) {
     const advertisingIds = data.map((item) => item.advertising_id);
     const ages = data.map((item) => item.age);
     const gender = data.map((item) => item.gender);
@@ -22,43 +30,51 @@ export class PrismaMetaAdvertisingLibDemographicDistributionRepository
         },
       });
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: MetaAdvertisingLibDemographicDistributionCreateInterface[] =
+      [];
+    const updateData: UpdateDataProps[] = [];
 
-    data.forEach((item) => {
-      if (
-        !exists.find(
-          (meta) =>
-            meta.age === item.age &&
-            meta.gender === item.gender &&
-            meta.percentage === item.percentage &&
-            meta.advertising_id === item.advertising_id
-        )
-      ) {
-        createData.push(item);
-      } else {
-        const exist = exists.find(
-          (meta) =>
-            meta.age === item.age &&
-            meta.gender === item.gender &&
-            meta.percentage === item.percentage &&
-            meta.advertising_id === item.advertising_id
-        );
+    data.forEach(
+      (item: {
+        age: string;
+        gender: string;
+        percentage: string;
+        advertising_id: string;
+      }) => {
+        if (
+          !exists.find(
+            (meta) =>
+              meta.age === item.age &&
+              meta.gender === item.gender &&
+              meta.percentage === item.percentage &&
+              meta.advertising_id === item.advertising_id
+          )
+        ) {
+          createData.push(item);
+        } else {
+          const exist = exists.find(
+            (meta) =>
+              meta.age === item.age &&
+              meta.gender === item.gender &&
+              meta.percentage === item.percentage &&
+              meta.advertising_id === item.advertising_id
+          );
 
-        if (exist) {
-          updateData.push({
-            id: exist.id,
-            ...item,
-          });
+          if (exist) {
+            updateData.push({
+              id: exist.id,
+              ...item,
+            });
+          }
         }
       }
-    });
+    );
 
     await prisma.$transaction([
       prisma.metaAdvertisingLibDemographicDistribution.createMany({
         data: createData,
       }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update) =>
         prisma.metaAdvertisingLibDemographicDistribution.update({
           where: {
             id: update.id,

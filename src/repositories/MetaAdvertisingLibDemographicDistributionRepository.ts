@@ -1,3 +1,7 @@
+import { MetaAdvertisingLibDemographicDistributionCreateInterface } from "@/@types/databaseInterfaces";
+
 export interface MetaAdvertisingLibDemographicDistributionRepository {
-  createMany(data: any[]): Promise<void>;
+  createMany(
+    data: MetaAdvertisingLibDemographicDistributionCreateInterface[]
+  ): Promise<void>;
 }

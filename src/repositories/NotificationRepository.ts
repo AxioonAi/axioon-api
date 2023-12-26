@@ -1,4 +1,4 @@
-import { NotificationType } from "@prisma/client";
+import { Notification, NotificationType } from "@prisma/client";
 
 export interface NotificationRepository {
   create(data: {
@@ -14,7 +14,7 @@ export interface NotificationRepository {
       politician_profile_id: string;
       type: NotificationType;
     }[]
-  ): Promise<any>;
-  findUserNotification(userId: string): Promise<any>;
+  ): Promise<void>;
+  findUserNotification(userId: string): Promise<Notification[]>;
   update(id: string, opened: boolean): Promise<void>;
 }

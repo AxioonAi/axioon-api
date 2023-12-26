@@ -485,16 +485,14 @@ export class AwsNotificationProductionRepository
           });
         });
 
-        item.demographic_distribution.forEach(
-          (distribution: { age: any; gender: any; percentage: any }) => {
-            formattedData.demographicDistributionData.push({
-              advertising_id: item.id,
-              age: distribution.age,
-              gender: distribution.gender,
-              percentage: distribution.percentage,
-            });
-          }
-        );
+        item.demographic_distribution.forEach((distribution) => {
+          formattedData.demographicDistributionData.push({
+            advertising_id: item.id,
+            age: distribution.age,
+            gender: distribution.gender,
+            percentage: distribution.percentage,
+          });
+        });
       });
     });
 

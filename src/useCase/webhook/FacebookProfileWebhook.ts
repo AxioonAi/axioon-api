@@ -1,6 +1,5 @@
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
 import { FacebookBaseDataRepository } from "@/repositories/FacebookBaseDataRepository";
-import { NotificationRepository } from "@/repositories/NotificationRepository";
 import { PoliticianProfileMonitoringRepository } from "@/repositories/PoliticianProfileMonitoringRepository";
 import { NotificationType } from "@prisma/client";
 
@@ -20,8 +19,7 @@ export class FacebookProfileWebhookUseCase {
   constructor(
     private awsNotificationRepository: AwsNotificationRepository,
     private facebookBaseDataRepository: FacebookBaseDataRepository,
-    private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository,
-    private notificationRepository: NotificationRepository
+    private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository
   ) {}
 
   async execute({

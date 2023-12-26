@@ -1,13 +1,10 @@
-import { PrismaTiktokBaseDataRepository } from "@/repositories/Prisma/PrismaTiktokBaseDataRepository";
-import { PrismaTiktokVideoDataRepository } from "@/repositories/Prisma/PrismaTiktokVideoDataRepository";
+import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaPoliticianProfileRepository";
 import { FindPoliticianProfileTiktokDetailsUseCase } from "@/useCase/politicianProfile/FindPoliticianProfileTiktokDetails";
 
 export function makeFindPoliticianProfileTiktokDetails() {
-  const tiktokBaseDataRepository = new PrismaTiktokBaseDataRepository();
-  const tiktokVideoDataRepository = new PrismaTiktokVideoDataRepository();
+  const politicianProfileRepository = new PrismaPoliticianProfileRepository();
 
   return new FindPoliticianProfileTiktokDetailsUseCase(
-    tiktokBaseDataRepository,
-    tiktokVideoDataRepository
+    politicianProfileRepository
   );
 }

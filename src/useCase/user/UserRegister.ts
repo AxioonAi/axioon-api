@@ -1,3 +1,4 @@
+import { EmailAlreadyExistsError } from "@/helper/errors/EmailAlreadyExists";
 import { UserRepository } from "@/repositories/userRepository";
 import { SexType, User } from "@prisma/client";
 import { hash } from "bcryptjs";
@@ -30,7 +31,7 @@ export class UserRegisterUseCase {
 
     const userExists = await this.userRepository.findByEmail(data.email);
 
-    if (userExists) throw new Error("User already exists");
+    if (userExists) throw new EmailAlreadyExistsError();
 
     const password_hash = await hash(password, 6);
     const formattedSex = sex === "MALE" ? SexType.MALE : SexType.FEMALE;

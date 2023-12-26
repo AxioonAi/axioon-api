@@ -1,3 +1,7 @@
+import { MetaAdvertisingLibDeliveryByRegionCreateInterface } from "@/@types/databaseInterfaces";
+
 export interface MetaAdvertisingLibDeliveryByRegionRepository {
-  createMany(data: any[]): Promise<any>;
+  createMany(
+    data: MetaAdvertisingLibDeliveryByRegionCreateInterface[]
+  ): Promise<void>;
 }

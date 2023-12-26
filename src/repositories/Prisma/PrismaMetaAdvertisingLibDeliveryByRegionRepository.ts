@@ -1,10 +1,16 @@
+import { MetaAdvertisingLibDeliveryByRegionCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { MetaAdvertisingLibDeliveryByRegionRepository } from "../MetaAdvertisingLibDeliveryByRegionRepository";
+
+interface UpdateDataProps
+  extends MetaAdvertisingLibDeliveryByRegionCreateInterface {
+  id: string;
+}
 
 export class PrismaMetaAdvertisingLibDeliveryByRegionRepository
   implements MetaAdvertisingLibDeliveryByRegionRepository
 {
-  async createMany(data: any[]): Promise<any> {
+  async createMany(data: MetaAdvertisingLibDeliveryByRegionCreateInterface[]) {
     const advertisingIds = data.map((item) => item.advertising_id);
     const regions = data.map((item) => item.region);
 
@@ -17,8 +23,8 @@ export class PrismaMetaAdvertisingLibDeliveryByRegionRepository
       },
     });
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: MetaAdvertisingLibDeliveryByRegionCreateInterface[] = [];
+    const updateData: UpdateDataProps[] = [];
 
     data.forEach((item) => {
       if (
@@ -51,7 +57,7 @@ export class PrismaMetaAdvertisingLibDeliveryByRegionRepository
       prisma.metaAdvertisingLibDeliveryByRegion.createMany({
         data: createData,
       }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update) =>
         prisma.metaAdvertisingLibDeliveryByRegion.update({
           where: {
             id: update.id,

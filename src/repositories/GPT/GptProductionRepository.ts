@@ -35,4 +35,8 @@ export class GptProductionRepository implements GptRepository {
 
     return finalData;
   }
+
+  async sentimentAnalysis() {
+    return Math.abs(Math.floor(Math.random() * (100 - 1000) + 100));
+  }
 }

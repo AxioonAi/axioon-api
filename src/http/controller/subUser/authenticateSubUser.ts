@@ -17,7 +17,8 @@ export const authenticateSubUserController = async (
     });
 
     const token = await reply.jwtSign({
-      sub: user.id,
+      sub: user.user_id,
+      type: "subUser",
     });
 
     const refreshToken = await reply.jwtSign({
@@ -28,6 +29,7 @@ export const authenticateSubUserController = async (
     return reply.status(200).send({
       token,
       refreshToken,
+      type: "subUser",
     });
   } catch (error) {
     throw error;

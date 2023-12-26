@@ -1,3 +1,4 @@
+import { MetaAdvertisingLibCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
 import { MetaAdvertisingLib } from "@prisma/client";
 import { MetaAdvertisingLibRepository } from "../MetaAdvertisingLibRepository";
@@ -16,8 +17,8 @@ export class PrismaMetaAdvertisingLibRepository
       },
     });
 
-    const createData: any = [];
-    const updateData: any = [];
+    const createData: MetaAdvertisingLibCreateInterface[] = [];
+    const updateData: MetaAdvertisingLibCreateInterface[] = [];
 
     data.forEach((item) => {
       if (!metaExists.find((meta) => meta.id === item.id)) {
@@ -29,7 +30,7 @@ export class PrismaMetaAdvertisingLibRepository
 
     await prisma.$transaction([
       prisma.metaAdvertisingLib.createMany({ data: createData }),
-      ...updateData.map((update: any) =>
+      ...updateData.map((update) =>
         prisma.metaAdvertisingLib.update({
           where: {
             id: update.id,
@@ -38,23 +39,5 @@ export class PrismaMetaAdvertisingLibRepository
         })
       ),
     ]);
-  }
-
-  async findDetails(data: { id: string; startDate: Date; endDate: Date }) {
-    const meta = await prisma.metaAdvertisingLib.findMany({
-      where: {
-        politician_id: data.id,
-        ad_creation_time: {
-          gte: data.startDate,
-          lte: data.endDate,
-        },
-      },
-      include: {
-        deliveryByRegion: true,
-        demographicDistribution: true,
-      },
-    });
-
-    return meta;
   }
 }

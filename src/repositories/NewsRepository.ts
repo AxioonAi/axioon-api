@@ -1,4 +1,4 @@
-import { News, NewsScore } from "@prisma/client";
+import { NewsScore } from "@prisma/client";
 
 export interface CreateNewsInterface {
   title: string;
@@ -11,8 +11,5 @@ export interface CreateNewsInterface {
 }
 
 export interface NewsRepository {
-  // findById(id: string): Promise<News>;
-  create(data: CreateNewsInterface): Promise<News>;
-  createMany(data: CreateNewsInterface[]): Promise<any>;
-  findByUserId(id: string): Promise<News[]>;
+  createMany(data: CreateNewsInterface[]): Promise<void>;
 }

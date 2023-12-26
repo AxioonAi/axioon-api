@@ -34,16 +34,16 @@ app.register(fastifyJwt, {
   },
 });
 
-app.register(userRoutes);
-app.register(cityRoutes);
-app.register(scrapeRoutes);
+app.register(userRoutes); // TESTADO
+app.register(cityRoutes); // TESTADO
+app.register(scrapeRoutes); // TESTADO
 app.register(subUserRoutes);
 app.register(webhookRoutes);
 app.register(purchaseRoutes);
-app.register(notificationRoutes);
-app.register(tutorialVideoRoutes);
-app.register(signaturePlanRoutes);
-app.register(politicalGroupRoutes);
+app.register(notificationRoutes); // TESTADO
+app.register(tutorialVideoRoutes); // TESTADO
+app.register(signaturePlanRoutes); // TESTADO
+app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
-app.setErrorHandler(fastifyErrorHandler);
+app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);

@@ -1,4 +1,6 @@
+import { AuthenticateError } from "@/helper/errors/AuthenticateError";
 import { SubUserRepository } from "@/repositories/SubUserRepository";
+import { SubUser } from "@prisma/client";
 import { compare } from "bcryptjs";
 
 interface AuthenticateSubUserUseCaseRequest {
@@ -6,7 +8,9 @@ interface AuthenticateSubUserUseCaseRequest {
   password: string;
 }
 
-interface AuthenticateSubUserUseCaseResponse {}
+interface AuthenticateSubUserUseCaseResponse {
+  user: SubUser;
+}
 
 export class AuthenticateSubUserUseCase {
   constructor(private subUserRepository: SubUserRepository) {}
@@ -18,15 +22,15 @@ export class AuthenticateSubUserUseCase {
     const subUser = await this.subUserRepository.findByEmail(email);
 
     if (!subUser) {
-      throw new Error("User not found");
+      throw new AuthenticateError();
     }
 
     const passwordMatch = await compare(password, subUser.password_hash);
 
     if (!passwordMatch) {
-      throw new Error("Invalid password");
+      throw new AuthenticateError();
     }
 
-    return subUser;
+    return { user: subUser };
   }
 }

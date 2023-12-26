@@ -11,6 +11,8 @@ export const FindUserNotificationController = async (
     const notification = await findUserNotificationUseCase.execute({
       id: request.user.sub,
     });
+
+    return reply.status(200).send(notification);
   } catch (error) {
     throw error;
   }

@@ -1,3 +1,4 @@
+import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { CityDataFormatter } from "@/utils/dataFormatter/city";
 
@@ -5,9 +6,7 @@ interface CityStatisticsUseCaseRequest {
   userId: string;
 }
 
-interface CityStatisticsUseCaseResponse {
-  city: any;
-}
+interface CityStatisticsUseCaseResponse {}
 
 export class CityStatisticsUseCase {
   constructor(
@@ -20,7 +19,7 @@ export class CityStatisticsUseCase {
     const user = await this.politicianProfileRepository.findUserCity(userId);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new UserNotFoundError();
     }
 
     const formattedData = CityDataFormatter(user);

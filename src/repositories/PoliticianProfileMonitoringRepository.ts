@@ -17,7 +17,10 @@ export interface PoliticianProfileMonitoringRepository {
     user_id: string;
     politician_profile_id: string;
   }): Promise<void>;
-  verify(data: { profileId: string; userId: string }): Promise<any>;
+  verify(data: {
+    profileId: string;
+    userId: string;
+  }): Promise<PoliticianProfileMonitoring | null>;
   findManyByUserId(userId: string): Promise<findUsersByProfileId[]>;
   findUsersByProfileId(ids: string[]): Promise<findUsersByProfileId[]>;
 }

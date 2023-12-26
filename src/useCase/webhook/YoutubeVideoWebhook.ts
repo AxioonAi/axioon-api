@@ -1,5 +1,4 @@
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
-import { YoutubeBaseDataRepository } from "@/repositories/YoutubeBaseDataRepository";
 import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepository";
 
 interface YoutubeWebhookUseCaseRequest {
@@ -17,7 +16,6 @@ interface YoutubeWebhookUseCaseResponse {}
 export class YoutubeWebhookUseCase {
   constructor(
     private awsNotificationRepository: AwsNotificationRepository,
-    private youtubeBaseDataRepository: YoutubeBaseDataRepository,
     private youtubeVideoBaseDataRepository: YoutubeVideoDataRepository
   ) {}
 

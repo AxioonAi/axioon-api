@@ -1,41 +1,42 @@
-import { InstagramBaseDataRepository } from "@/repositories/InstagramBaseDataRepository";
-import { InstagramMentionRepository } from "@/repositories/InstagramMentionRepository";
-import { InstagramPostRepository } from "@/repositories/InstagramPostRepository";
+import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
+import { instagramDataFormatter } from "@/utils/dataFormatter/instagram";
 
 interface FindPoliticianProfileInstagramDetailsUseCaseRequest {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  period: number;
 }
 
 interface FindPoliticianProfileInstagramDetailsUseCaseResponse {}
 
 export class FindPoliticianProfileInstagramDetailsUseCase {
   constructor(
-    private instagramBaseDataRepository: InstagramBaseDataRepository,
-    private instagramPostBaseDataRepository: InstagramPostRepository,
-    private instagramMentionsRepository: InstagramMentionRepository
+    private politicianProfileRepository: PoliticianProfileRepository
   ) {}
 
   async execute({
     id,
-    startDate,
-    endDate,
+    period,
   }: FindPoliticianProfileInstagramDetailsUseCaseRequest): Promise<FindPoliticianProfileInstagramDetailsUseCaseResponse> {
-    const [profile, mentions, posts] = await Promise.all([
-      this.instagramBaseDataRepository.findDetails({ id, startDate, endDate }),
-      this.instagramMentionsRepository.findDetails({ id, startDate, endDate }),
-      this.instagramPostBaseDataRepository.findDetails({
+    const { current, previous } =
+      await this.politicianProfileRepository.findInstagramStatistics({
         id,
-        startDate,
-        endDate,
-      }),
-    ]);
+        period,
+      });
 
-    return {
-      posts,
-      mentions,
-      profile,
+    const formatCurrent = !current ? null : instagramDataFormatter(current);
+    const formatPrevious = !previous ? null : instagramDataFormatter(previous);
+
+    const finalStatistics = {
+      keyIndicators: {
+        current: !formatCurrent ? null : formatCurrent.postEngagementData,
+        previous: !formatPrevious ? null : formatPrevious.postEngagementData,
+      },
+      commentsStatistics: !formatCurrent
+        ? null
+        : formatCurrent.commentStatistics,
+      posts: !formatCurrent ? null : formatCurrent.posts,
     };
+
+    return finalStatistics;
   }
 }

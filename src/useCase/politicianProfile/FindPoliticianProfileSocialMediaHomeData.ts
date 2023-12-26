@@ -1,100 +1,85 @@
-import { FacebookPostBaseDataRepository } from "@/repositories/FacebookPostBaseDataRepository";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
-import { TiktokVideoDataRepository } from "@/repositories/TiktokVideoDataRepository";
-import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepository";
+import { CommentWordCount } from "@/utils/dataFormatter/commentWordCount";
+import { EngagementDataFormatter } from "@/utils/dataFormatter/engagement";
 
 interface FindPoliticianProfileSocialMediaHomeDataUseCaseRequest {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  period: number;
 }
 
 interface FindPoliticianProfileSocialMediaHomeDataUseCaseResponse {}
 
 export class FindPoliticianProfileSocialMediaHomeDataUseCase {
   constructor(
-    private politicianProfileRepository: PoliticianProfileRepository,
-    private youtubeVideoDataRepository: YoutubeVideoDataRepository,
-    private tiktokVideoDataRepository: TiktokVideoDataRepository,
-    private facebookPostBaseDataRepository: FacebookPostBaseDataRepository
+    private politicianProfileRepository: PoliticianProfileRepository
   ) {}
 
   async execute({
     id,
-    startDate,
-    endDate,
+    period,
   }: FindPoliticianProfileSocialMediaHomeDataUseCaseRequest): Promise<FindPoliticianProfileSocialMediaHomeDataUseCaseResponse> {
-    const [youtube, tiktok, facebook] = await Promise.all([
-      this.youtubeVideoDataRepository.findHomeData({
-        id,
-        startDate,
-        endDate,
-      }),
-      this.tiktokVideoDataRepository.findHomeData({
-        id,
-        startDate,
-        endDate,
-      }),
-      this.facebookPostBaseDataRepository.findHomeData({
-        id,
-        startDate,
-        endDate,
-      }),
+    const [followers, comments, posts] = await Promise.all([
+      this.politicianProfileRepository.findFollowersStatistics({ id, period }),
+      this.politicianProfileRepository.findCommentsStatistics({ id, period }),
+      this.politicianProfileRepository.findPostsStatistics({ id, period }),
     ]);
 
-    const formattedData = {
-      youtube: {
+    const wordCount = !comments ? null : CommentWordCount(comments);
+    const engagement = !posts ? null : EngagementDataFormatter(posts);
+
+    const data = {
+      followers: {
         current: {
-          ...youtube[0]._sum,
-          interactions:
-            youtube[0]._sum.viewCount +
-            youtube[0]._sum.commentsCount * 1 +
-            youtube[0]._sum.likes * 1,
+          instagram: followers[0].instagramData[0]
+            ? followers[0].instagramData[0].followers
+            : 0,
+          tiktok: followers[0].tiktokData[0]
+            ? followers[0].tiktokData[0].fans
+            : 0,
+          facebook: followers[0].facebookData[0]
+            ? followers[0].facebookData[0].followers_count
+            : 0,
+          youtube: followers[0].youtubeBaseData[0]
+            ? followers[0].youtubeBaseData[0].channel_total_subs
+            : 0,
         },
         previous: {
-          ...youtube[1]._sum,
-          interactions:
-            youtube[1]._sum.viewCount +
-            youtube[1]._sum.commentsCount * 1 +
-            youtube[1]._sum.likes * 1,
+          instagram: followers[1].instagramData[0]
+            ? followers[1].instagramData[0].followers
+            : 0,
+          tiktok: followers[1].tiktokData[0]
+            ? followers[1].tiktokData[0].fans
+            : 0,
+          facebook: followers[1].facebookData[0]
+            ? followers[1].facebookData[0].followers_count
+            : 0,
+          youtube: followers[1].youtubeBaseData[0]
+            ? followers[1].youtubeBaseData[0].channel_total_subs
+            : 0,
         },
+        currentTotal: followers[0].instagramData[0]
+          ? followers[0].instagramData[0].followers
+          : 0 + followers[0].tiktokData[0]
+          ? followers[0].tiktokData[0].fans
+          : 0 + followers[0].facebookData[0]
+          ? followers[0].facebookData[0].followers_count
+          : 0 + followers[0].youtubeBaseData[0]
+          ? followers[0].youtubeBaseData[0].channel_total_subs
+          : 0,
+        previousTotal: followers[1].instagramData[0]
+          ? followers[1].instagramData[0].followers
+          : 0 + followers[1].tiktokData[0]
+          ? followers[1].tiktokData[0].fans
+          : 0 + followers[1].facebookData[0]
+          ? followers[1].facebookData[0].followers_count
+          : 0 + followers[1].youtubeBaseData[0]
+          ? followers[1].youtubeBaseData[0].channel_total_subs
+          : 0,
       },
-      tiktok: {
-        current: {
-          ...tiktok[0]._sum,
-          interactions:
-            tiktok[0]._sum.diggCount * 1 +
-            tiktok[0]._sum.commentCount * 1 +
-            tiktok[0]._sum.playCount * 1 +
-            tiktok[0]._sum.shareCount * 1,
-        },
-        previous: {
-          ...tiktok[1]._sum,
-          interactions:
-            tiktok[1]._sum.diggCount * 1 +
-            tiktok[1]._sum.commentCount * 1 +
-            tiktok[1]._sum.playCount * 1 +
-            tiktok[1]._sum.shareCount * 1,
-        },
-      },
-      facebook: {
-        current: {
-          ...facebook[0]._sum,
-          interactions:
-            facebook[0]._sum.like * 1 +
-            facebook[0]._sum.comments * 1 +
-            facebook[0]._sum.shares * 1,
-        },
-        previous: {
-          ...facebook[1]._sum,
-          interactions:
-            facebook[1]._sum.like * 1 +
-            facebook[1]._sum.comments * 1 +
-            facebook[1]._sum.shares * 1,
-        },
-      },
+      wordCloud: wordCount,
+      engagement,
     };
 
-    return formattedData;
+    return data;
   }
 }

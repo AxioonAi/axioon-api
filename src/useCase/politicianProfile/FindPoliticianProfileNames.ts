@@ -12,9 +12,15 @@ export class FindPoliticianProfileNamesUseCase {
   async execute({}: FindPoliticianProfileNamesUseCaseRequest): Promise<FindPoliticianProfileNamesUseCaseResponse> {
     const names = await this.politicianProfileRepository.findNamesAndRoles();
 
-    const formattedData: any = [];
+    const formattedData: {
+      id: string;
+      name: string;
+      social_name: string;
+      role: string;
+      facebook: string;
+    }[] = [];
 
-    names.forEach((user: any) => {
+    names.forEach((user) => {
       if (
         user.id &&
         user.full_name &&
@@ -28,7 +34,7 @@ export class FindPoliticianProfileNamesUseCase {
           social_name: user.social_name,
           role: user.role,
           facebook:
-            user.facebookData.length > 0 ? user.facebookData[0].title : null,
+            user.facebookData.length > 0 ? user.facebookData[0].title : "null",
         });
       }
     });

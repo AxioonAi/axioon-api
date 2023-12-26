@@ -3,8 +3,7 @@ import { youtubeDataFormatter } from "@/utils/dataFormatter/youtube";
 
 interface FindPoliticianProfileYoutubeDetailsUseCaseRequest {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  period: number;
 }
 
 interface FindPoliticianProfileYoutubeDetailsUseCaseResponse {}
@@ -16,20 +15,28 @@ export class FindPoliticianProfileYoutubeDetailsUseCase {
 
   async execute({
     id,
-    startDate,
-    endDate,
+    period,
   }: FindPoliticianProfileYoutubeDetailsUseCaseRequest): Promise<FindPoliticianProfileYoutubeDetailsUseCaseResponse> {
-    const data = await this.politicianProfileRepository.findYoutubeDetails({
-      id,
-      startDate,
-      endDate,
-    });
+    const { current, previous } =
+      await this.politicianProfileRepository.findYoutubeStatistics({
+        id,
+        period,
+      });
 
-    const format = youtubeDataFormatter(
-      data.youtubeVideoData,
-      data.youtubeBaseData[0].channel_total_subs
-    );
+    const formatCurrent = !current ? null : youtubeDataFormatter(current);
+    const formatPrevious = !previous ? null : youtubeDataFormatter(previous);
 
-    return format;
+    const finalStatistics = {
+      keyIndicators: {
+        current: !formatCurrent ? null : formatCurrent.videoEngagementData,
+        previous: !formatPrevious ? null : formatPrevious.videoEngagementData,
+      },
+      commentsStatistics: !formatCurrent
+        ? null
+        : formatCurrent.commentsStatistics,
+      posts: !formatPrevious ? null : formatPrevious.videos,
+    };
+
+    return finalStatistics;
   }
 }

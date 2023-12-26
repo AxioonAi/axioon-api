@@ -1,3 +1,4 @@
+import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { SubUserRepository } from "@/repositories/SubUserRepository";
 import { hash } from "bcryptjs";
 
@@ -22,11 +23,11 @@ export class updateSubUserUseCase {
     const subUser = await this.subUserRepository.findById(subUserId);
 
     if (!subUser) {
-      throw new Error("SubUser not found");
+      throw new UserNotFoundError();
     }
 
     if (subUser.user_id !== userId) {
-      throw new Error("Unauthorized");
+      throw new UserNotFoundError();
     }
 
     const password_hash = password && (await hash(password, 6));

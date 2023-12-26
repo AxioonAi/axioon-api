@@ -1,3 +1,4 @@
+import { WebsiteNotFoundError } from "@/helper/errors/WebsiteNotFoundError";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { WebSiteRepository } from "@/repositories/WebsiteRepository";
 
@@ -18,7 +19,7 @@ export class FindWebsiteUsersUseCase {
   }: FindWebsiteUsersUseCaseRequest): Promise<FindWebsiteUsersUseCaseResponse> {
     const website = await this.websiteRepository.findById(id);
 
-    if (!website) throw new Error("Website not found");
+    if (!website) throw new WebsiteNotFoundError();
 
     const users = await this.politicianProfileRepository.findByState(
       website.city.state
