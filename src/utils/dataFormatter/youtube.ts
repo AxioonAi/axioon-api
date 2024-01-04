@@ -107,8 +107,16 @@ export const youtubeDataFormatter = (data: {
 
 		let sentimentSum = 0;
 
+		const formattedComments = [];
+
 		for (const comment of comments) {
+			const { author, ...rest } = comment;
 			sentimentSum += comment.sentimentAnalysis;
+
+			formattedComments.push({
+				username: author,
+				...rest,
+			});
 		}
 
 		const engagement =
@@ -119,7 +127,7 @@ export const youtubeDataFormatter = (data: {
 		dataWithEngagement.push({
 			...data.youtubeVideoData[key],
 			engagement,
-			comments,
+			comments: formattedComments,
 			sentiment: sentimentSum / comments.length,
 		});
 	}
@@ -132,8 +140,12 @@ export const youtubeDataFormatter = (data: {
 
 	const finalData: YoutubeDataFormatterFinalDataInterface[] = [];
 	for (const video of dataWithEngagement) {
+		const { likes, commentsCount, viewCount, ...rest } = video;
 		finalData.push({
-			...video,
+			...rest,
+			like: likes,
+			commentCount: commentsCount,
+			views: viewCount,
 			percentage: (video.engagement / mostRankedVideo.engagement) * 100,
 		});
 	}

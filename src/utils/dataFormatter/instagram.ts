@@ -131,6 +131,14 @@ export const instagramDataFormatter = (data: {
 			(comment) => comment.post_id === data.instagramPosts[key].id,
 		);
 
+		const formattedComments = comments.map((comment) => {
+			const { ownerUsername, ...rest } = comment;
+			return {
+				...rest,
+				username: ownerUsername,
+			};
+		});
+
 		let sentimentSum = 0;
 
 		for (const comment of comments) {
@@ -145,7 +153,7 @@ export const instagramDataFormatter = (data: {
 		dataWithEngagement.push({
 			...instagramPosts[key],
 			engagement,
-			comments,
+			comments: formattedComments,
 			sentiment: sentimentSum / comments.length,
 		});
 	}
@@ -159,14 +167,46 @@ export const instagramDataFormatter = (data: {
 	const finalData: InstagramDataFormatterFinalDataInterface[] = [];
 
 	for (const item of rankByEngagement) {
+		const { likeCount, ...rest } = item;
 		finalData.push({
-			...item,
+			...rest,
+			like: likeCount,
 			percentage: (item.engagement / mostRankedPost.engagement) * 100,
 		});
 	}
 
+	const commentStatisticsFinalData = {
+		...commentStatisticsData,
+		commentTime: [
+			{
+				name: "00:00 - 04:00",
+				value: commentStatisticsData.commentTime.midnight_to_four_am,
+			},
+			{
+				name: "04:00 - 10:00",
+				value: commentStatisticsData.commentTime.four_am_to_ten_am,
+			},
+			{
+				name: "10:00 - 14:00",
+				value: commentStatisticsData.commentTime.ten_am_to_two_pm,
+			},
+			{
+				name: "14:00 - 18:00",
+				value: commentStatisticsData.commentTime.two_pm_to_six_pm,
+			},
+			{
+				name: "18:00 - 21:00",
+				value: commentStatisticsData.commentTime.six_pm_to_nine_pm,
+			},
+			{
+				name: "21:00 - 23:59",
+				value: commentStatisticsData.commentTime.nine_pm_to_midnight,
+			},
+		],
+	};
+
 	return {
-		commentStatistics: commentStatisticsData,
+		commentStatistics: commentStatisticsFinalData,
 		postEngagementData,
 		posts: finalData,
 	};

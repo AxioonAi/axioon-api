@@ -30,7 +30,7 @@ export interface YoutubeDataFormatterFinalDataInterface {
 		text: string;
 		likeCount: number;
 		replyCount: number;
-		author: string;
+		username: string;
 		video_id: string;
 		sentimentAnalysis: number;
 	}[];
@@ -39,9 +39,9 @@ export interface YoutubeDataFormatterFinalDataInterface {
 	title: string;
 	url: string;
 	duration: string;
-	viewCount: number;
-	commentsCount: number;
-	likes: number;
+	views: number;
+	commentCount: number;
+	like: number;
 	date: Date;
 	description: string;
 	imgUrl: string;
@@ -52,10 +52,10 @@ export interface TiktokDataFormatterFinalDataInterface {
 	engagement: number;
 	comments: {
 		id: string;
-		diggCount: number;
+		likeCount: number;
 		date: Date;
 		replyCount: number;
-		author: string;
+		username: string;
 		video_id: string;
 		text: string;
 		sentimentAnalysis: number;
@@ -64,9 +64,9 @@ export interface TiktokDataFormatterFinalDataInterface {
 	id: string;
 	text: string;
 	url: string;
-	diggCount: number;
+	like: number;
 	commentCount: number;
-	shareCount: number;
+	shares: number;
 	playCount: number;
 	date: Date;
 }
@@ -78,7 +78,7 @@ export interface InstagramDataFormatterFinalDataInterface {
 		id: string;
 		text: string;
 		post_id: string;
-		ownerUsername: string;
+		username: string;
 		ownerProfilePicUrl: string;
 		timestamp: string;
 		likeCount: number;
@@ -89,7 +89,7 @@ export interface InstagramDataFormatterFinalDataInterface {
 	postUrl: string;
 	description: string;
 	commentCount: number;
-	likeCount: number;
+	like: number;
 	pubDate: Date;
 	viewCount: number;
 	playCount: number;

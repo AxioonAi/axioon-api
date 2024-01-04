@@ -142,7 +142,16 @@ export const tiktokDataFormatter = (data: {
 
 		let sentimentSum = 0;
 
+		const formattedComments = [];
+
 		for (const comment of comments) {
+			const { author, sentimentAnalysis, diggCount, ...rest } = comment;
+			formattedComments.push({
+				...rest,
+				likeCount: diggCount,
+				sentimentAnalysis,
+				username: author,
+			});
 			sentimentSum += comment.sentimentAnalysis;
 		}
 
@@ -152,7 +161,7 @@ export const tiktokDataFormatter = (data: {
 		dataWithEngagement.push({
 			...tiktokVideoData[key],
 			engagement,
-			comments,
+			comments: formattedComments,
 			sentiment: sentimentSum / comments.length,
 		});
 	}
@@ -166,14 +175,47 @@ export const tiktokDataFormatter = (data: {
 	const finalData: TiktokDataFormatterFinalDataInterface[] = [];
 
 	for (const item of rankByEngagement) {
+		const { diggCount, shareCount, ...rest } = item;
 		finalData.push({
-			...item,
+			...rest,
+			like: diggCount,
+			shares: shareCount,
 			percentage: (item.engagement / mostRankedVideo.engagement) * 100,
 		});
 	}
 
+	const commentStatisticsFinalData = {
+		...commentStatisticsData,
+		commentTime: [
+			{
+				name: "00:00 - 04:00",
+				value: commentStatisticsData.commentTime.midnight_to_four_am,
+			},
+			{
+				name: "04:00 - 10:00",
+				value: commentStatisticsData.commentTime.four_am_to_ten_am,
+			},
+			{
+				name: "10:00 - 14:00",
+				value: commentStatisticsData.commentTime.ten_am_to_two_pm,
+			},
+			{
+				name: "14:00 - 18:00",
+				value: commentStatisticsData.commentTime.two_pm_to_six_pm,
+			},
+			{
+				name: "18:00 - 21:00",
+				value: commentStatisticsData.commentTime.six_pm_to_nine_pm,
+			},
+			{
+				name: "21:00 - 23:59",
+				value: commentStatisticsData.commentTime.nine_pm_to_midnight,
+			},
+		],
+	};
+
 	return {
-		commentsStatistics: commentStatisticsData,
+		commentsStatistics: commentStatisticsFinalData,
 		videoEngagementData,
 		videos: finalData,
 	};

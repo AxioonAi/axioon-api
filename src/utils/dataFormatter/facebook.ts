@@ -142,6 +142,7 @@ export const FacebookDataFormatter = (data: {
 		dataWithEngagement.push({
 			...facebookPosts[key],
 			engagement,
+			commentCount: facebookPosts[key].comments,
 			comments,
 			sentiment: sentimentSum / comments.length,
 		});
@@ -161,8 +162,38 @@ export const FacebookDataFormatter = (data: {
 		});
 	}
 
+	const commentStatisticsFinalData = {
+		...commentStatisticsData,
+		commentTime: [
+			{
+				name: "00:00 - 04:00",
+				value: commentStatisticsData.commentTime.midnight_to_four_am,
+			},
+			{
+				name: "04:00 - 10:00",
+				value: commentStatisticsData.commentTime.four_am_to_ten_am,
+			},
+			{
+				name: "10:00 - 14:00",
+				value: commentStatisticsData.commentTime.ten_am_to_two_pm,
+			},
+			{
+				name: "14:00 - 18:00",
+				value: commentStatisticsData.commentTime.two_pm_to_six_pm,
+			},
+			{
+				name: "18:00 - 21:00",
+				value: commentStatisticsData.commentTime.six_pm_to_nine_pm,
+			},
+			{
+				name: "21:00 - 23:59",
+				value: commentStatisticsData.commentTime.nine_pm_to_midnight,
+			},
+		],
+	};
+
 	return {
-		commentStatistics: commentStatisticsData,
+		commentStatistics: commentStatisticsFinalData,
 		postEngagementData,
 		posts: finalData,
 	};
