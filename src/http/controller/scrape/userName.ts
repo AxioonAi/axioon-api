@@ -11,7 +11,5 @@ export const userNameController = async (
 		const data = await userNameUseCase.execute({});
 
 		return reply.status(200).send(data);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

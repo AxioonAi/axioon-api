@@ -11,17 +11,13 @@ interface NewsWebhookUseCaseRequest {
 	}[];
 }
 
-interface NewsWebhookUseCaseResponse {}
-
 export class NewsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
 		private gptRepository: GptRepository,
 	) {}
 
-	async execute({
-		records,
-	}: NewsWebhookUseCaseRequest): Promise<NewsWebhookUseCaseResponse> {
+	async execute({ records }: NewsWebhookUseCaseRequest): Promise<void> {
 		const data = await this.awsNotificationRepository.S3NewsNotification({
 			records,
 		});

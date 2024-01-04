@@ -17,7 +17,5 @@ export const verifyAccessMiddleware = async (
 		});
 
 		return;
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

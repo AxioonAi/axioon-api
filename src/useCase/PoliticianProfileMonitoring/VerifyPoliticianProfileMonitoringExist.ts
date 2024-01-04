@@ -8,8 +8,6 @@ interface VerifyPoliticianProfileMonitoringExistUseCaseRequest {
 	profileId: string;
 }
 
-interface VerifyPoliticianProfileMonitoringExistUseCaseResponse {}
-
 export class VerifyPoliticianProfileMonitoringExistUseCase {
 	constructor(
 		private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository,
@@ -19,7 +17,7 @@ export class VerifyPoliticianProfileMonitoringExistUseCase {
 	async execute({
 		id,
 		profileId,
-	}: VerifyPoliticianProfileMonitoringExistUseCaseRequest): Promise<VerifyPoliticianProfileMonitoringExistUseCaseResponse> {
+	}: VerifyPoliticianProfileMonitoringExistUseCaseRequest): Promise<void> {
 		const [exists, activePlan] = await Promise.all([
 			this.politicianProfileMonitoringRepository.verify({
 				profileId,
@@ -36,6 +34,6 @@ export class VerifyPoliticianProfileMonitoringExistUseCase {
 			throw new SignatureNotFoundError();
 		}
 
-		return {};
+		return;
 	}
 }

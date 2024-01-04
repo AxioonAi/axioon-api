@@ -14,8 +14,6 @@ interface FacebookProfileWebhookUseCaseRequest {
 	}[];
 }
 
-interface FacebookProfileWebhookUseCaseResponse {}
-
 export class FacebookProfileWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -26,7 +24,7 @@ export class FacebookProfileWebhookUseCase {
 
 	async execute({
 		records,
-	}: FacebookProfileWebhookUseCaseRequest): Promise<FacebookProfileWebhookUseCaseResponse> {
+	}: FacebookProfileWebhookUseCaseRequest): Promise<void> {
 		const response =
 			await this.awsNotificationRepository.S3FacebookProfileNotification({
 				records,
@@ -52,6 +50,6 @@ export class FacebookProfileWebhookUseCase {
 
 		await this.facebookBaseDataRepository.createMany(response);
 
-		return {};
+		return;
 	}
 }

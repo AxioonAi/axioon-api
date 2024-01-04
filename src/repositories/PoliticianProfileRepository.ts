@@ -215,7 +215,7 @@ interface postData {
 	instagramPosts: InstagramPost[];
 }
 
-interface findByStateData {
+export interface findByStateData {
 	social_name: string;
 	id: string;
 }

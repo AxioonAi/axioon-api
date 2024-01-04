@@ -41,7 +41,5 @@ export const registerUserController = async (
 			refreshToken,
 			type: "user",
 		});
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

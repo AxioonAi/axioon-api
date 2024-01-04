@@ -1,13 +1,14 @@
 import { PoliticalGroupRepository } from "@/repositories/PoliticalGroupRepository";
+import { PoliticalGroup } from "@prisma/client";
 
-interface FindManyPoliticalGroupUseCaseRequest {}
-
-interface FindManyPoliticalGroupUseCaseResponse {}
+interface FindManyPoliticalGroupUseCaseResponse {
+	politicalGroup: PoliticalGroup[];
+}
 
 export class FindManyPoliticalGroupUseCase {
 	constructor(private politicalGroupRepository: PoliticalGroupRepository) {}
 
-	async execute({}: FindManyPoliticalGroupUseCaseRequest): Promise<FindManyPoliticalGroupUseCaseResponse> {
+	async execute(): Promise<FindManyPoliticalGroupUseCaseResponse> {
 		const politicalGroup = await this.politicalGroupRepository.findMany();
 
 		return {

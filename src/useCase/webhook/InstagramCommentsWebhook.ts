@@ -12,8 +12,6 @@ interface InstagramCommentsWebhookUseCaseRequest {
 	}[];
 }
 
-interface InstagramCommentsWebhookUseCaseResponse {}
-
 export class InstagramCommentsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -23,7 +21,7 @@ export class InstagramCommentsWebhookUseCase {
 
 	async execute({
 		records,
-	}: InstagramCommentsWebhookUseCaseRequest): Promise<InstagramCommentsWebhookUseCaseResponse> {
+	}: InstagramCommentsWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3InstagramCommentsNotification({
 				records,
@@ -31,7 +29,7 @@ export class InstagramCommentsWebhookUseCase {
 
 		const gptAnalysis = await this.gptRepository.commentAnalysis(data);
 
-		return data;
+		return;
 
 		// const createData: InstagramCommentCreateInterface[] = [];
 

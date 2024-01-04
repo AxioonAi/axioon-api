@@ -15,7 +15,5 @@ export const findPoliticianProfileByCpfController = async (
 		});
 
 		return reply.status(200).send({ politicianProfile });
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

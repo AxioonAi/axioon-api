@@ -18,7 +18,5 @@ export const createPoliticianProfileController = async (
 		});
 
 		return reply.status(201).send({});
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

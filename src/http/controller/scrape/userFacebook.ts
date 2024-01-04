@@ -11,7 +11,5 @@ export const userFacebookController = async (
 		const facebook = await userFacebookUseCase.execute({});
 
 		return reply.status(200).send(facebook);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

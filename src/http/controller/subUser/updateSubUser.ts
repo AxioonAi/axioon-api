@@ -19,7 +19,5 @@ export const updateSubUserController = async (
 		});
 
 		return reply.status(200).send();
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

@@ -16,7 +16,5 @@ export const cityStatisticsController = async (
 		});
 
 		return reply.status(200).send({ city });
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

@@ -13,7 +13,5 @@ export const FindUserNotificationController = async (
 		});
 
 		return reply.status(200).send(notification);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

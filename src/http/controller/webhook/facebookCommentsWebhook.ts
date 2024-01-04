@@ -16,7 +16,5 @@ export const facebookCommentsWebhookController = async (
 		});
 
 		reply.status(200).send(data);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

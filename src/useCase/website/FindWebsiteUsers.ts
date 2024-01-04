@@ -1,12 +1,17 @@
 import { WebsiteNotFoundError } from "@/helper/errors/WebsiteNotFoundError";
-import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
+import {
+	PoliticianProfileRepository,
+	findByStateData,
+} from "@/repositories/PoliticianProfileRepository";
 import { WebSiteRepository } from "@/repositories/WebsiteRepository";
 
 interface FindWebsiteUsersUseCaseRequest {
 	id: string;
 }
 
-interface FindWebsiteUsersUseCaseResponse {}
+interface FindWebsiteUsersUseCaseResponse {
+	users: findByStateData[];
+}
 
 export class FindWebsiteUsersUseCase {
 	constructor(

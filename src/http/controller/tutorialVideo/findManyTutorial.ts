@@ -11,7 +11,5 @@ export const findManyTutorialController = async (
 		const videos = await findManyTutorialUseCase.execute({});
 
 		return reply.status(200).send(videos);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

@@ -10,7 +10,5 @@ export const findManySignaturePlansController = async (
 		const plans = await findManySignaturePlansUseCase.execute({});
 
 		return reply.status(200).send(plans);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

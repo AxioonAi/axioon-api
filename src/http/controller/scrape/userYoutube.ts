@@ -11,7 +11,5 @@ export const userYoutubeController = async (
 		const channel = await userYoutubeUseCase.execute({});
 
 		return reply.status(200).send(channel);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

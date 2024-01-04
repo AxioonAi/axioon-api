@@ -1,13 +1,14 @@
 import { TutorialVideoRepository } from "@/repositories/TutorialVideoRepository";
+import { tutorialVideo } from "@prisma/client";
 
-interface FindTutorialVideoUseCaseRequest {}
-
-interface FindTutorialVideoUseCaseResponse {}
+interface FindTutorialVideoUseCaseResponse {
+	videos: tutorialVideo[];
+}
 
 export class FindTutorialVideoUseCase {
 	constructor(private tutorialVideoRepository: TutorialVideoRepository) {}
 
-	async execute({}: FindTutorialVideoUseCaseRequest): Promise<FindTutorialVideoUseCaseResponse> {
+	async execute(): Promise<FindTutorialVideoUseCaseResponse> {
 		const tutorialVideo = await this.tutorialVideoRepository.findAll();
 
 		return {

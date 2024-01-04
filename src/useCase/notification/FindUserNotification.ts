@@ -1,10 +1,13 @@
 import { NotificationRepository } from "@/repositories/NotificationRepository";
+import { Notification } from "@prisma/client";
 
 interface FindUserNotificationUseCaseRequest {
 	id: string;
 }
 
-interface FindUserNotificationUseCaseResponse {}
+interface FindUserNotificationUseCaseResponse {
+	notification: Notification[];
+}
 
 export class FindUserNotificationUseCase {
 	constructor(private notificationRepository: NotificationRepository) {}

@@ -14,8 +14,6 @@ interface InstagramProfileWebhookUseCaseRequest {
 	}[];
 }
 
-interface InstagramProfileWebhookUseCaseResponse {}
-
 export class InstagramProfileWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -26,7 +24,7 @@ export class InstagramProfileWebhookUseCase {
 
 	async execute({
 		records,
-	}: InstagramProfileWebhookUseCaseRequest): Promise<InstagramProfileWebhookUseCaseResponse> {
+	}: InstagramProfileWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3InstagramProfileNotification({
 				records,
@@ -51,6 +49,6 @@ export class InstagramProfileWebhookUseCase {
 		await this.notificationRepository.createMany(notifications);
 		await this.instagramBaseDataRepository.createMany(data);
 
-		return data;
+		return;
 	}
 }

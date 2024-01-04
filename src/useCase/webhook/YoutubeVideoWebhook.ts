@@ -11,17 +11,13 @@ interface YoutubeWebhookUseCaseRequest {
 	}[];
 }
 
-interface YoutubeWebhookUseCaseResponse {}
-
 export class YoutubeWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
 		private youtubeVideoBaseDataRepository: YoutubeVideoDataRepository,
 	) {}
 
-	async execute({
-		records,
-	}: YoutubeWebhookUseCaseRequest): Promise<YoutubeWebhookUseCaseResponse> {
+	async execute({ records }: YoutubeWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3YoutubeVideoNotification({
 				records,
@@ -29,6 +25,6 @@ export class YoutubeWebhookUseCase {
 
 		await this.youtubeVideoBaseDataRepository.createMany(data);
 
-		return {};
+		return;
 	}
 }

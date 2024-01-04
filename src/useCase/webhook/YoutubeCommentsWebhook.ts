@@ -13,8 +13,6 @@ interface YoutubeCommentsWebhookUseCaseRequest {
 	}[];
 }
 
-interface YoutubeCommentsWebhookUseCaseResponse {}
-
 export class YoutubeCommentsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -24,7 +22,7 @@ export class YoutubeCommentsWebhookUseCase {
 
 	async execute({
 		records,
-	}: YoutubeCommentsWebhookUseCaseRequest): Promise<YoutubeCommentsWebhookUseCaseResponse> {
+	}: YoutubeCommentsWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3YoutubeCommentsNotification({
 				records,
@@ -34,7 +32,7 @@ export class YoutubeCommentsWebhookUseCase {
 
 		const createData: YoutubeCommentCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
 			if (analysis) {
 				createData.push({
@@ -42,9 +40,9 @@ export class YoutubeCommentsWebhookUseCase {
 					...analysis,
 				});
 			}
-		});
+		}
 
 		await this.youtubeCommentsRepository.createMany(createData);
-		return data;
+		return;
 	}
 }

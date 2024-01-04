@@ -1,10 +1,13 @@
 import { SubUserRepository } from "@/repositories/SubUserRepository";
+import { SubUser } from "@prisma/client";
 
 interface SubUserListUseCaseRequest {
 	userId: string;
 }
 
-interface SubUserListUseCaseResponse {}
+interface SubUserListUseCaseResponse {
+	subUsers: SubUser[];
+}
 
 export class SubUserListUseCase {
 	constructor(private subUserRepository: SubUserRepository) {}
@@ -14,6 +17,6 @@ export class SubUserListUseCase {
 	}: SubUserListUseCaseRequest): Promise<SubUserListUseCaseResponse> {
 		const subUsers = await this.subUserRepository.findByUserId(userId);
 
-		return subUsers;
+		return { subUsers };
 	}
 }

@@ -15,7 +15,5 @@ export const updateUserAccountController = async (
 			data,
 			id: request.user.sub,
 		});
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

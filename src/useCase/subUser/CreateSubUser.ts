@@ -13,17 +13,13 @@ interface CreateSubUserUseCaseRequest {
 	};
 }
 
-interface CreateSubUserUseCaseResponse {}
-
 export class CreateSubUserUseCase {
 	constructor(
 		private subUserRepository: SubUserRepository,
 		private userRepository: UserRepository,
 	) {}
 
-	async execute({
-		data,
-	}: CreateSubUserUseCaseRequest): Promise<CreateSubUserUseCaseResponse> {
+	async execute({ data }: CreateSubUserUseCaseRequest): Promise<void> {
 		const { name, email, password, user_id } = data;
 
 		const [userExists, subUserExists] = await Promise.all([
@@ -43,6 +39,6 @@ export class CreateSubUserUseCase {
 			user_id,
 		});
 
-		return { subUser };
+		return;
 	}
 }

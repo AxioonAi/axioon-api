@@ -4,7 +4,9 @@ interface FindPoliticianProfileMonitoringListUseCaseRequest {
 	id: string;
 }
 
-interface FindPoliticianProfileMonitoringListUseCaseResponse {}
+interface FindPoliticianProfileMonitoringListUseCaseResponse {
+	profile: { name: string; id: string; politicalGroup: string }[];
+}
 
 export class FindPoliticianProfileMonitoringListUseCase {
 	constructor(

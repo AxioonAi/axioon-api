@@ -13,8 +13,6 @@ interface TiktokCommentsWebhookUseCaseRequest {
 	}[];
 }
 
-interface TiktokCommentsWebhookUseCaseResponse {}
-
 export class TiktokCommentsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -24,7 +22,7 @@ export class TiktokCommentsWebhookUseCase {
 
 	async execute({
 		records,
-	}: TiktokCommentsWebhookUseCaseRequest): Promise<TiktokCommentsWebhookUseCaseResponse> {
+	}: TiktokCommentsWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3TiktokCommentsNotification({
 				records,
@@ -34,7 +32,7 @@ export class TiktokCommentsWebhookUseCase {
 
 		const createData: TiktokCommentsCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
 			if (analysis) {
 				createData.push({
@@ -42,10 +40,10 @@ export class TiktokCommentsWebhookUseCase {
 					...analysis,
 				});
 			}
-		});
+		}
 
 		await this.tiktokCommentsRepository.createMany(createData);
 
-		return data;
+		return;
 	}
 }

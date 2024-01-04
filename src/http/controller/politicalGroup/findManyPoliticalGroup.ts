@@ -11,7 +11,5 @@ export const findManyPoliticalGroupController = async (
 		const politicalGroup = await findManyPoliticalGroupUseCase.execute({});
 
 		return reply.status(200).send(politicalGroup);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

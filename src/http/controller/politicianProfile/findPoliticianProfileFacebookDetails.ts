@@ -21,7 +21,5 @@ export const findPoliticianProfileFacebookDetailsController = async (
 		});
 
 		return reply.send(data);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

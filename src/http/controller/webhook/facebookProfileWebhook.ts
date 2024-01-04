@@ -15,7 +15,5 @@ export const facebookProfileWebhookController = async (
 		});
 
 		return reply.status(200).send(data);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

@@ -13,8 +13,6 @@ interface FacebookAdsWebhookUseCaseRequest {
 	}[];
 }
 
-interface FacebookAdsWebhookUseCaseResponse {}
-
 export class FacebookAdsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -23,9 +21,7 @@ export class FacebookAdsWebhookUseCase {
 		private metaAdvertisingLibDemographicDistributionRepository: MetaAdvertisingLibDemographicDistributionRepository,
 	) {}
 
-	async execute({
-		records,
-	}: FacebookAdsWebhookUseCaseRequest): Promise<FacebookAdsWebhookUseCaseResponse> {
+	async execute({ records }: FacebookAdsWebhookUseCaseRequest): Promise<void> {
 		const { advertisingData, deliveryRegionData, demographicDistributionData } =
 			await this.awsNotificationRepository.S3FacebookAdsNotification({
 				records,
@@ -38,6 +34,6 @@ export class FacebookAdsWebhookUseCase {
 		await this.metaAdvertisingLibDemographicDistributionRepository.createMany(
 			demographicDistributionData,
 		);
-		return { advertisingData, deliveryRegionData, demographicDistributionData };
+		return;
 	}
 }

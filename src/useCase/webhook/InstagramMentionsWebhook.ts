@@ -13,8 +13,6 @@ interface InstagramMentionsWebhookUseCaseRequest {
 	}[];
 }
 
-interface InstagramMentionsWebhookUseCaseResponse {}
-
 export class InstagramMentionsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -24,7 +22,7 @@ export class InstagramMentionsWebhookUseCase {
 
 	async execute({
 		records,
-	}: InstagramMentionsWebhookUseCaseRequest): Promise<InstagramMentionsWebhookUseCaseResponse> {
+	}: InstagramMentionsWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3InstagramMentionsNotification({
 				records,
@@ -32,11 +30,9 @@ export class InstagramMentionsWebhookUseCase {
 
 		const gptAnalysis = await this.gptRepository.mentionAnalysis(data);
 
-		return data;
-
 		const createData: InstagramMentionCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
 			if (analysis) {
 				createData.push({
@@ -44,9 +40,9 @@ export class InstagramMentionsWebhookUseCase {
 					...analysis,
 				});
 			}
-		});
+		}
 
 		await this.instagramMentionRepository.createMany(createData);
-		return {};
+		return;
 	}
 }

@@ -11,8 +11,6 @@ interface PixPurchaseUseCaseRequest {
 	planId: string;
 }
 
-interface PixPurchaseUseCaseResponse {}
-
 export class PixPurchaseUseCase {
 	constructor(
 		private userRepository: UserRepository,
@@ -21,10 +19,7 @@ export class PixPurchaseUseCase {
 		private asaasRepository: AsaasRepository,
 	) {}
 
-	async execute({
-		userId,
-		planId,
-	}: PixPurchaseUseCaseRequest): Promise<PixPurchaseUseCaseResponse> {
+	async execute({ userId, planId }: PixPurchaseUseCaseRequest): Promise<void> {
 		const [user, plan] = await Promise.all([
 			this.userRepository.findById(userId),
 			this.signaturePlanRepository.findById(planId),
@@ -46,6 +41,6 @@ export class PixPurchaseUseCase {
 			expires_in: moment().add(1, "year").toDate(),
 		});
 
-		return { payment };
+		return;
 	}
 }

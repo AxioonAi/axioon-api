@@ -11,7 +11,5 @@ export const userInstagramController = async (
 		const instagram = await userInstagramUseCase.execute({});
 
 		return reply.status(200).send(instagram);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

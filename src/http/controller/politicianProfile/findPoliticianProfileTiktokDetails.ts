@@ -22,7 +22,5 @@ export const findPoliticianProfileTiktokDetailsController = async (
 		});
 
 		return reply.send(data);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

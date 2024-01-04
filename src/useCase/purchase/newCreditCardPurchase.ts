@@ -29,8 +29,6 @@ interface newCreditCardPurchaseUseCaseRequest {
 	saveCreditCard: boolean;
 }
 
-interface newCreditCardPurchaseUseCaseResponse {}
-
 export class newCreditCardPurchaseUseCase {
 	constructor(
 		private userRepository: UserRepository,
@@ -46,7 +44,7 @@ export class newCreditCardPurchaseUseCase {
 		creditCardHolderInfo,
 		installmentCount,
 		saveCreditCard,
-	}: newCreditCardPurchaseUseCaseRequest): Promise<newCreditCardPurchaseUseCaseResponse> {
+	}: newCreditCardPurchaseUseCaseRequest): Promise<void> {
 		const [user, plan] = await Promise.all([
 			this.userRepository.findById(userId),
 			this.planRepository.findById(planId),
@@ -95,6 +93,6 @@ export class newCreditCardPurchaseUseCase {
 		//   });
 		// }
 
-		return { userPlan };
+		return;
 	}
 }

@@ -17,7 +17,5 @@ export const pixPurchaseController = async (
 		});
 
 		return reply.status(200).send({ payment });
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

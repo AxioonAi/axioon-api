@@ -9,8 +9,6 @@ interface updateSubUserUseCaseRequest {
 	active?: boolean;
 }
 
-interface updateSubUserUseCaseResponse {}
-
 export class updateSubUserUseCase {
 	constructor(private subUserRepository: SubUserRepository) {}
 
@@ -19,7 +17,7 @@ export class updateSubUserUseCase {
 		userId,
 		password,
 		active,
-	}: updateSubUserUseCaseRequest): Promise<updateSubUserUseCaseResponse> {
+	}: updateSubUserUseCaseRequest): Promise<void> {
 		const subUser = await this.subUserRepository.findById(subUserId);
 
 		if (!subUser) {
@@ -34,6 +32,6 @@ export class updateSubUserUseCase {
 
 		await this.subUserRepository.update(subUserId, { password_hash, active });
 
-		return {};
+		return;
 	}
 }

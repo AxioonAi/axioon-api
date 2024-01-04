@@ -31,7 +31,5 @@ export const authenticateUserController = async (
 			refreshToken,
 			type: "user",
 		});
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

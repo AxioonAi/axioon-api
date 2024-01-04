@@ -31,7 +31,5 @@ export const authenticateSubUserController = async (
 			refreshToken,
 			type: "subUser",
 		});
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

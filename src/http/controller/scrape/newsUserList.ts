@@ -16,7 +16,5 @@ export const newsUserListController = async (
 		});
 
 		return reply.status(200).send(users);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };

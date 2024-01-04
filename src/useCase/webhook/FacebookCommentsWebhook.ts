@@ -13,8 +13,6 @@ interface FacebookCommentsWebhookUseCaseRequest {
 	}[];
 }
 
-interface FacebookCommentsWebhookUseCaseResponse {}
-
 export class FacebookCommentsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -24,7 +22,7 @@ export class FacebookCommentsWebhookUseCase {
 
 	async execute({
 		records,
-	}: FacebookCommentsWebhookUseCaseRequest): Promise<FacebookCommentsWebhookUseCaseResponse> {
+	}: FacebookCommentsWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3FacebookCommentsNotification({
 				records,
@@ -34,7 +32,7 @@ export class FacebookCommentsWebhookUseCase {
 
 		const createData: FacebookPostCommentsCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
 			if (analysis) {
 				createData.push({
@@ -42,10 +40,10 @@ export class FacebookCommentsWebhookUseCase {
 					...analysis,
 				});
 			}
-		});
+		}
 
 		await this.facebookCommentsRepository.createMany(createData);
 
-		return data;
+		return;
 	}
 }

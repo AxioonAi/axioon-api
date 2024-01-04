@@ -15,8 +15,6 @@ interface TiktokProfileWebhookUseCaseRequest {
 	}[];
 }
 
-interface TiktokProfileWebhookUseCaseResponse {}
-
 export class TiktokProfileWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
@@ -28,7 +26,7 @@ export class TiktokProfileWebhookUseCase {
 
 	async execute({
 		records,
-	}: TiktokProfileWebhookUseCaseRequest): Promise<TiktokProfileWebhookUseCaseResponse> {
+	}: TiktokProfileWebhookUseCaseRequest): Promise<void> {
 		const data =
 			await this.awsNotificationRepository.S3TiktokProfileNotification({
 				records,
@@ -56,6 +54,6 @@ export class TiktokProfileWebhookUseCase {
 			this.notificationRepository.createMany(notifications),
 		]);
 
-		return data;
+		return;
 	}
 }

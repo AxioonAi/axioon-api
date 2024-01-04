@@ -11,7 +11,5 @@ export const userTikTokController = async (
 		const tiktok = await userTikTokUseCase.execute({});
 
 		return reply.status(200).send(tiktok);
-	} catch (error) {
-		throw error;
-	}
+	} catch (error) {}
 };
