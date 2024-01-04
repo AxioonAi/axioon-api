@@ -5,13 +5,13 @@ interface FindTutorialVideoUseCaseRequest {}
 interface FindTutorialVideoUseCaseResponse {}
 
 export class FindTutorialVideoUseCase {
-  constructor(private tutorialVideoRepository: TutorialVideoRepository) {}
+	constructor(private tutorialVideoRepository: TutorialVideoRepository) {}
 
-  async execute({}: FindTutorialVideoUseCaseRequest): Promise<FindTutorialVideoUseCaseResponse> {
-    const tutorialVideo = await this.tutorialVideoRepository.findAll();
+	async execute({}: FindTutorialVideoUseCaseRequest): Promise<FindTutorialVideoUseCaseResponse> {
+		const tutorialVideo = await this.tutorialVideoRepository.findAll();
 
-    return {
-      videos: tutorialVideo,
-    };
-  }
+		return {
+			videos: tutorialVideo,
+		};
+	}
 }

@@ -4,13 +4,13 @@ import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaP
 import { CreatePoliticianProfileUseCase } from "@/useCase/politicianProfile/CreatePoliticianProfile";
 
 export function makeCreatePoliticianProfile() {
-  const politicianProfileRepository = new PrismaPoliticianProfileRepository();
-  const cityRepository = new PrismaCityRepository();
-  const monitoringRepository =
-    new PrismaPoliticianProfileMonitoringRepository();
-  return new CreatePoliticianProfileUseCase(
-    politicianProfileRepository,
-    cityRepository,
-    monitoringRepository
-  );
+	const politicianProfileRepository = new PrismaPoliticianProfileRepository();
+	const cityRepository = new PrismaCityRepository();
+	const monitoringRepository =
+		new PrismaPoliticianProfileMonitoringRepository();
+	return new CreatePoliticianProfileUseCase(
+		politicianProfileRepository,
+		cityRepository,
+		monitoringRepository,
+	);
 }

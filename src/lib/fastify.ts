@@ -6,48 +6,43 @@ import { EmailAlreadyExistsError } from "@/helper/errors/EmailAlreadyExists";
 import { PlanNotFoundError } from "@/helper/errors/PlanNotFoundError";
 import { ProfileNotFoundError } from "@/helper/errors/ProfileNotFoundError";
 import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
-import { Prisma } from "@prisma/client";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import { ZodError } from "zod";
-import { prismaErrorHandler } from "./prisma";
 import { zodErrorHandler } from "./zod/errorHandler";
 
 export const fastifyErrorHandler = (
-  error: FastifyError,
-  req: FastifyRequest,
-  reply: FastifyReply
+	error: FastifyError,
+	req: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  // console.log(error);
-  if (error instanceof ZodError) {
-    error.errors[0].path[0];
-    return reply.status(400).send(zodErrorHandler(error));
-  }
+	// console.log(error);
+	if (error instanceof ZodError) {
+		error.errors[0].path[0];
+		return reply.status(400).send(zodErrorHandler(error));
+	}
 
-  if (
-    error instanceof AuthenticateError ||
-    error instanceof EmailAlreadyExistsError ||
-    error instanceof CpfAlreadyExistsError ||
-    error instanceof AsaasError ||
-    error instanceof PlanNotFoundError ||
-    error instanceof UserNotFoundError ||
-    error instanceof ProfileNotFoundError ||
-    error instanceof CityNotFoundError ||
-    error instanceof ProfileNotFoundError ||
-    error instanceof ProfileNotFoundError
-  ) {
-    return reply.status(401).send(error.message);
-  }
+	if (
+		error instanceof AuthenticateError ||
+		error instanceof EmailAlreadyExistsError ||
+		error instanceof CpfAlreadyExistsError ||
+		error instanceof AsaasError ||
+		error instanceof PlanNotFoundError ||
+		error instanceof UserNotFoundError ||
+		error instanceof ProfileNotFoundError ||
+		error instanceof CityNotFoundError ||
+		error instanceof ProfileNotFoundError ||
+		error instanceof ProfileNotFoundError
+	) {
+		return reply.status(401).send(error.message);
+	}
 
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    const e: PrismaClientKnownRequestError = error;
-    const field = e.meta;
-    if (error.code === "P2002") {
-      return reply.status(400).send(prismaErrorHandler(field));
-    }
-  }
+	// if (error instanceof Prisma.PrismaClientKnownRequestError) {
+	//   const e: PrismaClientKnownRequestError = error;
+	//   const field = e.meta;
+	//   if (error.code === "P2002") {
+	//     return reply.status(400).send(prismaErrorHandler(field));
+	//   }
+	// }
 
-  console.log(error);
-
-  return reply.status(500).send(error);
+	return reply.status(500).send(error);
 };

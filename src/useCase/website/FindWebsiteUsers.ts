@@ -3,28 +3,28 @@ import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRep
 import { WebSiteRepository } from "@/repositories/WebsiteRepository";
 
 interface FindWebsiteUsersUseCaseRequest {
-  id: string;
+	id: string;
 }
 
 interface FindWebsiteUsersUseCaseResponse {}
 
 export class FindWebsiteUsersUseCase {
-  constructor(
-    private websiteRepository: WebSiteRepository,
-    private politicianProfileRepository: PoliticianProfileRepository
-  ) {}
+	constructor(
+		private websiteRepository: WebSiteRepository,
+		private politicianProfileRepository: PoliticianProfileRepository,
+	) {}
 
-  async execute({
-    id,
-  }: FindWebsiteUsersUseCaseRequest): Promise<FindWebsiteUsersUseCaseResponse> {
-    const website = await this.websiteRepository.findById(id);
+	async execute({
+		id,
+	}: FindWebsiteUsersUseCaseRequest): Promise<FindWebsiteUsersUseCaseResponse> {
+		const website = await this.websiteRepository.findById(id);
 
-    if (!website) throw new WebsiteNotFoundError();
+		if (!website) throw new WebsiteNotFoundError();
 
-    const users = await this.politicianProfileRepository.findByState(
-      website.city.state
-    );
+		const users = await this.politicianProfileRepository.findByState(
+			website.city.state,
+		);
 
-    return { users };
-  }
+		return { users };
+	}
 }

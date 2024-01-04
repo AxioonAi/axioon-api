@@ -5,16 +5,16 @@ import { PrismaMetaAdvertisingLibRepository } from "@/repositories/Prisma/Prisma
 import { FacebookAdsWebhookUseCase } from "@/useCase/webhook/FacebookAdsWebhook";
 
 export function makeFacebookAdsWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const metaAdvertisingLibRepository = new PrismaMetaAdvertisingLibRepository();
-  const metaAdvertisingLibDeliveryByRegionRepository =
-    new PrismaMetaAdvertisingLibDeliveryByRegionRepository();
-  const metaAdvertisingLibDemographicDistributionRepository =
-    new PrismaMetaAdvertisingLibDemographicDistributionRepository();
-  return new FacebookAdsWebhookUseCase(
-    awsNotificationRepository,
-    metaAdvertisingLibRepository,
-    metaAdvertisingLibDeliveryByRegionRepository,
-    metaAdvertisingLibDemographicDistributionRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const metaAdvertisingLibRepository = new PrismaMetaAdvertisingLibRepository();
+	const metaAdvertisingLibDeliveryByRegionRepository =
+		new PrismaMetaAdvertisingLibDeliveryByRegionRepository();
+	const metaAdvertisingLibDemographicDistributionRepository =
+		new PrismaMetaAdvertisingLibDemographicDistributionRepository();
+	return new FacebookAdsWebhookUseCase(
+		awsNotificationRepository,
+		metaAdvertisingLibRepository,
+		metaAdvertisingLibDeliveryByRegionRepository,
+		metaAdvertisingLibDemographicDistributionRepository,
+	);
 }

@@ -2,7 +2,7 @@ import { PrismaSubUserRepository } from "@/repositories/Prisma/PrismaSubUserRepo
 import { SubUserListUseCase } from "@/useCase/subUser/SubUserList";
 
 export function makeSubUserList() {
-  const subUserRepository = new PrismaSubUserRepository();
+	const subUserRepository = new PrismaSubUserRepository();
 
-  return new SubUserListUseCase(subUserRepository);
+	return new SubUserListUseCase(subUserRepository);
 }

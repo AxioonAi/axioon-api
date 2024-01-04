@@ -2,16 +2,16 @@ import { makeFindPoliticianProfileFacebookList } from "@/useCase/@factories/poli
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userFacebookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  try {
-    const userFacebookUseCase = makeFindPoliticianProfileFacebookList();
+	try {
+		const userFacebookUseCase = makeFindPoliticianProfileFacebookList();
 
-    const facebook = await userFacebookUseCase.execute({});
+		const facebook = await userFacebookUseCase.execute({});
 
-    return reply.status(200).send(facebook);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(facebook);
+	} catch (error) {
+		throw error;
+	}
 };

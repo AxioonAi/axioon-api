@@ -4,14 +4,14 @@ import { PrismaInstagramMentionCommentRepository } from "@/repositories/Prisma/P
 import { InstagramMentionCommentsWebhookUseCase } from "@/useCase/webhook/InstagramMentionCommentsWebhook";
 
 export function makeInstagramMentionsCommentsWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const instagramMentionCommentsRepository =
-    new PrismaInstagramMentionCommentRepository();
-  const gptRepository = new GptProductionRepository();
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const instagramMentionCommentsRepository =
+		new PrismaInstagramMentionCommentRepository();
+	const gptRepository = new GptProductionRepository();
 
-  return new InstagramMentionCommentsWebhookUseCase(
-    awsNotificationRepository,
-    instagramMentionCommentsRepository,
-    gptRepository
-  );
+	return new InstagramMentionCommentsWebhookUseCase(
+		awsNotificationRepository,
+		instagramMentionCommentsRepository,
+		gptRepository,
+	);
 }

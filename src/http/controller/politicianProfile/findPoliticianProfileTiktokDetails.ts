@@ -4,25 +4,25 @@ import { makeFindPoliticianProfileTiktokDetails } from "@/useCase/@factories/pol
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findPoliticianProfileTiktokDetailsController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { id } = ZodIdParamsSchema.parse(request.params);
-  const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
-    request.query
-  );
+	const { id } = ZodIdParamsSchema.parse(request.params);
+	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
+		request.query,
+	);
 
-  try {
-    const findPoliticianProfileTiktokDetails =
-      makeFindPoliticianProfileTiktokDetails();
+	try {
+		const findPoliticianProfileTiktokDetails =
+			makeFindPoliticianProfileTiktokDetails();
 
-    const data = await findPoliticianProfileTiktokDetails.execute({
-      id,
-      period,
-    });
+		const data = await findPoliticianProfileTiktokDetails.execute({
+			id,
+			period,
+		});
 
-    return reply.send(data);
-  } catch (error) {
-    throw error;
-  }
+		return reply.send(data);
+	} catch (error) {
+		throw error;
+	}
 };

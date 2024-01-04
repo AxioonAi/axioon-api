@@ -4,33 +4,33 @@ import { SubUser } from "@prisma/client";
 import { compare } from "bcryptjs";
 
 interface AuthenticateSubUserUseCaseRequest {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 }
 
 interface AuthenticateSubUserUseCaseResponse {
-  user: SubUser;
+	user: SubUser;
 }
 
 export class AuthenticateSubUserUseCase {
-  constructor(private subUserRepository: SubUserRepository) {}
+	constructor(private subUserRepository: SubUserRepository) {}
 
-  async execute({
-    email,
-    password,
-  }: AuthenticateSubUserUseCaseRequest): Promise<AuthenticateSubUserUseCaseResponse> {
-    const subUser = await this.subUserRepository.findByEmail(email);
+	async execute({
+		email,
+		password,
+	}: AuthenticateSubUserUseCaseRequest): Promise<AuthenticateSubUserUseCaseResponse> {
+		const subUser = await this.subUserRepository.findByEmail(email);
 
-    if (!subUser) {
-      throw new AuthenticateError();
-    }
+		if (!subUser) {
+			throw new AuthenticateError();
+		}
 
-    const passwordMatch = await compare(password, subUser.password_hash);
+		const passwordMatch = await compare(password, subUser.password_hash);
 
-    if (!passwordMatch) {
-      throw new AuthenticateError();
-    }
+		if (!passwordMatch) {
+			throw new AuthenticateError();
+		}
 
-    return { user: subUser };
-  }
+		return { user: subUser };
+	}
 }

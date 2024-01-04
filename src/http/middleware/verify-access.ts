@@ -3,21 +3,21 @@ import { makeVerifyPoliticianProfileMonitoringExists } from "@/useCase/@factorie
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const verifyAccessMiddleware = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { id } = ZodIdParamsSchema.parse(request.params);
+	const { id } = ZodIdParamsSchema.parse(request.params);
 
-  try {
-    const verifyAccess = makeVerifyPoliticianProfileMonitoringExists();
+	try {
+		const verifyAccess = makeVerifyPoliticianProfileMonitoringExists();
 
-    const exists = await verifyAccess.execute({
-      profileId: id,
-      id: request.user.sub,
-    });
+		const exists = await verifyAccess.execute({
+			profileId: id,
+			id: request.user.sub,
+		});
 
-    return;
-  } catch (error) {
-    throw error;
-  }
+		return;
+	} catch (error) {
+		throw error;
+	}
 };

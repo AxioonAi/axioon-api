@@ -4,12 +4,12 @@ import { PrismaFacebookCommentsRepository } from "@/repositories/Prisma/PrismaFa
 import { FacebookCommentsWebhookUseCase } from "@/useCase/webhook/FacebookCommentsWebhook";
 
 export function makeFacebookCommentsWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const facebookCommentsRepository = new PrismaFacebookCommentsRepository();
-  const gptRepository = new GptProductionRepository();
-  return new FacebookCommentsWebhookUseCase(
-    awsNotificationRepository,
-    facebookCommentsRepository,
-    gptRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const facebookCommentsRepository = new PrismaFacebookCommentsRepository();
+	const gptRepository = new GptProductionRepository();
+	return new FacebookCommentsWebhookUseCase(
+		awsNotificationRepository,
+		facebookCommentsRepository,
+		gptRepository,
+	);
 }

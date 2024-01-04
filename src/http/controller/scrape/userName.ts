@@ -2,16 +2,16 @@ import { makeFindPoliticianNames } from "@/useCase/@factories/politicianProfile/
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userNameController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  try {
-    const userNameUseCase = makeFindPoliticianNames();
+	try {
+		const userNameUseCase = makeFindPoliticianNames();
 
-    const data = await userNameUseCase.execute({});
+		const data = await userNameUseCase.execute({});
 
-    return reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

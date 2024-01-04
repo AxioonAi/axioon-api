@@ -5,15 +5,15 @@ import { PrismaPoliticianProfileMonitoringRepository } from "@/repositories/Pris
 import { InstagramProfileWebhookUseCase } from "@/useCase/webhook/InstagramProfileWebhook";
 
 export function makeInstagramProfileWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const InstagramBaseDataRepository = new PrismaInstagramBaseDataRepository();
-  const politicianProfileMonitoringRepository =
-    new PrismaPoliticianProfileMonitoringRepository();
-  const notificationRepository = new PrismaNotificationRepository();
-  return new InstagramProfileWebhookUseCase(
-    awsNotificationRepository,
-    InstagramBaseDataRepository,
-    politicianProfileMonitoringRepository,
-    notificationRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const InstagramBaseDataRepository = new PrismaInstagramBaseDataRepository();
+	const politicianProfileMonitoringRepository =
+		new PrismaPoliticianProfileMonitoringRepository();
+	const notificationRepository = new PrismaNotificationRepository();
+	return new InstagramProfileWebhookUseCase(
+		awsNotificationRepository,
+		InstagramBaseDataRepository,
+		politicianProfileMonitoringRepository,
+		notificationRepository,
+	);
 }

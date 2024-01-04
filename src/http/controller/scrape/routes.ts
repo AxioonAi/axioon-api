@@ -7,10 +7,10 @@ import { userTikTokController } from "./userTikTok";
 import { userYoutubeController } from "./userYoutube";
 
 export async function scrapeRoutes(app: FastifyInstance) {
-  app.get("/scrape/instagram", userInstagramController);
-  app.get("/scrape/youtube", userYoutubeController);
-  app.get("/scrape/tiktok", userTikTokController);
-  app.get("/scrape/facebook", userFacebookController);
-  app.get("/scrape/name", userNameController);
-  app.get("/scrape/news/:id", newsUserListController);
+	app.get("/scrape/instagram", userInstagramController);
+	app.get("/scrape/youtube", userYoutubeController);
+	app.get("/scrape/tiktok", userTikTokController);
+	app.get("/scrape/facebook", userFacebookController);
+	app.get("/scrape/name", userNameController);
+	app.get("/scrape/news/:id", newsUserListController);
 }

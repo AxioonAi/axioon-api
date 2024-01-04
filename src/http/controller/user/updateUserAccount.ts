@@ -3,19 +3,19 @@ import { makeUpdateUserAccount } from "@/useCase/@factories/user/makeUpdateUserA
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const updateUserAccountController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const data = ZodUpdateUserAccountBodySchema.parse(request.body);
+	const data = ZodUpdateUserAccountBodySchema.parse(request.body);
 
-  try {
-    const updateUserAccountUseCase = makeUpdateUserAccount();
+	try {
+		const updateUserAccountUseCase = makeUpdateUserAccount();
 
-    await updateUserAccountUseCase.execute({
-      data,
-      id: request.user.sub,
-    });
-  } catch (error) {
-    throw error;
-  }
+		await updateUserAccountUseCase.execute({
+			data,
+			id: request.user.sub,
+		});
+	} catch (error) {
+		throw error;
+	}
 };

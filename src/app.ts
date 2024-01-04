@@ -6,8 +6,8 @@ import { cityRoutes } from "./http/controller/city/routes";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
 import {
-  politicianProfileMonitoringListRoutes,
-  politicianProfileRoutes,
+	politicianProfileMonitoringListRoutes,
+	politicianProfileRoutes,
 } from "./http/controller/politicianProfile/routes";
 import { purchaseRoutes } from "./http/controller/purchase/routes";
 import { scrapeRoutes } from "./http/controller/scrape/routes";
@@ -20,18 +20,18 @@ import { fastifyErrorHandler } from "./lib/fastify";
 export const app = fastify();
 
 app.register(fastifyCors, {
-  origin: "*",
+	origin: "*",
 });
 
 app.register(fastifyJwt, {
-  secret: env.JWT_SECRET,
-  cookie: {
-    cookieName: "refreshToken",
-    signed: false,
-  },
-  sign: {
-    expiresIn: "365d",
-  },
+	secret: env.JWT_SECRET,
+	cookie: {
+		cookieName: "refreshToken",
+		signed: false,
+	},
+	sign: {
+		expiresIn: "365d",
+	},
 });
 
 app.register(userRoutes); // TESTADO

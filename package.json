@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "^1.4.1",
     "@types/bcryptjs": "^2.4.5",
     "@types/node": "^20.8.7",
     "@types/request": "^2.48.12",
@@ -36,6 +37,7 @@
     "fastify": "^4.24.3",
     "moment": "^2.29.4",
     "node-xlsx": "^0.23.0",
+    "openai": "^4.24.1",
     "request": "^2.88.2",
     "tsup": "^7.2.0",
     "zod": "^3.22.4"

@@ -2,15 +2,15 @@ import { makeFindManySignaturePlans } from "@/useCase/@factories/signaturePlan/m
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findManySignaturePlansController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  try {
-    const findManySignaturePlansUseCase = makeFindManySignaturePlans();
-    const plans = await findManySignaturePlansUseCase.execute({});
+	try {
+		const findManySignaturePlansUseCase = makeFindManySignaturePlans();
+		const plans = await findManySignaturePlansUseCase.execute({});
 
-    return reply.status(200).send(plans);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(plans);
+	} catch (error) {
+		throw error;
+	}
 };

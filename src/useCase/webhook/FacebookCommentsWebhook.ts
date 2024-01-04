@@ -4,48 +4,48 @@ import { FacebookPostCommentsRepository } from "@/repositories/FacebookPostComme
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface FacebookCommentsWebhookUseCaseRequest {
-  records: {
-    s3: {
-      object: {
-        key: string;
-      };
-    };
-  }[];
+	records: {
+		s3: {
+			object: {
+				key: string;
+			};
+		};
+	}[];
 }
 
 interface FacebookCommentsWebhookUseCaseResponse {}
 
 export class FacebookCommentsWebhookUseCase {
-  constructor(
-    private awsNotificationRepository: AwsNotificationRepository,
-    private facebookCommentsRepository: FacebookPostCommentsRepository,
-    private gptRepository: GptRepository
-  ) {}
+	constructor(
+		private awsNotificationRepository: AwsNotificationRepository,
+		private facebookCommentsRepository: FacebookPostCommentsRepository,
+		private gptRepository: GptRepository,
+	) {}
 
-  async execute({
-    records,
-  }: FacebookCommentsWebhookUseCaseRequest): Promise<FacebookCommentsWebhookUseCaseResponse> {
-    const data =
-      await this.awsNotificationRepository.S3FacebookCommentsNotification({
-        records,
-      });
+	async execute({
+		records,
+	}: FacebookCommentsWebhookUseCaseRequest): Promise<FacebookCommentsWebhookUseCaseResponse> {
+		const data =
+			await this.awsNotificationRepository.S3FacebookCommentsNotification({
+				records,
+			});
 
-    const gptAnalysis = await this.gptRepository.commentAnalysis(data);
+		const gptAnalysis = await this.gptRepository.commentAnalysis(data);
 
-    const createData: FacebookPostCommentsCreateInterface[] = [];
+		const createData: FacebookPostCommentsCreateInterface[] = [];
 
-    data.forEach((item) => {
-      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
-      if (analysis) {
-        createData.push({
-          ...item,
-          ...analysis,
-        });
-      }
-    });
+		data.forEach((item) => {
+			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+			if (analysis) {
+				createData.push({
+					...item,
+					...analysis,
+				});
+			}
+		});
 
-    await this.facebookCommentsRepository.createMany(createData);
+		await this.facebookCommentsRepository.createMany(createData);
 
-    return data;
-  }
+		return data;
+	}
 }

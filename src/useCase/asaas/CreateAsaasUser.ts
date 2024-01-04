@@ -4,43 +4,43 @@ import { AsaasRepository } from "@/repositories/asaasRepository";
 import { UserRepository } from "@/repositories/userRepository";
 
 interface CreateAsaasUserUseCaseRequest {
-  name: string;
-  cpfCnpj: string;
-  mobilePhone: string;
-  email?: string;
+	name: string;
+	cpfCnpj: string;
+	mobilePhone: string;
+	email?: string;
 }
 
 interface CreateAsaasUserUseCaseResponse {
-  id: string;
+	id: string;
 }
 
 export class CreateAsaasUserUseCase {
-  constructor(
-    private asaasRepository: AsaasRepository,
-    private userRepository: UserRepository
-  ) {}
+	constructor(
+		private asaasRepository: AsaasRepository,
+		private userRepository: UserRepository,
+	) {}
 
-  async execute({
-    name,
-    cpfCnpj,
-    mobilePhone,
-    email,
-  }: CreateAsaasUserUseCaseRequest): Promise<CreateAsaasUserUseCaseResponse> {
-    const [userAlreadyExistsWithEmail, userAlreadyExistsWithCpfCnpj] =
-      await Promise.all([
-        email ? this.userRepository.findByEmail(email) : null,
-        this.userRepository.findByCpfCnpj(cpfCnpj),
-      ]);
+	async execute({
+		name,
+		cpfCnpj,
+		mobilePhone,
+		email,
+	}: CreateAsaasUserUseCaseRequest): Promise<CreateAsaasUserUseCaseResponse> {
+		const [userAlreadyExistsWithEmail, userAlreadyExistsWithCpfCnpj] =
+			await Promise.all([
+				email ? this.userRepository.findByEmail(email) : null,
+				this.userRepository.findByCpfCnpj(cpfCnpj),
+			]);
 
-    if (userAlreadyExistsWithEmail) throw new EmailAlreadyExistsError();
-    if (userAlreadyExistsWithCpfCnpj) throw new CpfAlreadyExistsError();
+		if (userAlreadyExistsWithEmail) throw new EmailAlreadyExistsError();
+		if (userAlreadyExistsWithCpfCnpj) throw new CpfAlreadyExistsError();
 
-    const { id } = await this.asaasRepository.createUser({
-      name,
-      cpfCnpj,
-      mobilePhone,
-    });
+		const { id } = await this.asaasRepository.createUser({
+			name,
+			cpfCnpj,
+			mobilePhone,
+		});
 
-    return { id };
-  }
+		return { id };
+	}
 }

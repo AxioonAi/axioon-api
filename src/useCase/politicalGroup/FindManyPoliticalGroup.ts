@@ -5,13 +5,13 @@ interface FindManyPoliticalGroupUseCaseRequest {}
 interface FindManyPoliticalGroupUseCaseResponse {}
 
 export class FindManyPoliticalGroupUseCase {
-  constructor(private politicalGroupRepository: PoliticalGroupRepository) {}
+	constructor(private politicalGroupRepository: PoliticalGroupRepository) {}
 
-  async execute({}: FindManyPoliticalGroupUseCaseRequest): Promise<FindManyPoliticalGroupUseCaseResponse> {
-    const politicalGroup = await this.politicalGroupRepository.findMany();
+	async execute({}: FindManyPoliticalGroupUseCaseRequest): Promise<FindManyPoliticalGroupUseCaseResponse> {
+		const politicalGroup = await this.politicalGroupRepository.findMany();
 
-    return {
-      politicalGroup,
-    };
-  }
+		return {
+			politicalGroup,
+		};
+	}
 }

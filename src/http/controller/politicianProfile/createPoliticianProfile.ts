@@ -3,22 +3,22 @@ import { makeCreatePoliticianProfile } from "@/useCase/@factories/politicianProf
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const createPoliticianProfileController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  try {
-    const data = ZodCreatePoliticianProfileBodySchema.parse(request.body);
-    const CreatePoliticianProfile = makeCreatePoliticianProfile();
+	try {
+		const data = ZodCreatePoliticianProfileBodySchema.parse(request.body);
+		const CreatePoliticianProfile = makeCreatePoliticianProfile();
 
-    const { profile } = await CreatePoliticianProfile.execute({
-      data: {
-        ...data,
-        user_id: request.user.sub,
-      },
-    });
+		const { profile } = await CreatePoliticianProfile.execute({
+			data: {
+				...data,
+				user_id: request.user.sub,
+			},
+		});
 
-    return reply.status(201).send({});
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(201).send({});
+	} catch (error) {
+		throw error;
+	}
 };

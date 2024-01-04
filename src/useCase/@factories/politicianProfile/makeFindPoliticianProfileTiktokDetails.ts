@@ -2,9 +2,9 @@ import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaP
 import { FindPoliticianProfileTiktokDetailsUseCase } from "@/useCase/politicianProfile/FindPoliticianProfileTiktokDetails";
 
 export function makeFindPoliticianProfileTiktokDetails() {
-  const politicianProfileRepository = new PrismaPoliticianProfileRepository();
+	const politicianProfileRepository = new PrismaPoliticianProfileRepository();
 
-  return new FindPoliticianProfileTiktokDetailsUseCase(
-    politicianProfileRepository
-  );
+	return new FindPoliticianProfileTiktokDetailsUseCase(
+		politicianProfileRepository,
+	);
 }

@@ -1,5 +1,5 @@
 export class CityNotFoundError extends Error {
-  constructor() {
-    super("Cidade não encontrada");
-  }
+	constructor() {
+		super("Cidade não encontrada");
+	}
 }

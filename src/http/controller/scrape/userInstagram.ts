@@ -2,16 +2,16 @@ import { makePoliticianProfileInstagramList } from "@/useCase/@factories/politic
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userInstagramController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  try {
-    const userInstagramUseCase = makePoliticianProfileInstagramList();
+	try {
+		const userInstagramUseCase = makePoliticianProfileInstagramList();
 
-    const instagram = await userInstagramUseCase.execute({});
+		const instagram = await userInstagramUseCase.execute({});
 
-    return reply.status(200).send(instagram);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(instagram);
+	} catch (error) {
+		throw error;
+	}
 };

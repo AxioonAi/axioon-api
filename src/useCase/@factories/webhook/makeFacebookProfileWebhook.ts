@@ -5,16 +5,16 @@ import { PrismaPoliticianProfileMonitoringRepository } from "@/repositories/Pris
 import { FacebookProfileWebhookUseCase } from "@/useCase/webhook/FacebookProfileWebhook";
 
 export function makeFacebookProfileWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const facebookBaseDataRepository = new PrismaFacebookBaseDataRepository();
-  const politicianProfileMonitoringRepository =
-    new PrismaPoliticianProfileMonitoringRepository();
-  const notificationRepository = new PrismaNotificationRepository();
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const facebookBaseDataRepository = new PrismaFacebookBaseDataRepository();
+	const politicianProfileMonitoringRepository =
+		new PrismaPoliticianProfileMonitoringRepository();
+	const notificationRepository = new PrismaNotificationRepository();
 
-  return new FacebookProfileWebhookUseCase(
-    awsNotificationRepository,
-    facebookBaseDataRepository,
-    politicianProfileMonitoringRepository,
-    notificationRepository
-  );
+	return new FacebookProfileWebhookUseCase(
+		awsNotificationRepository,
+		facebookBaseDataRepository,
+		politicianProfileMonitoringRepository,
+		notificationRepository,
+	);
 }

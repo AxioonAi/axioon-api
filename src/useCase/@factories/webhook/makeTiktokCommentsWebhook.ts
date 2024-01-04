@@ -4,12 +4,12 @@ import { PrismaTiktokCommentDataRepository } from "@/repositories/Prisma/PrismaT
 import { TiktokCommentsWebhookUseCase } from "@/useCase/webhook/TiktokCommentsWebhook";
 
 export function makeTiktokCommentsWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const tiktokCommentsRepository = new PrismaTiktokCommentDataRepository();
-  const gptRepository = new GptProductionRepository();
-  return new TiktokCommentsWebhookUseCase(
-    awsNotificationRepository,
-    tiktokCommentsRepository,
-    gptRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const tiktokCommentsRepository = new PrismaTiktokCommentDataRepository();
+	const gptRepository = new GptProductionRepository();
+	return new TiktokCommentsWebhookUseCase(
+		awsNotificationRepository,
+		tiktokCommentsRepository,
+		gptRepository,
+	);
 }

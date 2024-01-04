@@ -6,17 +6,17 @@ import { PrismaTiktokVideoDataRepository } from "@/repositories/Prisma/PrismaTik
 import { TiktokProfileWebhookUseCase } from "@/useCase/webhook/TiktokProfileWebhook";
 
 export function makeTiktokProfileWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const TiktokBaseDataRepository = new PrismaTiktokBaseDataRepository();
-  const TiktokVideoDataRepository = new PrismaTiktokVideoDataRepository();
-  const politicianProfileMonitoringRepository =
-    new PrismaPoliticianProfileMonitoringRepository();
-  const notificationRepository = new PrismaNotificationRepository();
-  return new TiktokProfileWebhookUseCase(
-    awsNotificationRepository,
-    TiktokBaseDataRepository,
-    TiktokVideoDataRepository,
-    politicianProfileMonitoringRepository,
-    notificationRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const TiktokBaseDataRepository = new PrismaTiktokBaseDataRepository();
+	const TiktokVideoDataRepository = new PrismaTiktokVideoDataRepository();
+	const politicianProfileMonitoringRepository =
+		new PrismaPoliticianProfileMonitoringRepository();
+	const notificationRepository = new PrismaNotificationRepository();
+	return new TiktokProfileWebhookUseCase(
+		awsNotificationRepository,
+		TiktokBaseDataRepository,
+		TiktokVideoDataRepository,
+		politicianProfileMonitoringRepository,
+		notificationRepository,
+	);
 }

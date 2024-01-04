@@ -5,14 +5,14 @@ import { PrismaUserRepository } from "@/repositories/Prisma/PrismaUserRepository
 import { PixPurchaseUseCase } from "@/useCase/purchase/PixPurchase";
 
 export function makePixPurchase() {
-  const planRepository = new PrismaSignaturePlanRepository();
-  const userPlanRepository = new PrismaUserPlanRepository();
-  const userRepository = new PrismaUserRepository();
-  const asaasRepository = new AsaasProductionRepository();
-  return new PixPurchaseUseCase(
-    userRepository,
-    planRepository,
-    userPlanRepository,
-    asaasRepository
-  );
+	const planRepository = new PrismaSignaturePlanRepository();
+	const userPlanRepository = new PrismaUserPlanRepository();
+	const userRepository = new PrismaUserRepository();
+	const asaasRepository = new AsaasProductionRepository();
+	return new PixPurchaseUseCase(
+		userRepository,
+		planRepository,
+		userPlanRepository,
+		asaasRepository,
+	);
 }

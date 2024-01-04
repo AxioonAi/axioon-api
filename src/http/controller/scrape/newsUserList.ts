@@ -3,20 +3,20 @@ import { makeFindWebsiteUsers } from "@/useCase/@factories/website/makeFindWebsi
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const newsUserListController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { id } = ZodIdParamsSchema.parse(request.params);
+	const { id } = ZodIdParamsSchema.parse(request.params);
 
-  try {
-    const websiteUserList = makeFindWebsiteUsers();
+	try {
+		const websiteUserList = makeFindWebsiteUsers();
 
-    const users = await websiteUserList.execute({
-      id,
-    });
+		const users = await websiteUserList.execute({
+			id,
+		});
 
-    return reply.status(200).send(users);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(users);
+	} catch (error) {
+		throw error;
+	}
 };

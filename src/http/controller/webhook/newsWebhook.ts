@@ -3,19 +3,19 @@ import { makeNewsWebhook } from "@/useCase/@factories/webhook/makeNewsWebhook";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const newsWebhookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-  try {
-    const newsWebhookUseCase = makeNewsWebhook();
-    const data = await newsWebhookUseCase.execute({
-      records: Records,
-    });
+	try {
+		const newsWebhookUseCase = makeNewsWebhook();
+		const data = await newsWebhookUseCase.execute({
+			records: Records,
+		});
 
-    reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

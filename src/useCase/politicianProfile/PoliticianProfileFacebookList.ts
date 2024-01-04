@@ -5,13 +5,13 @@ interface PoliticianProfileFacebookListUseCaseRequest {}
 interface PoliticianProfileFacebookListUseCaseResponse {}
 
 export class PoliticianProfileFacebookListUseCase {
-  constructor(private userRepository: PoliticianProfileRepository) {}
+	constructor(private userRepository: PoliticianProfileRepository) {}
 
-  async execute({}: PoliticianProfileFacebookListUseCaseRequest): Promise<PoliticianProfileFacebookListUseCaseResponse> {
-    const user = await this.userRepository.findFacebookList();
+	async execute({}: PoliticianProfileFacebookListUseCaseRequest): Promise<PoliticianProfileFacebookListUseCaseResponse> {
+		const user = await this.userRepository.findFacebookList();
 
-    return {
-      facebook: user,
-    };
-  }
+		return {
+			facebook: user,
+		};
+	}
 }

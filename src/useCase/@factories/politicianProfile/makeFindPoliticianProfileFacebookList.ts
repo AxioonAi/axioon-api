@@ -2,6 +2,6 @@ import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaP
 import { PoliticianProfileFacebookListUseCase } from "@/useCase/politicianProfile/PoliticianProfileFacebookList";
 
 export function makeFindPoliticianProfileFacebookList() {
-  const politicianProfileRepository = new PrismaPoliticianProfileRepository();
-  return new PoliticianProfileFacebookListUseCase(politicianProfileRepository);
+	const politicianProfileRepository = new PrismaPoliticianProfileRepository();
+	return new PoliticianProfileFacebookListUseCase(politicianProfileRepository);
 }

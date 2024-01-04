@@ -3,19 +3,19 @@ import { makeTiktokProfileWebhook } from "@/useCase/@factories/webhook/makeTikto
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const tiktokProfileWebhookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { Records } = ZodWebhookBodySchema.parse(request.body);
-  try {
-    const tiktokProfileWebhookUseCase = makeTiktokProfileWebhook();
+	const { Records } = ZodWebhookBodySchema.parse(request.body);
+	try {
+		const tiktokProfileWebhookUseCase = makeTiktokProfileWebhook();
 
-    const data = await tiktokProfileWebhookUseCase.execute({
-      records: Records,
-    });
+		const data = await tiktokProfileWebhookUseCase.execute({
+			records: Records,
+		});
 
-    reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

@@ -3,27 +3,27 @@ import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRep
 import { CityDataFormatter } from "@/utils/dataFormatter/city";
 
 interface CityStatisticsUseCaseRequest {
-  userId: string;
+	userId: string;
 }
 
 interface CityStatisticsUseCaseResponse {}
 
 export class CityStatisticsUseCase {
-  constructor(
-    private politicianProfileRepository: PoliticianProfileRepository
-  ) {}
+	constructor(
+		private politicianProfileRepository: PoliticianProfileRepository,
+	) {}
 
-  async execute({
-    userId,
-  }: CityStatisticsUseCaseRequest): Promise<CityStatisticsUseCaseResponse> {
-    const user = await this.politicianProfileRepository.findUserCity(userId);
+	async execute({
+		userId,
+	}: CityStatisticsUseCaseRequest): Promise<CityStatisticsUseCaseResponse> {
+		const user = await this.politicianProfileRepository.findUserCity(userId);
 
-    if (!user) {
-      throw new UserNotFoundError();
-    }
+		if (!user) {
+			throw new UserNotFoundError();
+		}
 
-    const formattedData = CityDataFormatter(user);
+		const formattedData = CityDataFormatter(user);
 
-    return { city: formattedData };
-  }
+		return { city: formattedData };
+	}
 }

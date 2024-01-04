@@ -2,16 +2,16 @@ import { makePoliticianProfileTiktokList } from "@/useCase/@factories/politician
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userTikTokController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  try {
-    const userTikTokUseCase = makePoliticianProfileTiktokList();
+	try {
+		const userTikTokUseCase = makePoliticianProfileTiktokList();
 
-    const tiktok = await userTikTokUseCase.execute({});
+		const tiktok = await userTikTokUseCase.execute({});
 
-    return reply.status(200).send(tiktok);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(tiktok);
+	} catch (error) {
+		throw error;
+	}
 };

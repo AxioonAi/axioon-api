@@ -3,11 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { InstagramBaseDataRepository } from "../InstagramBaseDataRepository";
 
 export class PrismaInstagramBaseDataRepository
-  implements InstagramBaseDataRepository
+	implements InstagramBaseDataRepository
 {
-  async createMany(data: InstagramBaseDataCreateInterface[]) {
-    await prisma.instagramBaseData.createMany({
-      data,
-    });
-  }
+	async createMany(data: InstagramBaseDataCreateInterface[]) {
+		await prisma.instagramBaseData.createMany({
+			data,
+		});
+	}
 }

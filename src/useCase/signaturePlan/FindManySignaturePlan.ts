@@ -4,15 +4,15 @@ import { SignaturePlan } from "@prisma/client";
 interface FindManySignaturePlanUseCaseRequest {}
 
 interface FindManySignaturePlanUseCaseResponse {
-  plans: SignaturePlan[];
+	plans: SignaturePlan[];
 }
 
 export class FindManySignaturePlanUseCase {
-  constructor(private signaturePlanRepository: SignaturePlanRepository) {}
+	constructor(private signaturePlanRepository: SignaturePlanRepository) {}
 
-  async execute({}: FindManySignaturePlanUseCaseRequest): Promise<FindManySignaturePlanUseCaseResponse> {
-    const plans = await this.signaturePlanRepository.findAll();
+	async execute({}: FindManySignaturePlanUseCaseRequest): Promise<FindManySignaturePlanUseCaseResponse> {
+		const plans = await this.signaturePlanRepository.findAll();
 
-    return { plans };
-  }
+		return { plans };
+	}
 }

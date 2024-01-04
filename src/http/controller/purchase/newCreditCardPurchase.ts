@@ -4,22 +4,22 @@ import { makeNewCreditCardPayment } from "@/useCase/@factories/purchase/makeNewC
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const newCreditCardPurchaseController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const data = ZodNewCreditCardPaymentBodySchema.parse(request.body);
-  const { id } = ZodIdParamsSchema.parse(request.params);
-  try {
-    const newCreditCardPurchaseUseCase = makeNewCreditCardPayment();
+	const data = ZodNewCreditCardPaymentBodySchema.parse(request.body);
+	const { id } = ZodIdParamsSchema.parse(request.params);
+	try {
+		const newCreditCardPurchaseUseCase = makeNewCreditCardPayment();
 
-    const payment = await newCreditCardPurchaseUseCase.execute({
-      planId: id,
-      ...data,
-      userId: request.user.sub,
-    });
+		const payment = await newCreditCardPurchaseUseCase.execute({
+			planId: id,
+			...data,
+			userId: request.user.sub,
+		});
 
-    return reply.status(200).send({ payment });
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send({ payment });
+	} catch (error) {
+		throw error;
+	}
 };

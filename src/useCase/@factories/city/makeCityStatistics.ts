@@ -2,6 +2,6 @@ import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaP
 import { CityStatisticsUseCase } from "@/useCase/city/CityStatistics";
 
 export function makeCityStatistics() {
-  const politicianProfileRepository = new PrismaPoliticianProfileRepository();
-  return new CityStatisticsUseCase(politicianProfileRepository);
+	const politicianProfileRepository = new PrismaPoliticianProfileRepository();
+	return new CityStatisticsUseCase(politicianProfileRepository);
 }

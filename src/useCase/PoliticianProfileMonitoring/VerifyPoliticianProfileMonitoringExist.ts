@@ -4,38 +4,38 @@ import { PoliticianProfileMonitoringRepository } from "@/repositories/Politician
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
 
 interface VerifyPoliticianProfileMonitoringExistUseCaseRequest {
-  id: string;
-  profileId: string;
+	id: string;
+	profileId: string;
 }
 
 interface VerifyPoliticianProfileMonitoringExistUseCaseResponse {}
 
 export class VerifyPoliticianProfileMonitoringExistUseCase {
-  constructor(
-    private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository,
-    private userPlanRepository: UserPlanRepository
-  ) {}
+	constructor(
+		private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository,
+		private userPlanRepository: UserPlanRepository,
+	) {}
 
-  async execute({
-    id,
-    profileId,
-  }: VerifyPoliticianProfileMonitoringExistUseCaseRequest): Promise<VerifyPoliticianProfileMonitoringExistUseCaseResponse> {
-    const [exists, activePlan] = await Promise.all([
-      this.politicianProfileMonitoringRepository.verify({
-        profileId,
-        userId: id,
-      }),
-      this.userPlanRepository.findActivePlan(id),
-    ]);
+	async execute({
+		id,
+		profileId,
+	}: VerifyPoliticianProfileMonitoringExistUseCaseRequest): Promise<VerifyPoliticianProfileMonitoringExistUseCaseResponse> {
+		const [exists, activePlan] = await Promise.all([
+			this.politicianProfileMonitoringRepository.verify({
+				profileId,
+				userId: id,
+			}),
+			this.userPlanRepository.findActivePlan(id),
+		]);
 
-    if (!exists) {
-      throw new MonitoringNotFoundError();
-    }
+		if (!exists) {
+			throw new MonitoringNotFoundError();
+		}
 
-    if (!activePlan) {
-      throw new SignatureNotFoundError();
-    }
+		if (!activePlan) {
+			throw new SignatureNotFoundError();
+		}
 
-    return {};
-  }
+		return {};
+	}
 }

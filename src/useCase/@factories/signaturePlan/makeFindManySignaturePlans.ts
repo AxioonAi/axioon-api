@@ -2,6 +2,6 @@ import { PrismaSignaturePlanRepository } from "@/repositories/Prisma/PrismaSigna
 import { FindManySignaturePlanUseCase } from "@/useCase/signaturePlan/FindManySignaturePlan";
 
 export function makeFindManySignaturePlans() {
-  const signaturePlanRepository = new PrismaSignaturePlanRepository();
-  return new FindManySignaturePlanUseCase(signaturePlanRepository);
+	const signaturePlanRepository = new PrismaSignaturePlanRepository();
+	return new FindManySignaturePlanUseCase(signaturePlanRepository);
 }

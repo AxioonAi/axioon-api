@@ -2,6 +2,6 @@ import { PrismaNotificationRepository } from "@/repositories/Prisma/PrismaNotifi
 import { FindUserNotificationUseCase } from "@/useCase/notification/FindUserNotification";
 
 export function makeFindUserNotification() {
-  const notificationRepository = new PrismaNotificationRepository();
-  return new FindUserNotificationUseCase(notificationRepository);
+	const notificationRepository = new PrismaNotificationRepository();
+	return new FindUserNotificationUseCase(notificationRepository);
 }

@@ -4,23 +4,23 @@ import { makeFindPoliticianProfileInstagramDetails } from "@/useCase/@factories/
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findPoliticianProfileInstagramDetailsController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { id } = ZodIdParamsSchema.parse(request.params);
-  const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
-    request.query
-  );
-  try {
-    const findPoliticianProfileInstagramDetails =
-      makeFindPoliticianProfileInstagramDetails();
-    const data = await findPoliticianProfileInstagramDetails.execute({
-      id,
-      period,
-    });
+	const { id } = ZodIdParamsSchema.parse(request.params);
+	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
+		request.query,
+	);
+	try {
+		const findPoliticianProfileInstagramDetails =
+			makeFindPoliticianProfileInstagramDetails();
+		const data = await findPoliticianProfileInstagramDetails.execute({
+			id,
+			period,
+		});
 
-    return reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

@@ -3,19 +3,19 @@ import { makeFindPoliticianProfileByCpf } from "@/useCase/@factories/politicianP
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findPoliticianProfileByCpfController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { id } = ZodIdParamsSchema.parse(request.params);
-  try {
-    const findPoliticianProfileByCpf = makeFindPoliticianProfileByCpf();
+	const { id } = ZodIdParamsSchema.parse(request.params);
+	try {
+		const findPoliticianProfileByCpf = makeFindPoliticianProfileByCpf();
 
-    const { politicianProfile } = await findPoliticianProfileByCpf.execute({
-      cpf: id,
-    });
+		const { politicianProfile } = await findPoliticianProfileByCpf.execute({
+			cpf: id,
+		});
 
-    return reply.status(200).send({ politicianProfile });
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send({ politicianProfile });
+	} catch (error) {
+		throw error;
+	}
 };

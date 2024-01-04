@@ -5,15 +5,15 @@ import { PrismaYoutubeBaseDataRepository } from "@/repositories/Prisma/PrismaYou
 import { YoutubeChannelWebhookUseCase } from "@/useCase/webhook/YoutubeChannelWebhook";
 
 export function makeYoutubeChannelWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const youtubeChannelRepository = new PrismaYoutubeBaseDataRepository();
-  const politicianProfileMonitoringRepository =
-    new PrismaPoliticianProfileMonitoringRepository();
-  const notificationRepository = new PrismaNotificationRepository();
-  return new YoutubeChannelWebhookUseCase(
-    awsNotificationRepository,
-    youtubeChannelRepository,
-    politicianProfileMonitoringRepository,
-    notificationRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const youtubeChannelRepository = new PrismaYoutubeBaseDataRepository();
+	const politicianProfileMonitoringRepository =
+		new PrismaPoliticianProfileMonitoringRepository();
+	const notificationRepository = new PrismaNotificationRepository();
+	return new YoutubeChannelWebhookUseCase(
+		awsNotificationRepository,
+		youtubeChannelRepository,
+		politicianProfileMonitoringRepository,
+		notificationRepository,
+	);
 }

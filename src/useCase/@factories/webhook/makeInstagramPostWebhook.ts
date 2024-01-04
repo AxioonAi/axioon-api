@@ -3,11 +3,11 @@ import { PrismaInstagramPostRepository } from "@/repositories/Prisma/PrismaInsta
 import { InstagramPostsWebhookUseCase } from "@/useCase/webhook/InstagramPostsWebhook";
 
 export function makeInstagramPostWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const instagramPostRepository = new PrismaInstagramPostRepository();
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const instagramPostRepository = new PrismaInstagramPostRepository();
 
-  return new InstagramPostsWebhookUseCase(
-    awsNotificationRepository,
-    instagramPostRepository
-  );
+	return new InstagramPostsWebhookUseCase(
+		awsNotificationRepository,
+		instagramPostRepository,
+	);
 }

@@ -3,8 +3,8 @@ import { PrismaUserRepository } from "@/repositories/Prisma/PrismaUserRepository
 import { CreateSubUserUseCase } from "@/useCase/subUser/CreateSubUser";
 
 export function makeCreateSubUser() {
-  const subUserRepository = new PrismaSubUserRepository();
-  const userRepository = new PrismaUserRepository();
+	const subUserRepository = new PrismaSubUserRepository();
+	const userRepository = new PrismaUserRepository();
 
-  return new CreateSubUserUseCase(subUserRepository, userRepository);
+	return new CreateSubUserUseCase(subUserRepository, userRepository);
 }

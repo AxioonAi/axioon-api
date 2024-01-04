@@ -3,27 +3,27 @@ import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRep
 import { PoliticianProfile } from "@prisma/client";
 
 interface FindPoliticianProfileWithCpfUseCaseRequest {
-  cpf: string;
+	cpf: string;
 }
 
 interface FindPoliticianProfileWithCpfUseCaseResponse {
-  politicianProfile: PoliticianProfile;
+	politicianProfile: PoliticianProfile;
 }
 
 export class FindPoliticianProfileWithCpfUseCase {
-  constructor(
-    private politicianProfileRepository: PoliticianProfileRepository
-  ) {}
+	constructor(
+		private politicianProfileRepository: PoliticianProfileRepository,
+	) {}
 
-  async execute({
-    cpf,
-  }: FindPoliticianProfileWithCpfUseCaseRequest): Promise<FindPoliticianProfileWithCpfUseCaseResponse> {
-    const profile = await this.politicianProfileRepository.findByCpf(cpf);
+	async execute({
+		cpf,
+	}: FindPoliticianProfileWithCpfUseCaseRequest): Promise<FindPoliticianProfileWithCpfUseCaseResponse> {
+		const profile = await this.politicianProfileRepository.findByCpf(cpf);
 
-    if (!profile) {
-      throw new ProfileNotFoundError();
-    }
+		if (!profile) {
+			throw new ProfileNotFoundError();
+		}
 
-    return { politicianProfile: profile };
-  }
+		return { politicianProfile: profile };
+	}
 }

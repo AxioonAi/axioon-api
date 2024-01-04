@@ -3,20 +3,20 @@ import { makeYoutubeCommentsWebhook } from "@/useCase/@factories/webhook/makeYou
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const youtubeCommentsWebhookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-  try {
-    const youtubeCommentsWebhookUseCase = makeYoutubeCommentsWebhook();
+	try {
+		const youtubeCommentsWebhookUseCase = makeYoutubeCommentsWebhook();
 
-    const data = await youtubeCommentsWebhookUseCase.execute({
-      records: Records,
-    });
+		const data = await youtubeCommentsWebhookUseCase.execute({
+			records: Records,
+		});
 
-    reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

@@ -2,6 +2,6 @@ import { PrismaSubUserRepository } from "@/repositories/Prisma/PrismaSubUserRepo
 import { updateSubUserUseCase } from "@/useCase/subUser/updateSubUser";
 
 export function makeUpdateSubUser() {
-  const subUserRepository = new PrismaSubUserRepository();
-  return new updateSubUserUseCase(subUserRepository);
+	const subUserRepository = new PrismaSubUserRepository();
+	return new updateSubUserUseCase(subUserRepository);
 }

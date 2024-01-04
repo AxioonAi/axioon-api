@@ -4,12 +4,12 @@ import { PrismaInstagramMentionRepository } from "@/repositories/Prisma/PrismaIn
 import { InstagramMentionsWebhookUseCase } from "@/useCase/webhook/InstagramMentionsWebhook";
 
 export function makeInstagramMentionsWebhook() {
-  const awsNotificationRepository = new AwsNotificationProductionRepository();
-  const instagramMentionRepository = new PrismaInstagramMentionRepository();
-  const gptRepository = new GptProductionRepository();
-  return new InstagramMentionsWebhookUseCase(
-    awsNotificationRepository,
-    instagramMentionRepository,
-    gptRepository
-  );
+	const awsNotificationRepository = new AwsNotificationProductionRepository();
+	const instagramMentionRepository = new PrismaInstagramMentionRepository();
+	const gptRepository = new GptProductionRepository();
+	return new InstagramMentionsWebhookUseCase(
+		awsNotificationRepository,
+		instagramMentionRepository,
+		gptRepository,
+	);
 }

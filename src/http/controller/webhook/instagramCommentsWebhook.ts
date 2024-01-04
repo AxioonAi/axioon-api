@@ -3,20 +3,20 @@ import { makeInstagramCommentsWebhook } from "@/useCase/@factories/webhook/makeI
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const instagramCommentsWebhookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-  try {
-    const instagramCommentsWebhookUseCase = makeInstagramCommentsWebhook();
+	try {
+		const instagramCommentsWebhookUseCase = makeInstagramCommentsWebhook();
 
-    const data = await instagramCommentsWebhookUseCase.execute({
-      records: Records,
-    });
+		const data = await instagramCommentsWebhookUseCase.execute({
+			records: Records,
+		});
 
-    reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

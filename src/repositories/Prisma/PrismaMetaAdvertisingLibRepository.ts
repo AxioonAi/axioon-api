@@ -4,40 +4,40 @@ import { MetaAdvertisingLib } from "@prisma/client";
 import { MetaAdvertisingLibRepository } from "../MetaAdvertisingLibRepository";
 
 export class PrismaMetaAdvertisingLibRepository
-  implements MetaAdvertisingLibRepository
+	implements MetaAdvertisingLibRepository
 {
-  async createMany(data: MetaAdvertisingLib[]) {
-    const idExists = data.map((item) => item.id);
+	async createMany(data: MetaAdvertisingLib[]) {
+		const idExists = data.map((item) => item.id);
 
-    const metaExists = await prisma.metaAdvertisingLib.findMany({
-      where: {
-        id: {
-          in: idExists,
-        },
-      },
-    });
+		const metaExists = await prisma.metaAdvertisingLib.findMany({
+			where: {
+				id: {
+					in: idExists,
+				},
+			},
+		});
 
-    const createData: MetaAdvertisingLibCreateInterface[] = [];
-    const updateData: MetaAdvertisingLibCreateInterface[] = [];
+		const createData: MetaAdvertisingLibCreateInterface[] = [];
+		const updateData: MetaAdvertisingLibCreateInterface[] = [];
 
-    data.forEach((item) => {
-      if (!metaExists.find((meta) => meta.id === item.id)) {
-        createData.push(item);
-      } else {
-        updateData.push(item);
-      }
-    });
+		data.forEach((item) => {
+			if (!metaExists.find((meta) => meta.id === item.id)) {
+				createData.push(item);
+			} else {
+				updateData.push(item);
+			}
+		});
 
-    await prisma.$transaction([
-      prisma.metaAdvertisingLib.createMany({ data: createData }),
-      ...updateData.map((update) =>
-        prisma.metaAdvertisingLib.update({
-          where: {
-            id: update.id,
-          },
-          data: update,
-        })
-      ),
-    ]);
-  }
+		await prisma.$transaction([
+			prisma.metaAdvertisingLib.createMany({ data: createData }),
+			...updateData.map((update) =>
+				prisma.metaAdvertisingLib.update({
+					where: {
+						id: update.id,
+					},
+					data: update,
+				}),
+			),
+		]);
+	}
 }

@@ -4,43 +4,43 @@ import { InstagramMentionCommentRepository } from "@/repositories/InstagramMenti
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface InstagramMentionCommentsWebhookUseCaseRequest {
-  records: {
-    s3: {
-      object: {
-        key: string;
-      };
-    };
-  }[];
+	records: {
+		s3: {
+			object: {
+				key: string;
+			};
+		};
+	}[];
 }
 
 interface InstagramMentionCommentsWebhookUseCaseResponse {}
 
 export class InstagramMentionCommentsWebhookUseCase {
-  constructor(
-    private awsNotificationRepository: AwsNotificationRepository,
-    private instagramMentionCommentsRepository: InstagramMentionCommentRepository,
-    private gptRepository: GptRepository
-  ) {}
+	constructor(
+		private awsNotificationRepository: AwsNotificationRepository,
+		private instagramMentionCommentsRepository: InstagramMentionCommentRepository,
+		private gptRepository: GptRepository,
+	) {}
 
-  async execute({
-    records,
-  }: InstagramMentionCommentsWebhookUseCaseRequest): Promise<InstagramMentionCommentsWebhookUseCaseResponse> {
-    const data =
-      await this.awsNotificationRepository.S3InstagramCommentsNotification({
-        records,
-      });
-    const gptAnalysis = await this.gptRepository.commentAnalysis(data);
-    const createData: InstagramCommentCreateInterface[] = [];
-    data.forEach((item) => {
-      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
-      if (analysis) {
-        createData.push({
-          ...item,
-          ...analysis,
-        });
-      }
-    });
-    await this.instagramMentionCommentsRepository.createMany(createData);
-    return {};
-  }
+	async execute({
+		records,
+	}: InstagramMentionCommentsWebhookUseCaseRequest): Promise<InstagramMentionCommentsWebhookUseCaseResponse> {
+		const data =
+			await this.awsNotificationRepository.S3InstagramCommentsNotification({
+				records,
+			});
+		const gptAnalysis = await this.gptRepository.commentAnalysis(data);
+		const createData: InstagramCommentCreateInterface[] = [];
+		data.forEach((item) => {
+			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+			if (analysis) {
+				createData.push({
+					...item,
+					...analysis,
+				});
+			}
+		});
+		await this.instagramMentionCommentsRepository.createMany(createData);
+		return {};
+	}
 }

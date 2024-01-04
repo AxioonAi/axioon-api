@@ -1,5 +1,5 @@
 export class AuthenticateError extends Error {
-  constructor() {
-    super("Email ou senha incorretos");
-  }
+	constructor() {
+		super("Email ou senha incorretos");
+	}
 }

@@ -3,13 +3,13 @@ import { prisma } from "@/lib/prisma";
 import { FacebookBaseDataRepository } from "../FacebookBaseDataRepository";
 
 export class PrismaFacebookBaseDataRepository
-  implements FacebookBaseDataRepository
+	implements FacebookBaseDataRepository
 {
-  async createMany(data: FacebookBaseDataCreateInterface[]) {
-    await prisma.facebookBaseData.createMany({
-      data,
-    });
+	async createMany(data: FacebookBaseDataCreateInterface[]) {
+		await prisma.facebookBaseData.createMany({
+			data,
+		});
 
-    return;
-  }
+		return;
+	}
 }

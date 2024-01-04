@@ -2,6 +2,6 @@ import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaP
 import { FindPoliticianProfileWithCpfUseCase } from "@/useCase/politicianProfile/FindPoliticianProfileWithCpf";
 
 export function makeFindPoliticianProfileByCpf() {
-  const politicianProfileRepository = new PrismaPoliticianProfileRepository();
-  return new FindPoliticianProfileWithCpfUseCase(politicianProfileRepository);
+	const politicianProfileRepository = new PrismaPoliticianProfileRepository();
+	return new FindPoliticianProfileWithCpfUseCase(politicianProfileRepository);
 }

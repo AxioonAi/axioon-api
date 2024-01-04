@@ -7,45 +7,45 @@ import { UserRepository } from "@/repositories/userRepository";
 import { Status } from "@prisma/client";
 import moment from "moment";
 interface PixPurchaseUseCaseRequest {
-  userId: string;
-  planId: string;
+	userId: string;
+	planId: string;
 }
 
 interface PixPurchaseUseCaseResponse {}
 
 export class PixPurchaseUseCase {
-  constructor(
-    private userRepository: UserRepository,
-    private signaturePlanRepository: SignaturePlanRepository,
-    private userPlanRepository: UserPlanRepository,
-    private asaasRepository: AsaasRepository
-  ) {}
+	constructor(
+		private userRepository: UserRepository,
+		private signaturePlanRepository: SignaturePlanRepository,
+		private userPlanRepository: UserPlanRepository,
+		private asaasRepository: AsaasRepository,
+	) {}
 
-  async execute({
-    userId,
-    planId,
-  }: PixPurchaseUseCaseRequest): Promise<PixPurchaseUseCaseResponse> {
-    const [user, plan] = await Promise.all([
-      this.userRepository.findById(userId),
-      this.signaturePlanRepository.findById(planId),
-    ]);
+	async execute({
+		userId,
+		planId,
+	}: PixPurchaseUseCaseRequest): Promise<PixPurchaseUseCaseResponse> {
+		const [user, plan] = await Promise.all([
+			this.userRepository.findById(userId),
+			this.signaturePlanRepository.findById(planId),
+		]);
 
-    if (!user) throw new UserNotFoundError();
-    if (!plan) throw new PlanNotFoundError();
+		if (!user) throw new UserNotFoundError();
+		if (!plan) throw new PlanNotFoundError();
 
-    const payment = await this.asaasRepository.pixPayment({
-      customer: user.paymentId,
-      value: plan.pixValue,
-    });
+		const payment = await this.asaasRepository.pixPayment({
+			customer: user.paymentId,
+			value: plan.pixValue,
+		});
 
-    const userPlan = await this.userPlanRepository.create({
-      user_id: userId,
-      plan_id: planId,
-      paymentId: payment.payment_id,
-      status: Status.INACTIVE,
-      expires_in: moment().add(1, "year").toDate(),
-    });
+		const userPlan = await this.userPlanRepository.create({
+			user_id: userId,
+			plan_id: planId,
+			paymentId: payment.payment_id,
+			status: Status.INACTIVE,
+			expires_in: moment().add(1, "year").toDate(),
+		});
 
-    return { payment };
-  }
+		return { payment };
+	}
 }

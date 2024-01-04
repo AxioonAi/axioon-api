@@ -4,47 +4,49 @@ import { InstagramMentionRepository } from "@/repositories/InstagramMentionRepos
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface InstagramMentionsWebhookUseCaseRequest {
-  records: {
-    s3: {
-      object: {
-        key: string;
-      };
-    };
-  }[];
+	records: {
+		s3: {
+			object: {
+				key: string;
+			};
+		};
+	}[];
 }
 
 interface InstagramMentionsWebhookUseCaseResponse {}
 
 export class InstagramMentionsWebhookUseCase {
-  constructor(
-    private awsNotificationRepository: AwsNotificationRepository,
-    private instagramMentionRepository: InstagramMentionRepository,
-    private gptRepository: GptRepository
-  ) {}
+	constructor(
+		private awsNotificationRepository: AwsNotificationRepository,
+		private instagramMentionRepository: InstagramMentionRepository,
+		private gptRepository: GptRepository,
+	) {}
 
-  async execute({
-    records,
-  }: InstagramMentionsWebhookUseCaseRequest): Promise<InstagramMentionsWebhookUseCaseResponse> {
-    const data =
-      await this.awsNotificationRepository.S3InstagramMentionsNotification({
-        records,
-      });
+	async execute({
+		records,
+	}: InstagramMentionsWebhookUseCaseRequest): Promise<InstagramMentionsWebhookUseCaseResponse> {
+		const data =
+			await this.awsNotificationRepository.S3InstagramMentionsNotification({
+				records,
+			});
 
-    const gptAnalysis = await this.gptRepository.mentionAnalysis(data);
+		const gptAnalysis = await this.gptRepository.mentionAnalysis(data);
 
-    const createData: InstagramMentionCreateInterface[] = [];
+		return data;
 
-    data.forEach((item) => {
-      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
-      if (analysis) {
-        createData.push({
-          ...item,
-          ...analysis,
-        });
-      }
-    });
+		const createData: InstagramMentionCreateInterface[] = [];
 
-    await this.instagramMentionRepository.createMany(createData);
-    return {};
-  }
+		data.forEach((item) => {
+			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+			if (analysis) {
+				createData.push({
+					...item,
+					...analysis,
+				});
+			}
+		});
+
+		await this.instagramMentionRepository.createMany(createData);
+		return {};
+	}
 }

@@ -3,20 +3,20 @@ import { makeFacebookCommentsWebhook } from "@/useCase/@factories/webhook/makeFa
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const facebookCommentsWebhookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-  try {
-    const facebookCommentsWebhookUseCase = makeFacebookCommentsWebhook();
+	try {
+		const facebookCommentsWebhookUseCase = makeFacebookCommentsWebhook();
 
-    const data = await facebookCommentsWebhookUseCase.execute({
-      records: Records,
-    });
+		const data = await facebookCommentsWebhookUseCase.execute({
+			records: Records,
+		});
 
-    reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };

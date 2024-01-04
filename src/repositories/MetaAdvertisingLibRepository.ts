@@ -1,8 +1,8 @@
 import { MetaAdvertisingLib } from "@prisma/client";
 
 export interface MetaAdvertisingLibCreateManyInterface
-  extends MetaAdvertisingLib {}
+	extends MetaAdvertisingLib {}
 
 export interface MetaAdvertisingLibRepository {
-  createMany(data: MetaAdvertisingLib[]): Promise<void>;
+	createMany(data: MetaAdvertisingLib[]): Promise<void>;
 }

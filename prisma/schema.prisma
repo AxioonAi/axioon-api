@@ -535,9 +535,9 @@ model MetaAdvertisingLib {
   bylines String
   ad_snapshot_url String
   ad_delivery_start_time DateTime
-  ad_delivery_stop_time DateTime
+  ad_delivery_stop_time DateTime?
   ad_creation_time DateTime
-
+  status Status @default(INACTIVE)
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   deliveryByRegion MetaAdvertisingLibDeliveryByRegion[]
   demographicDistribution MetaAdvertisingLibDemographicDistribution[]

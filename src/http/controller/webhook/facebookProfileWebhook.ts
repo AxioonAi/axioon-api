@@ -3,19 +3,19 @@ import { makeFacebookProfileWebhook } from "@/useCase/@factories/webhook/makeFac
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const facebookProfileWebhookController = async (
-  request: FastifyRequest,
-  reply: FastifyReply
+	request: FastifyRequest,
+	reply: FastifyReply,
 ) => {
-  const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-  try {
-    const facebookWebhookUseCase = makeFacebookProfileWebhook();
-    const data = await facebookWebhookUseCase.execute({
-      records: Records,
-    });
+	try {
+		const facebookWebhookUseCase = makeFacebookProfileWebhook();
+		const data = await facebookWebhookUseCase.execute({
+			records: Records,
+		});
 
-    return reply.status(200).send(data);
-  } catch (error) {
-    throw error;
-  }
+		return reply.status(200).send(data);
+	} catch (error) {
+		throw error;
+	}
 };
