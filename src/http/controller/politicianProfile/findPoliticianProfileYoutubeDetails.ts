@@ -11,15 +11,13 @@ export const findPoliticianProfileYoutubeDetailsController = async (
 	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
 		request.query,
 	);
-	try {
-		const findPoliticianProfileYoutubeDetailsUseCase =
-			makeFindPoliticianYoutubeDetails();
+	const findPoliticianProfileYoutubeDetailsUseCase =
+		makeFindPoliticianYoutubeDetails();
 
-		const data = await findPoliticianProfileYoutubeDetailsUseCase.execute({
-			id,
-			period,
-		});
+	const data = await findPoliticianProfileYoutubeDetailsUseCase.execute({
+		id,
+		period,
+	});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

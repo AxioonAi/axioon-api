@@ -5,11 +5,9 @@ export const userFacebookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const userFacebookUseCase = makeFindPoliticianProfileFacebookList();
+	const userFacebookUseCase = makeFindPoliticianProfileFacebookList();
 
-		const facebook = await userFacebookUseCase.execute({});
+	const facebook = await userFacebookUseCase.execute({});
 
-		return reply.status(200).send(facebook);
-	} catch (error) {}
+	return reply.status(200).send(facebook);
 };

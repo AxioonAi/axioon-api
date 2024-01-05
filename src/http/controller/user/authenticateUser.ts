@@ -8,28 +8,26 @@ export const authenticateUserController = async (
 ) => {
 	const { email, password } = ZodAuthenticateUserBodySchema.parse(request.body);
 
-	try {
-		const authenticateUser = makeAuthenticateUser();
+	const authenticateUser = makeAuthenticateUser();
 
-		const { user } = await authenticateUser.execute({
-			email,
-			password,
-		});
+	const { user } = await authenticateUser.execute({
+		email,
+		password,
+	});
 
-		const token = await reply.jwtSign({
-			sub: user.id,
-			type: "user",
-		});
+	const token = await reply.jwtSign({
+		sub: user.id,
+		type: "user",
+	});
 
-		const refreshToken = await reply.jwtSign({
-			sub: user.id,
-			expiresIn: "7d",
-		});
+	const refreshToken = await reply.jwtSign({
+		sub: user.id,
+		expiresIn: "7d",
+	});
 
-		return reply.status(200).send({
-			token,
-			refreshToken,
-			type: "user",
-		});
-	} catch (error) {}
+	return reply.status(200).send({
+		token,
+		refreshToken,
+		type: "user",
+	});
 };

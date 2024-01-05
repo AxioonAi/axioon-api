@@ -5,13 +5,11 @@ export const FindUserNotificationController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const findUserNotificationUseCase = makeFindUserNotification();
+	const findUserNotificationUseCase = makeFindUserNotification();
 
-		const notification = await findUserNotificationUseCase.execute({
-			id: request.user.sub,
-		});
+	const notification = await findUserNotificationUseCase.execute({
+		id: request.user.sub,
+	});
 
-		return reply.status(200).send(notification);
-	} catch (error) {}
+	return reply.status(200).send(notification);
 };

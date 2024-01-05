@@ -11,15 +11,13 @@ export const findPoliticianProfileSocialMediaHomeDataController = async (
 	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
 		request.query,
 	);
-	try {
-		const findPoliticianProfileSocialMediaHomeDataUseCase =
-			makeFindPoliticianProfileSocialMediaHomeData();
+	const findPoliticianProfileSocialMediaHomeDataUseCase =
+		makeFindPoliticianProfileSocialMediaHomeData();
 
-		const data = await findPoliticianProfileSocialMediaHomeDataUseCase.execute({
-			id,
-			period: 30,
-		});
+	const data = await findPoliticianProfileSocialMediaHomeDataUseCase.execute({
+		id,
+		period: 30,
+	});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

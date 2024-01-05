@@ -10,16 +10,14 @@ export const findPoliticianProfileAdvertisingDetailsController = async (
 	const { id } = ZodIdParamsSchema.parse(request.params);
 	const { startDate, endDate } =
 		ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
-	try {
-		const findPoliticianProfileAdvertisingDetailsUseCase =
-			makeFindPoliticianProfileAdvertisingDetails();
+	const findPoliticianProfileAdvertisingDetailsUseCase =
+		makeFindPoliticianProfileAdvertisingDetails();
 
-		const data = await findPoliticianProfileAdvertisingDetailsUseCase.execute({
-			id,
-			startDate,
-			endDate,
-		});
+	const data = await findPoliticianProfileAdvertisingDetailsUseCase.execute({
+		id,
+		startDate,
+		endDate,
+	});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

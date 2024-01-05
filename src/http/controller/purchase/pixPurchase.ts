@@ -8,14 +8,12 @@ export const pixPurchaseController = async (
 ) => {
 	const { id } = ZodIdParamsSchema.parse(request.params);
 
-	try {
-		const pixPurchaseUseCase = makePixPurchase();
+	const pixPurchaseUseCase = makePixPurchase();
 
-		const payment = await pixPurchaseUseCase.execute({
-			planId: id,
-			userId: request.user.sub,
-		});
+	const payment = await pixPurchaseUseCase.execute({
+		planId: id,
+		userId: request.user.sub,
+	});
 
-		return reply.status(200).send({ payment });
-	} catch (error) {}
+	return reply.status(200).send({ payment });
 };

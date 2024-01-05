@@ -11,14 +11,12 @@ export const findPoliticianProfileInstagramDetailsController = async (
 	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
 		request.query,
 	);
-	try {
-		const findPoliticianProfileInstagramDetails =
-			makeFindPoliticianProfileInstagramDetails();
-		const data = await findPoliticianProfileInstagramDetails.execute({
-			id,
-			period,
-		});
+	const findPoliticianProfileInstagramDetails =
+		makeFindPoliticianProfileInstagramDetails();
+	const data = await findPoliticianProfileInstagramDetails.execute({
+		id,
+		period,
+	});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

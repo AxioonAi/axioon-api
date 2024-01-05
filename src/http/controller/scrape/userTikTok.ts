@@ -5,11 +5,9 @@ export const userTikTokController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const userTikTokUseCase = makePoliticianProfileTiktokList();
+	const userTikTokUseCase = makePoliticianProfileTiktokList();
 
-		const tiktok = await userTikTokUseCase.execute({});
+	const tiktok = await userTikTokUseCase.execute({});
 
-		return reply.status(200).send(tiktok);
-	} catch (error) {}
+	return reply.status(200).send(tiktok);
 };

@@ -8,38 +8,36 @@ export const registerUserController = async (
 	reply: FastifyReply,
 ) => {
 	const data = ZodRegisterUserBodySchema.parse(request.body);
-	try {
-		const registerUser = makeRegisterUser();
-		const createAsaasUser = makeAsaasCreateUser();
+	const registerUser = makeRegisterUser();
+	const createAsaasUser = makeAsaasCreateUser();
 
-		const { id } = await createAsaasUser.execute({
-			name: data.name,
-			email: data.email,
-			cpfCnpj: data.cpfCnpj,
-			mobilePhone: data.mobilePhone,
-		});
+	const { id } = await createAsaasUser.execute({
+		name: data.name,
+		email: data.email,
+		cpfCnpj: data.cpfCnpj,
+		mobilePhone: data.mobilePhone,
+	});
 
-		const { user } = await registerUser.execute({
-			data: {
-				...data,
-				paymentId: id,
-			},
-		});
+	const { user } = await registerUser.execute({
+		data: {
+			...data,
+			paymentId: id,
+		},
+	});
 
-		const token = await reply.jwtSign({
-			sub: user.id,
-			type: "user",
-		});
+	const token = await reply.jwtSign({
+		sub: user.id,
+		type: "user",
+	});
 
-		const refreshToken = await reply.jwtSign({
-			sub: user.id,
-			expiresIn: "7d",
-		});
+	const refreshToken = await reply.jwtSign({
+		sub: user.id,
+		expiresIn: "7d",
+	});
 
-		return reply.status(200).send({
-			token,
-			refreshToken,
-			type: "user",
-		});
-	} catch (error) {}
+	return reply.status(200).send({
+		token,
+		refreshToken,
+		type: "user",
+	});
 };

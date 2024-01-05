@@ -12,15 +12,13 @@ export const findPoliticianProfileTiktokDetailsController = async (
 		request.query,
 	);
 
-	try {
-		const findPoliticianProfileTiktokDetails =
-			makeFindPoliticianProfileTiktokDetails();
+	const findPoliticianProfileTiktokDetails =
+		makeFindPoliticianProfileTiktokDetails();
 
-		const data = await findPoliticianProfileTiktokDetails.execute({
-			id,
-			period,
-		});
+	const data = await findPoliticianProfileTiktokDetails.execute({
+		id,
+		period,
+	});
 
-		return reply.send(data);
-	} catch (error) {}
+	return reply.send(data);
 };

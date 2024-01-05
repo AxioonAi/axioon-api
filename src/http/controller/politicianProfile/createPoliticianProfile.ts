@@ -6,17 +6,15 @@ export const createPoliticianProfileController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const data = ZodCreatePoliticianProfileBodySchema.parse(request.body);
-		const CreatePoliticianProfile = makeCreatePoliticianProfile();
+	const data = ZodCreatePoliticianProfileBodySchema.parse(request.body);
+	const CreatePoliticianProfile = makeCreatePoliticianProfile();
 
-		const { profile } = await CreatePoliticianProfile.execute({
-			data: {
-				...data,
-				user_id: request.user.sub,
-			},
-		});
+	const { profile } = await CreatePoliticianProfile.execute({
+		data: {
+			...data,
+			user_id: request.user.sub,
+		},
+	});
 
-		return reply.status(201).send({});
-	} catch (error) {}
+	return reply.status(201).send({});
 };

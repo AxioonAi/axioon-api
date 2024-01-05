@@ -5,11 +5,9 @@ export const findManyPoliticalGroupController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const findManyPoliticalGroupUseCase = makeFindManyPoliticalGroup();
+	const findManyPoliticalGroupUseCase = makeFindManyPoliticalGroup();
 
-		const politicalGroup = await findManyPoliticalGroupUseCase.execute({});
+	const politicalGroup = await findManyPoliticalGroupUseCase.execute({});
 
-		return reply.status(200).send(politicalGroup);
-	} catch (error) {}
+	return reply.status(200).send(politicalGroup);
 };

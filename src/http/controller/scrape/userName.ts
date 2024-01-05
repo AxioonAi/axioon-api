@@ -5,11 +5,9 @@ export const userNameController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const userNameUseCase = makeFindPoliticianNames();
+	const userNameUseCase = makeFindPoliticianNames();
 
-		const data = await userNameUseCase.execute({});
+	const data = await userNameUseCase.execute({});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

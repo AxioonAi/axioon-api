@@ -5,11 +5,9 @@ export const findManyTutorialController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const findManyTutorialUseCase = makeFindTutorialVideos();
+	const findManyTutorialUseCase = makeFindTutorialVideos();
 
-		const videos = await findManyTutorialUseCase.execute({});
+	const videos = await findManyTutorialUseCase.execute({});
 
-		return reply.status(200).send(videos);
-	} catch (error) {}
+	return reply.status(200).send(videos);
 };

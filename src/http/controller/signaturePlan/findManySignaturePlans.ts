@@ -5,10 +5,8 @@ export const findManySignaturePlansController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const findManySignaturePlansUseCase = makeFindManySignaturePlans();
-		const plans = await findManySignaturePlansUseCase.execute({});
+	const findManySignaturePlansUseCase = makeFindManySignaturePlans();
+	const plans = await findManySignaturePlansUseCase.execute({});
 
-		return reply.status(200).send(plans);
-	} catch (error) {}
+	return reply.status(200).send(plans);
 };

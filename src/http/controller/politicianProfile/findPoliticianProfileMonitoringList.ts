@@ -5,13 +5,11 @@ export const findPoliticianProfileMonitoringListController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	try {
-		const findPoliticianProfileMonitoringListUseCase =
-			makeFindPoliticianProfileMonitoringList();
-		const data = await findPoliticianProfileMonitoringListUseCase.execute({
-			id: request.user.sub,
-		});
+	const findPoliticianProfileMonitoringListUseCase =
+		makeFindPoliticianProfileMonitoringList();
+	const data = await findPoliticianProfileMonitoringListUseCase.execute({
+		id: request.user.sub,
+	});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

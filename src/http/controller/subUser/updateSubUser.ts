@@ -9,15 +9,13 @@ export const updateSubUserController = async (
 ) => {
 	const { id } = ZodIdParamsSchema.parse(request.params);
 	const data = ZodUpdateSubUserBodySchema.parse(request.body);
-	try {
-		const updateSubUserUseCase = makeUpdateSubUser();
+	const updateSubUserUseCase = makeUpdateSubUser();
 
-		await updateSubUserUseCase.execute({
-			...data,
-			subUserId: id,
-			userId: request.user.sub,
-		});
+	await updateSubUserUseCase.execute({
+		...data,
+		subUserId: id,
+		userId: request.user.sub,
+	});
 
-		return reply.status(200).send();
-	} catch (error) {}
+	return reply.status(200).send();
 };

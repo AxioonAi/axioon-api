@@ -8,13 +8,11 @@ export const newsUserListController = async (
 ) => {
 	const { id } = ZodIdParamsSchema.parse(request.params);
 
-	try {
-		const websiteUserList = makeFindWebsiteUsers();
+	const websiteUserList = makeFindWebsiteUsers();
 
-		const users = await websiteUserList.execute({
-			id,
-		});
+	const users = await websiteUserList.execute({
+		id,
+	});
 
-		return reply.status(200).send(users);
-	} catch (error) {}
+	return reply.status(200).send(users);
 };

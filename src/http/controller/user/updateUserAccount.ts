@@ -8,12 +8,10 @@ export const updateUserAccountController = async (
 ) => {
 	const data = ZodUpdateUserAccountBodySchema.parse(request.body);
 
-	try {
-		const updateUserAccountUseCase = makeUpdateUserAccount();
+	const updateUserAccountUseCase = makeUpdateUserAccount();
 
-		await updateUserAccountUseCase.execute({
-			data,
-			id: request.user.sub,
-		});
-	} catch (error) {}
+	await updateUserAccountUseCase.execute({
+		data,
+		id: request.user.sub,
+	});
 };

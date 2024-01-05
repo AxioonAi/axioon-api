@@ -8,13 +8,11 @@ export const cityStatisticsController = async (
 ) => {
 	const { id } = ZodIdParamsSchema.parse(request.params);
 
-	try {
-		const cityStatisticsUseCase = makeCityStatistics();
+	const cityStatisticsUseCase = makeCityStatistics();
 
-		const { city } = await cityStatisticsUseCase.execute({
-			userId: id,
-		});
+	const { city } = await cityStatisticsUseCase.execute({
+		userId: id,
+	});
 
-		return reply.status(200).send({ city });
-	} catch (error) {}
+	return reply.status(200).send({ city });
 };
