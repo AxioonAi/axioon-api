@@ -19,13 +19,13 @@ export class PrismaYoutubeVideoDataRepository
 		const createVideoData: YoutubeVideoCreateInterface[] = [];
 		const updateVideoData: YoutubeVideoCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!videoExists.find((video) => video.id === item.id)) {
 				createVideoData.push(item);
 			} else {
 				updateVideoData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.youtubeVideoData.createMany({ data: createVideoData }),
@@ -40,5 +40,17 @@ export class PrismaYoutubeVideoDataRepository
 		]);
 
 		return;
+	}
+
+	async videoExists(id: string[]) {
+		const videoExists = await prisma.youtubeVideoData.findMany({
+			where: {
+				id: {
+					in: id,
+				},
+			},
+		});
+
+		return videoExists.map((video) => video.id);
 	}
 }

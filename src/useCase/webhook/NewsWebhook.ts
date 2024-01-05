@@ -30,7 +30,6 @@ export class NewsWebhookUseCase {
 
 		for (const item of gptAnalysis) {
 			const fullNews = data.find((news) => news.title === item.title);
-			console.log(item.users);
 			if (fullNews) {
 				createData.push({
 					...item,

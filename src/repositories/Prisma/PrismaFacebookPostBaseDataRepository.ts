@@ -18,13 +18,13 @@ export class PrismaFacebookPostBaseDataRepository
 		const createPostData: FacebookPostCreateInterface[] = [];
 		const updatePostData: FacebookPostCreateInterface[] = [];
 
-		data.forEach((item) => {
-			if (!postExists.find((video) => video.id === item.id)) {
+		for (const item of data) {
+			if (!postExists.find((post) => post.id === item.id)) {
 				createPostData.push(item);
 			} else {
 				updatePostData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.facebookPostBaseData.createMany({ data: createPostData }),

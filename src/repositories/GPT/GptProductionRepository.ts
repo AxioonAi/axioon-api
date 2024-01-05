@@ -31,18 +31,19 @@ export class GptProductionRepository implements GptRepository {
 
 			while (!success && retryCount < 3) {
 				try {
+					console.time("Timing:");
 					const response = await openAi.chat.completions.create({
 						model: "gpt-3.5-turbo-16k",
 						messages: [
 							{
 								role: "system",
-								content: `Haja como um especialista em interpretação de comentários, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentScore, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo (SEMPRE USE NÚMEROS PRA CLASSIFICAR).
+								content: `Haja como um especialista em interpretação de comentários, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentAnalysis, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo (SEMPRE USE NÚMEROS PRA CLASSIFICAR).
                     Use essa métrica em relação especificamente ao comentário em questão.
                     A Resposta deve ser SOMENTE um objeto:
                     {
                       "ownerUsername": "NomeDoUsuario",
                       "gender": "Masculino ou Feminino ou  Indefinido",
-                      "sentimentScore": "numero"
+                      "sentimentAnalysis": "numero"
                     }
                     `,
 							},
@@ -86,20 +87,16 @@ export class GptProductionRepository implements GptRepository {
 					const answer = response.choices[0].message.content;
 					if (answer?.startsWith("{")) {
 						const finalAnswer = JSON.parse(answer);
-
-						if (/^\d+$/.test(finalAnswer.sentimentAnalysis)) {
-							success = true;
-							finalData.push({
-								id: item.id,
-								authorGender:
-									finalAnswer.gender === "Masculino"
-										? SexType.MALE
-										: finalAnswer.gender === "Feminino"
-										  ? SexType.FEMALE
-										  : SexType.UNKNOWN,
-								sentimentAnalysis: finalAnswer.sentimentScore,
-							});
-						}
+						finalData.push({
+							id: item.id,
+							authorGender:
+								finalAnswer.gender === "Masculino"
+									? SexType.MALE
+									: finalAnswer.gender === "Feminino"
+									  ? SexType.FEMALE
+									  : SexType.UNKNOWN,
+							sentimentAnalysis: finalAnswer.sentimentAnalysis,
+						});
 
 						success = true;
 					} else {
@@ -131,13 +128,13 @@ export class GptProductionRepository implements GptRepository {
 						messages: [
 							{
 								role: "system",
-								content: `Haja como um especialista em interpretação de publicações de redes sociais, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentScore, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo (SEMPRE USE NÚMEROS PRA CLASSIFICAR).
+								content: `Haja como um especialista em interpretação de publicações de redes sociais, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentAnalysis, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo (SEMPRE USE NÚMEROS PRA CLASSIFICAR).
                     Use essa métrica em relação especificamente a publicação em questão.
                     A Resposta deve ser SOMENTE um objeto:
                     {
 
 						"id":"postId",
-                      "sentimentScore": "numero"
+                      "sentimentAnalysis": "numero"
                     }
                     `,
 							},
@@ -165,7 +162,7 @@ export class GptProductionRepository implements GptRepository {
                     Retorne Sempre:
                     {
                 	  "id":"commentId",
-					  "sentimentScore": "numero"
+					  "sentimentAnalysis": "numero"
                     }
                     nao comente NADA alem disso.
                     `,
@@ -175,14 +172,13 @@ export class GptProductionRepository implements GptRepository {
 					const answer = response.choices[0].message.content;
 					if (answer?.startsWith("{")) {
 						const finalAnswer = JSON.parse(answer);
-						console.log(finalAnswer);
 
 						if (/^\d+$/.test(finalAnswer.sentimentAnalysis)) {
 							success = true;
 							finalData.push({
 								id: item.id,
 								description: item.description,
-								sentimentAnalysis: finalAnswer.sentimentScore,
+								sentimentAnalysis: finalAnswer.sentimentAnalysis,
 							});
 						}
 
@@ -216,7 +212,7 @@ export class GptProductionRepository implements GptRepository {
 						messages: [
 							{
 								role: "system",
-								content: `Haja como um especialista em interpretação de Notícias, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentScore, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo.
+								content: `Haja como um especialista em interpretação de Notícias, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentAnalysis, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo.
 								Use essa métrica em relação especificamente na parte que a notícia fala sobre o político em específico.
 								A métrica deve ser somente relação ao que a notícia fala sobre político em questão.
 								a Resposta deve ser SOMENTE um array:

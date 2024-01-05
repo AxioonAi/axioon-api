@@ -19,13 +19,13 @@ export class PrismaTiktokVideoDataRepository
 		const createVideoData: TiktokVideoCreateInterface[] = [];
 		const updateVideoData: TiktokVideoCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!videoExists.find((video) => video.id === item.id)) {
 				createVideoData.push(item);
 			} else {
 				updateVideoData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.tiktokVideoData.createMany({ data: createVideoData }),
@@ -40,5 +40,17 @@ export class PrismaTiktokVideoDataRepository
 		]);
 
 		return;
+	}
+
+	async videoExists(ids: string[]) {
+		const videoExists = await prisma.tiktokVideoData.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+		});
+
+		return videoExists.map((item) => item.id);
 	}
 }

@@ -24,4 +24,5 @@ export const ZodUpdateUserAccountBodySchema = z.object({
 	birth_date: z.coerce.date().optional(),
 	cpfCnpj: z.string().optional(),
 	mobilePhone: z.string().optional(),
+	sex: z.enum(["MALE", "FEMALE"]).optional(),
 });

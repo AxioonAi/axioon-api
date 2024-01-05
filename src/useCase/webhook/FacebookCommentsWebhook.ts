@@ -28,7 +28,16 @@ export class FacebookCommentsWebhookUseCase {
 				records,
 			});
 
-		const gptAnalysis = await this.gptRepository.commentAnalysis(data);
+		const commentExists = await this.facebookCommentsRepository.commentExists(
+			data.map((item) => item.id),
+		);
+
+		const analysisFilter = data.filter(
+			(item) => !commentExists.includes(item.id),
+		);
+
+		const gptAnalysis =
+			await this.gptRepository.commentAnalysis(analysisFilter);
 
 		const createData: FacebookPostCommentsCreateInterface[] = [];
 

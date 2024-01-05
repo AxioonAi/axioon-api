@@ -1,4 +1,4 @@
-import { Prisma, User } from "@prisma/client";
+import { Prisma, SexType, User } from "@prisma/client";
 
 export interface UserRepository {
 	findById(id: string): Promise<User | null>;
@@ -9,6 +9,7 @@ export interface UserRepository {
 			email?: string;
 			mobilePhone?: string;
 			cpfCnpj?: string;
+			sex?: SexType;
 			birthDate?: string;
 			password_hash?: string;
 		},

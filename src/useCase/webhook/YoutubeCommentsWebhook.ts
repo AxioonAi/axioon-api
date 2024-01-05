@@ -1,6 +1,7 @@
 import { YoutubeCommentCreateInterface } from "@/@types/databaseInterfaces";
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
 import { YoutubeCommentsRepository } from "@/repositories/YoutubeCommentRepository";
+import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepository";
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface YoutubeCommentsWebhookUseCaseRequest {
@@ -18,6 +19,7 @@ export class YoutubeCommentsWebhookUseCase {
 		private awsNotificationRepository: AwsNotificationRepository,
 		private youtubeCommentsRepository: YoutubeCommentsRepository,
 		private gptRepository: GptRepository,
+		private youtubeVideoRepository: YoutubeVideoDataRepository,
 	) {}
 
 	async execute({
@@ -28,7 +30,26 @@ export class YoutubeCommentsWebhookUseCase {
 				records,
 			});
 
-		const gptAnalysis = await this.gptRepository.commentAnalysis(data);
+		const commentExists = await this.youtubeCommentsRepository.commentExists(
+			data.map((item) => item.id),
+		);
+
+		console.log(commentExists[0]);
+
+		const analysisFilter = data.filter(
+			(item) => !commentExists.includes(item.id),
+		);
+
+		console.log(analysisFilter.length);
+		const videoExists = await this.youtubeVideoRepository.videoExists(
+			analysisFilter.map((item) => item.video_id),
+		);
+
+		const gptAnalysis = await this.gptRepository.commentAnalysis(
+			analysisFilter.filter((item) => videoExists.includes(item.video_id)),
+		);
+
+		console.log(gptAnalysis);
 
 		const createData: YoutubeCommentCreateInterface[] = [];
 

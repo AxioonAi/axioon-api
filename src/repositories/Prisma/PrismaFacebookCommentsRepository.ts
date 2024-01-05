@@ -33,12 +33,13 @@ export class PrismaFacebookCommentsRepository
 		const createData: CreateCommentProps[] = [];
 		const updateData: FacebookPostCommentsCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!commentExists.find((comment) => comment.id === item.id)) {
 				const post = postExists.find((post) => post.id === item.post_id);
 				if (post && item.text) {
 					createData.push({
 						...item,
+						sentimentAnalysis: Number(item.sentimentAnalysis),
 						politician_id: post.politician_id,
 					});
 				} else {
@@ -46,7 +47,9 @@ export class PrismaFacebookCommentsRepository
 			} else {
 				updateData.push(item);
 			}
-		});
+		}
+
+		console.log(createData);
 
 		await prisma.$transaction([
 			prisma.facebookPostComments.createMany({ data: createData }),
@@ -61,5 +64,19 @@ export class PrismaFacebookCommentsRepository
 		]);
 
 		return;
+	}
+	async commentExists(ids: string[]) {
+		const comments = await prisma.facebookPostComments.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		return comments.map((item) => item.id);
 	}
 }

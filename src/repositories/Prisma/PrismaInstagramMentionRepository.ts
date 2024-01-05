@@ -19,17 +19,13 @@ export class PrismaInstagramMentionRepository
 		const createData: InstagramMentionCreateInterface[] = [];
 		const updateData: InstagramMentionCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!mentionExists.find((mention) => mention.id === item.id)) {
-				createData.push({
-					...item,
-				});
+				createData.push(item);
 			} else {
-				updateData.push({
-					...item,
-				});
+				updateData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.instagramMention.createMany({ data: createData }),
@@ -42,5 +38,17 @@ export class PrismaInstagramMentionRepository
 				}),
 			),
 		]);
+	}
+
+	async mentionExists(ids: string[]) {
+		const mentionExists = await prisma.instagramMention.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+		});
+
+		return mentionExists.map((item) => item.id);
 	}
 }

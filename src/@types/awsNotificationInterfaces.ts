@@ -22,7 +22,7 @@ export interface AwsNotificationYoutubeCommentsResponseInterface {
 export interface AwsNotificationTiktokCommentsAwsDataInterface {
 	cid: string;
 	submittedVideoUrl: string;
-	comment: string;
+	text: string;
 	diggCount: number;
 	createTimeISO: Date;
 	replyCommentTotal: number;
@@ -129,7 +129,6 @@ export interface AwsNotificationInstagramCommentsResponseInterface {
 	text: string;
 	ownerProfilePicUrl: string;
 	post_id: string;
-	politician_id: string;
 	ownerUsername: string;
 	timestamp: Date;
 	likeCount: number;

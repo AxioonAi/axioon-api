@@ -33,20 +33,21 @@ export class PrismaYoutubeCommentsRepository
 		const createData: CommentWithPoliticianIdProps[] = [];
 		const updateData: YoutubeCommentCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!commentExists.find((comment) => comment.id === item.id)) {
 				const video = videoExists.find((video) => video.id === item.video_id);
-				if (video && item.text) {
+				if (video) {
 					createData.push({
 						...item,
 						politician_id: video.politician_id,
+						sentimentAnalysis: Number(item.sentimentAnalysis),
 					});
 				} else {
 				}
 			} else {
 				updateData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.youtubeCommentData.createMany({ data: createData }),
@@ -61,5 +62,17 @@ export class PrismaYoutubeCommentsRepository
 		]);
 
 		return;
+	}
+
+	async commentExists(data: string[]) {
+		const commentExists = await prisma.youtubeCommentData.findMany({
+			where: {
+				id: {
+					in: data,
+				},
+			},
+		});
+
+		return commentExists.map((comment) => comment.id);
 	}
 }

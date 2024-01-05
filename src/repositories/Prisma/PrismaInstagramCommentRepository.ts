@@ -36,16 +36,18 @@ export class PrismaInstagramCommentRepository
 		const createData: CreateCommentProps[] = [];
 		const updateData: InstagramCommentCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!commentExists.find((comment) => comment.id === item.id)) {
 				const post = postExists.find(
 					(post) =>
 						post.postUrl === `https://www.instagram.com/p/${item.post_id}`,
 				);
 				if (post && item.text) {
+					console.log("entrou criar comment");
 					createData.push({
 						...item,
 						post_id: post.id,
+						sentimentAnalysis: Number(item.sentimentAnalysis),
 						politician_id: post.politician_id,
 					});
 				} else {
@@ -62,7 +64,9 @@ export class PrismaInstagramCommentRepository
 					});
 				}
 			}
-		});
+		}
+
+		console.log(createData.length);
 
 		await prisma.$transaction([
 			prisma.instagramPostComment.createMany({ data: createData }),
@@ -76,5 +80,20 @@ export class PrismaInstagramCommentRepository
 			),
 		]);
 		return;
+	}
+
+	async commentExists(data: string[]) {
+		const comments = await prisma.instagramPostComment.findMany({
+			where: {
+				id: {
+					in: data,
+				},
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		return comments.map((item) => item.id);
 	}
 }

@@ -30,7 +30,7 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
 		const createData: InstagramPostCreateInterface[] = [];
 		const updateData: InstagramPostCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!idExits.find((d) => d.id === item.id)) {
 				createData.push({
 					...item,
@@ -42,7 +42,7 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
 					playCount: item.playCount ? item.playCount : 0,
 				});
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.instagramPost.createMany({ data: createData }),
@@ -57,5 +57,23 @@ export class PrismaInstagramPostRepository implements InstagramPostRepository {
 		]);
 
 		return;
+	}
+
+	async existsByUrl(url: string[]) {
+		const formattedUrl = url.map((item) => {
+			return `https://www.instagram.com/p/${item}`;
+		});
+
+		const exists = await prisma.instagramPost.findMany({
+			where: {
+				postUrl: {
+					in: formattedUrl,
+				},
+			},
+		});
+
+		return exists.map((item) =>
+			item.postUrl.replace("https://www.instagram.com/p/", ""),
+		);
 	}
 }

@@ -36,7 +36,7 @@ export class PrismaInstagramMentionCommentRepository
 		const createData: CreateCommentProps[] = [];
 		const updateData: InstagramCommentCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!commentExists.find((comment) => comment.id === item.id)) {
 				const post = postExists.find(
 					(post) =>
@@ -62,7 +62,7 @@ export class PrismaInstagramMentionCommentRepository
 					});
 				}
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.instagramMentionComment.createMany({ data: createData }),
@@ -75,5 +75,20 @@ export class PrismaInstagramMentionCommentRepository
 				}),
 			),
 		]);
+	}
+
+	async commentExists(ids: string[]) {
+		const comments = await prisma.instagramMentionComment.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		return comments.map((item) => item.id);
 	}
 }

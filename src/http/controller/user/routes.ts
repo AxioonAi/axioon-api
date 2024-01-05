@@ -3,6 +3,7 @@ import { FastifyInstance } from "fastify";
 import { authenticateUserController } from "./authenticateUser";
 import { registerUserController } from "./registerUser";
 import { updateUserAccountController } from "./updateUserAccount";
+import { userProfileController } from "./userProfile";
 
 export async function userRoutes(app: FastifyInstance) {
 	app.post("/login", authenticateUserController);
@@ -12,9 +13,5 @@ export async function userRoutes(app: FastifyInstance) {
 		{ onRequest: [verifyJwt] },
 		updateUserAccountController,
 	);
-	app.get(
-		"/user/profile",
-		{ onRequest: [verifyJwt] },
-		updateUserAccountController,
-	);
+	app.get("/user/profile", { onRequest: [verifyJwt] }, userProfileController);
 }

@@ -29,20 +29,21 @@ export class PrismaTiktokCommentDataRepository {
 		const createData: CreateCommentProps[] = [];
 		const updateData: TiktokCommentsCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!commentExists.find((comment) => comment.id === item.id)) {
 				const video = videoExists.find((video) => video.id === item.video_id);
 				if (video) {
 					createData.push({
 						...item,
 						politician_id: video.politician_id,
+						sentimentAnalysis: Number(item.sentimentAnalysis),
 					});
 				} else {
 				}
 			} else {
 				updateData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.tiktokCommentData.createMany({ data: createData }),
@@ -57,5 +58,20 @@ export class PrismaTiktokCommentDataRepository {
 		]);
 
 		return;
+	}
+
+	async commentExists(ids: string[]) {
+		const comments = await prisma.tiktokCommentData.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+			select: {
+				id: true,
+			},
+		});
+
+		return comments.map((item) => item.id);
 	}
 }

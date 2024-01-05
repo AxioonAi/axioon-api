@@ -8,12 +8,10 @@ export const facebookProfileWebhookController = async (
 ) => {
 	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-	try {
-		const facebookWebhookUseCase = makeFacebookProfileWebhook();
-		const data = await facebookWebhookUseCase.execute({
-			records: Records,
-		});
+	const facebookWebhookUseCase = makeFacebookProfileWebhook();
+	const data = await facebookWebhookUseCase.execute({
+		records: Records,
+	});
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+	return reply.status(200).send(data);
 };

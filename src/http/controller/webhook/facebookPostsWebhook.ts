@@ -7,13 +7,11 @@ export const facebookPostsWebhookController = async (
 	reply: FastifyReply,
 ) => {
 	const { Records } = ZodWebhookBodySchema.parse(request.body);
-	try {
-		const facebookPostsWebhookUseCase = makeFacebookPostsWebhook();
+	const facebookPostsWebhookUseCase = makeFacebookPostsWebhook();
 
-		const data = await facebookPostsWebhookUseCase.execute({
-			records: Records,
-		});
+	const data = await facebookPostsWebhookUseCase.execute({
+		records: Records,
+	});
 
-		reply.status(200).send(data);
-	} catch (error) {}
+	reply.status(200).send(data);
 };

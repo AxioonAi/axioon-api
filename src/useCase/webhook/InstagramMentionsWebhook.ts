@@ -28,7 +28,16 @@ export class InstagramMentionsWebhookUseCase {
 				records,
 			});
 
-		const gptAnalysis = await this.gptRepository.mentionAnalysis(data);
+		const mentionExists = await this.instagramMentionRepository.mentionExists(
+			data.map((item) => item.id),
+		);
+
+		const analysisFilter = data.filter(
+			(item) => !mentionExists.includes(item.id),
+		);
+
+		const gptAnalysis =
+			await this.gptRepository.mentionAnalysis(analysisFilter);
 
 		const createData: InstagramMentionCreateInterface[] = [];
 

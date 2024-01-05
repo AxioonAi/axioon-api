@@ -11,10 +11,10 @@ export const facebookAdsWebhookController = async (
 	try {
 		const facebookAdsWebhookUseCase = makeFacebookAdsWebhook();
 
-		const data = await facebookAdsWebhookUseCase.execute({
+		await facebookAdsWebhookUseCase.execute({
 			records: Records,
 		});
 
-		reply.status(200).send(data);
+		reply.status(200).send();
 	} catch (error) {}
 };

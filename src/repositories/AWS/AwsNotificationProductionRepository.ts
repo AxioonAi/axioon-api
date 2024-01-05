@@ -86,20 +86,19 @@ export class AwsNotificationProductionRepository
 			.catch((err) => {});
 
 		const formattedData: AwsNotificationTiktokCommentsResponseInterface[] = [];
-
-		awsData.forEach((item) => {
-			if (item.comment && item.cid) {
+		for (const item of awsData) {
+			if (item.text && item.cid) {
 				formattedData.push({
 					id: item.cid,
 					video_id: `${item.submittedVideoUrl.split("/").pop()}`,
-					text: item.comment,
+					text: item.text,
 					diggCount: item.diggCount,
 					date: item.createTimeISO,
 					replyCount: item.replyCommentTotal,
 					author: item.uniqueId,
 				});
 			}
-		});
+		}
 
 		return formattedData;
 	}
@@ -289,16 +288,17 @@ export class AwsNotificationProductionRepository
 		const commentData: AwsNotificationInstagramCommentsResponseInterface[] = [];
 
 		for (const item of awsData) {
-			commentData.push({
-				id: item.id,
-				text: item.text,
-				ownerProfilePicUrl: item.ownerProfilePicUrl,
-				post_id: item.postUrl.replace("https://www.instagram.com/p/", ""),
-				politician_id: item.instagram_id,
-				ownerUsername: item.ownerUsername,
-				timestamp: item.timestamp,
-				likeCount: item.likesCount,
-			});
+			if (item.text) {
+				commentData.push({
+					id: item.id,
+					text: item.text,
+					ownerProfilePicUrl: item.ownerProfilePicUrl,
+					post_id: item.postUrl.replace("https://www.instagram.com/p/", ""),
+					ownerUsername: item.ownerUsername,
+					timestamp: item.timestamp,
+					likeCount: item.likesCount,
+				});
+			}
 		}
 
 		return commentData;
@@ -319,7 +319,7 @@ export class AwsNotificationProductionRepository
 
 		const mentionData: AwsNotificationInstagramMentionResponseInterface[] = [];
 
-		awsData.forEach((item) => {
+		for (const item of awsData) {
 			if (item.instagram_id) {
 				mentionData.push({
 					id: item.id,
@@ -338,7 +338,7 @@ export class AwsNotificationProductionRepository
 					ownerUsername: item.ownerUsername,
 				});
 			}
-		});
+		}
 
 		return mentionData;
 	}
@@ -545,8 +545,10 @@ export class AwsNotificationProductionRepository
 				});
 
 		const formattedData: AwsNotificationFacebookCommentsResponseInterface[] =
-			awsData.map((item) => {
-				return {
+			[];
+		for (const item of awsData) {
+			if (item.text) {
+				formattedData.push({
 					id: item.id,
 					postUrl: item.facebookUrl,
 					text: item.text,
@@ -554,8 +556,9 @@ export class AwsNotificationProductionRepository
 					date: item.date,
 					username: item.profileName,
 					post_id: item.facebookId,
-				};
-			});
+				});
+			}
+		}
 
 		return formattedData;
 	}
