@@ -12,4 +12,9 @@ export async function userRoutes(app: FastifyInstance) {
 		{ onRequest: [verifyJwt] },
 		updateUserAccountController,
 	);
+	app.get(
+		"/user/profile",
+		{ onRequest: [verifyJwt] },
+		updateUserAccountController,
+	);
 }
