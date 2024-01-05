@@ -8,12 +8,10 @@ export const newsWebhookController = async (
 ) => {
 	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
-	try {
-		const newsWebhookUseCase = makeNewsWebhook();
-		const data = await newsWebhookUseCase.execute({
-			records: Records,
-		});
+	const newsWebhookUseCase = makeNewsWebhook();
+	const data = await newsWebhookUseCase.execute({
+		records: Records,
+	});
 
-		reply.status(200).send(data);
-	} catch (error) {}
+	reply.status(200).send(data);
 };

@@ -27,10 +27,35 @@ export class FindPoliticianProfileInstagramDetailsUseCase {
 		const formatPrevious = !previous ? null : instagramDataFormatter(previous);
 
 		const finalStatistics = {
-			keyIndicators: {
-				current: !formatCurrent ? null : formatCurrent.postEngagementData,
-				previous: !formatPrevious ? null : formatPrevious.postEngagementData,
-			},
+			keyIndicators: [
+				{
+					name: "Comentários",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.comments,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.comments,
+				},
+				{
+					name: "Curtidas",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.like,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.like,
+				},
+				{
+					name: "Sentimento",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.sentiment,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.sentiment,
+				},
+			],
 			commentsStatistics: !formatCurrent
 				? null
 				: formatCurrent.commentStatistics,

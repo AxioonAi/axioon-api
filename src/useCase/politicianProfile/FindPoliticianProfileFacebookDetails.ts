@@ -31,10 +31,44 @@ export class FindPoliticianProfileFacebookDetailsUseCase {
 		const formatPrevious = previous ? FacebookDataFormatter(previous) : null;
 
 		const finalStatistics = {
-			keyIndicators: {
-				current: formatCurrent ? formatCurrent.postEngagementData : null,
-				previous: formatPrevious ? formatPrevious.postEngagementData : null,
-			},
+			keyIndicators: [
+				{
+					name: "Compartilhamentos",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.shares,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.shares,
+				},
+				{
+					name: "Curtidas",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.like,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.like,
+				},
+				{
+					name: "Comentários",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.comments,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.comments,
+				},
+				{
+					name: "Sentimento",
+					current: !formatCurrent
+						? null
+						: formatCurrent.postEngagementData.sentiment,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.postEngagementData.sentiment,
+				},
+			],
 			commentsStatistics: formatCurrent
 				? formatCurrent.commentStatistics
 				: null,

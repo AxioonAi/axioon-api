@@ -27,10 +27,44 @@ export class FindPoliticianProfileTiktokDetailsUseCase {
 		const formatPrevious = !previous ? null : tiktokDataFormatter(previous);
 
 		const finalStatistics = {
-			keyIndicators: {
-				current: !formatCurrent ? null : formatCurrent.videoEngagementData,
-				previous: !formatPrevious ? null : formatPrevious.videoEngagementData,
-			},
+			keyIndicators: [
+				{
+					name: "Curtidas",
+					current: !formatCurrent
+						? null
+						: formatCurrent.videoEngagementData.like,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.videoEngagementData.like,
+				},
+				{
+					name: "Comentários",
+					current: !formatCurrent
+						? null
+						: formatCurrent.videoEngagementData.comments,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.videoEngagementData.comments,
+				},
+				{
+					name: "Visualizações",
+					current: !formatCurrent
+						? null
+						: formatCurrent.videoEngagementData.views,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.videoEngagementData.views,
+				},
+				{
+					name: "Sentimento",
+					current: !formatCurrent
+						? null
+						: formatCurrent.videoEngagementData.sentiment,
+					previous: !formatPrevious
+						? null
+						: formatPrevious.videoEngagementData.sentiment,
+				},
+			],
 			commentsStatistics: !formatCurrent
 				? null
 				: formatCurrent.commentsStatistics,

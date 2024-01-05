@@ -49,7 +49,7 @@ export class GptProductionRepository implements GptRepository {
 							{
 								role: "system",
 								content:
-									"O resultado de SentimentScore Deve ser um número, seja crítico nesse número, use a métrica para isso.",
+									"O resultado de sentimentAnalysis Deve ser um número, seja crítico nesse número, use a métrica para isso.",
 							},
 							{
 								role: "system",
@@ -70,12 +70,12 @@ export class GptProductionRepository implements GptRepository {
 							},
 							{
 								role: "system",
-								content: `Lembre-se SentimentScore PRECISA ser um numero e 
+								content: `Lembre-se sentimentAnalysis PRECISA ser um numero e 
                     Retorne Sempre:
                     {
                       "ownerUsername": "NomeDoUsuario",
                       "Gender": "Masculino ou Feminino ou  Indefinido",
-                      "SentimentScore": "numero",
+                      "sentimentAnalysis": "numero",
                 "id":"commentId"
                     }
                     nao comente NADA alem disso.
@@ -87,7 +87,7 @@ export class GptProductionRepository implements GptRepository {
 					if (answer?.startsWith("{")) {
 						const finalAnswer = JSON.parse(answer);
 
-						if (/^\d+$/.test(finalAnswer.SentimentScore)) {
+						if (/^\d+$/.test(finalAnswer.sentimentAnalysis)) {
 							success = true;
 							finalData.push({
 								id: item.id,
@@ -144,7 +144,7 @@ export class GptProductionRepository implements GptRepository {
 							{
 								role: "system",
 								content:
-									"O resultado de SentimentScore Deve ser um número, seja crítico nesse número, use a métrica para isso.",
+									"O resultado de sentimentAnalysis Deve ser um número, seja crítico nesse número, use a métrica para isso.",
 							},
 							{
 								role: "system",
@@ -161,7 +161,7 @@ export class GptProductionRepository implements GptRepository {
 							},
 							{
 								role: "system",
-								content: `Lembre-se SentimentScore PRECISA ser um numero e 
+								content: `Lembre-se sentimentAnalysis PRECISA ser um numero e 
                     Retorne Sempre:
                     {
                 	  "id":"commentId",
@@ -177,7 +177,7 @@ export class GptProductionRepository implements GptRepository {
 						const finalAnswer = JSON.parse(answer);
 						console.log(finalAnswer);
 
-						if (/^\d+$/.test(finalAnswer.SentimentScore)) {
+						if (/^\d+$/.test(finalAnswer.sentimentAnalysis)) {
 							success = true;
 							finalData.push({
 								id: item.id,
@@ -222,9 +222,9 @@ export class GptProductionRepository implements GptRepository {
 								a Resposta deve ser SOMENTE um array:
 								"users": [
 								  {
-									"name": "NomeDoPolitico",
-								  "id": "idDoPolitico",
-								  "SentimentScore": "numero"
+								  "name": "NomeDoPolitico",
+								  "politician_id": "idDoPolitico",
+								  "sentimentAnalysis": "numero"
 								  }
 								]
 								`,
@@ -232,7 +232,7 @@ export class GptProductionRepository implements GptRepository {
 							{
 								role: "system",
 								content:
-									"O resultado de SentimentScore Deve ser um número, seja crítico nesse número, use a métrica para isso , caso tenha mais de um político Analisado, faça um SentimentScore para cada um deles;",
+									"O resultado de sentimentAnalysis Deve ser um número, seja crítico nesse número, use a métrica para isso , caso tenha mais de um político Analisado, faça um sentimentAnalysis para cada um deles;",
 							},
 							{
 								role: "system",
@@ -256,12 +256,12 @@ export class GptProductionRepository implements GptRepository {
 							},
 							{
 								role: "system",
-								content: `Lembre-se SentimentScore PRECISA ser um numero e 
+								content: `Lembre-se sentimentAnalysis PRECISA ser um numero e 
 							  Retorne Sempre "users": [
 								{
 								  "name": "NomeDoPolitico",
-								  "id": "idDoPolitico",
-								  "SentimentScore": "numero",
+								  "politician_id": "idDoPolitico",
+								  "sentimentAnalysis": "numero",
 								  
 								}
 								nao comente NADA alem disso.
@@ -271,19 +271,19 @@ export class GptProductionRepository implements GptRepository {
 					});
 					const answer = response.choices[0].message.content;
 					if (answer?.startsWith("{")) {
-						const finalAnswer = JSON.parse(answer);
+						const finalAnswer: GptNewsResponseInterface = JSON.parse(answer);
 						finalData.push({
 							title: item.title,
 							users: finalAnswer.users,
 						});
 						success = true;
 					} else if (answer?.startsWith('"users": [')) {
+						success = true;
 						const usersIndex = answer.indexOf('"users": [');
 						const usersSubstring = answer.substring(usersIndex);
 
 						const finalAnswer = JSON.parse(`{${usersSubstring}}`);
 						finalData.push({
-							id: item.id,
 							title: item.title,
 							users: finalAnswer.users,
 						});

@@ -166,7 +166,35 @@ export class AwsNotificationProductionRepository
 			},
 		);
 
-		return format;
+		const groupedData = format.reduce(
+			(acc: AwsNotificationNewsResponseInterface[], item) => {
+				const existingItem = acc.find((obj) => obj.title === item.title);
+				if (existingItem) {
+					existingItem.users.push(...item.users);
+				} else {
+					acc.push({ ...item });
+				}
+				return acc;
+			},
+			[],
+		);
+
+		const finalData: AwsNotificationNewsResponseInterface[] = [];
+
+		for (const item of groupedData) {
+			const seen = new Set();
+			const users = item.users.filter((obj) => {
+				if (seen.has(obj.user_id)) {
+					return false;
+				}
+				seen.add(obj.user_id);
+				return true;
+			});
+
+			finalData.push({ ...item, users });
+		}
+
+		return finalData;
 	}
 
 	async S3MetaAdvertisingNotification(data: S3NotificationInterface) {

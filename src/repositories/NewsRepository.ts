@@ -1,12 +1,10 @@
-import { NewsScore } from "@prisma/client";
-
 export interface CreateNewsInterface {
 	title: string;
-	last_update: string;
+	last_update: Date;
 	url: string;
-	score: NewsScore;
 	users: {
-		user_id: string;
+		politician_id: string;
+		sentimentAnalysis: number;
 	}[];
 }
 

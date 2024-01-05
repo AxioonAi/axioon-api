@@ -1,4 +1,5 @@
 import { AwsNotificationRepository } from "@/repositories/AwsNotificationRepository";
+import { NewsRepository } from "@/repositories/NewsRepository";
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface NewsWebhookUseCaseRequest {
@@ -15,6 +16,7 @@ export class NewsWebhookUseCase {
 	constructor(
 		private awsNotificationRepository: AwsNotificationRepository,
 		private gptRepository: GptRepository,
+		private newsRepository: NewsRepository,
 	) {}
 
 	async execute({ records }: NewsWebhookUseCaseRequest): Promise<void> {
@@ -24,18 +26,22 @@ export class NewsWebhookUseCase {
 
 		const gptAnalysis = await this.gptRepository.newsAnalysis(data);
 
-		// const createData: InstagramMentionCreateInterface[] = [];
+		const createData = [];
 
-		// data.forEach((item) => {
-		//   const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
-		//   if (analysis) {
-		//     createData.push({
-		//       ...item,
-		//       ...analysis,
-		//     });
-		//   }
-		// });
+		for (const item of gptAnalysis) {
+			const fullNews = data.find((news) => news.title === item.title);
+			console.log(item.users);
+			if (fullNews) {
+				createData.push({
+					...item,
+					last_update: fullNews.last_update,
+					url: fullNews.url,
+				});
+			}
+		}
 
-		return data;
+		await this.newsRepository.createMany(createData);
+
+		return;
 	}
 }

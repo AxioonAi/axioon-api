@@ -16,13 +16,6 @@ enum CoverageTypes {
   COUNTRY
 }
 
-enum NewsScore {
-  IRRELEVANT
-  NORMAL
-  IMPORTANT
-  URGENT 
-}
-
 enum NotificationType {
   FACEBOOK
   INSTAGRAM
@@ -510,8 +503,6 @@ model News {
   last_update DateTime
   title String
   url String
-  sentmentAnalysis Int
-  score NewsScore @default(IRRELEVANT)
   users NewsUsers[]
 }
 
@@ -519,6 +510,7 @@ model NewsUsers {
   id String @unique @default(uuid())
   news_id String
   politician_id String
+  sentimentAnalysis Int
   politician PoliticianProfile @relation(references: [id], fields: [politician_id])
   news News @relation(references: [id], fields: [news_id])
 }

@@ -181,7 +181,6 @@ export interface GptMentionResponseInterface {
 }
 
 export interface GptNewsDataInterface {
-	id: string;
 	title: string;
 	url: string;
 	content: string[];
@@ -193,9 +192,12 @@ export interface GptNewsDataInterface {
 }
 
 export interface GptNewsResponseInterface {
-	id: string;
 	title: string;
-	sentimentAnalysis: number;
+	users: {
+		name: string;
+		politician_id: string;
+		sentimentAnalysis: number;
+	}[];
 }
 
 export interface MetaAdvertisingLibCreateInterface {
