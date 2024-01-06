@@ -8,7 +8,9 @@ export const youtubeVideoWebhookController = async (
 ) => {
 	console.log(request.body);
 
-	const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { message } = ZodWebhookBodySchema.parse(request.body);
+
+	const Records = JSON.parse(message);
 
 	try {
 		const youtubeWebhookUseCase = makeYoutubeVideoWebhook();
