@@ -6,6 +6,7 @@ export const instagramMentionCommentsWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
+	console.log(request.body);
 	const { Records } = ZodWebhookBodySchema.parse(request.body);
 
 	const instagramMentionCommentsWebhookUseCase =
