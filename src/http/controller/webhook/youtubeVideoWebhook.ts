@@ -1,3 +1,4 @@
+import { ZodWebhookBodySchema } from "@/lib/zod/global";
 import { makeYoutubeVideoWebhook } from "@/useCase/@factories/webhook/makeYoutubeVideoWebhook";
 import { FastifyReply, FastifyRequest } from "fastify";
 
@@ -5,13 +6,7 @@ export const youtubeVideoWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log("body:", request.body);
-	console.log("bodyType:", typeof request.body);
-
-	// const { message } = ZodWebhookBodySchema.parse(request.body);
-
-	const Records = JSON.parse(request.body.Message);
-	console.log(Records);
+	const { Records } = ZodWebhookBodySchema(request.body);
 
 	try {
 		const youtubeWebhookUseCase = makeYoutubeVideoWebhook();
