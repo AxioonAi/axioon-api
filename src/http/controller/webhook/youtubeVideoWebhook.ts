@@ -6,7 +6,8 @@ export const youtubeVideoWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log(request.body);
+	console.log("body:", request.body);
+	console.log("bodyType:", typeof request.body);
 
 	const { message } = ZodWebhookBodySchema.parse(request.body);
 
