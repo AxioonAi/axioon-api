@@ -11,7 +11,7 @@ import { findPoliticianProfileTiktokDetailsController } from "./findPoliticianPr
 import { findPoliticianProfileYoutubeDetailsController } from "./findPoliticianProfileYoutubeDetails";
 
 export async function politicianProfileRoutes(app: FastifyInstance) {
-	// app.addHook("onRequest", verifyJwt);
+	app.addHook("onRequest", verifyJwt);
 	// app.addHook("onRequest", verifyAccessMiddleware);
 
 	app.get("/profile/cpf/:id", findPoliticianProfileByCpfController);
