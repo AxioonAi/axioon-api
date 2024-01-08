@@ -5,13 +5,7 @@ import { InstagramPostRepository } from "@/repositories/InstagramPostRepository"
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface InstagramCommentsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class InstagramCommentsWebhookUseCase {

@@ -4,13 +4,7 @@ import { FacebookPostCommentsRepository } from "@/repositories/FacebookPostComme
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface FacebookCommentsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class FacebookCommentsWebhookUseCase {

@@ -2,13 +2,7 @@ import { AwsNotificationRepository } from "@/repositories/AwsNotificationReposit
 import { InstagramPostRepository } from "@/repositories/InstagramPostRepository";
 
 interface InstagramPostsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class InstagramPostsWebhookUseCase {

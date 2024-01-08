@@ -5,13 +5,7 @@ import { YoutubeBaseDataRepository } from "@/repositories/YoutubeBaseDataReposit
 import { NotificationType } from "@prisma/client";
 
 interface YoutubeChannelWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class YoutubeChannelWebhookUseCase {

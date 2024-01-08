@@ -2,13 +2,7 @@ import { AwsNotificationRepository } from "@/repositories/AwsNotificationReposit
 import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepository";
 
 interface YoutubeWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class YoutubeWebhookUseCase {

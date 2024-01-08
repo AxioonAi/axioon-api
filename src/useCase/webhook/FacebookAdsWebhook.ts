@@ -4,13 +4,7 @@ import { MetaAdvertisingLibDemographicDistributionRepository } from "@/repositor
 import { MetaAdvertisingLibRepository } from "@/repositories/MetaAdvertisingLibRepository";
 
 interface FacebookAdsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class FacebookAdsWebhookUseCase {

@@ -16,13 +16,7 @@ import {
 } from "@/@types/awsNotificationInterfaces";
 
 export interface S3NotificationInterface {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export interface AwsNotificationRepository {

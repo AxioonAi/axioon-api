@@ -5,13 +5,7 @@ import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepos
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface YoutubeCommentsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class YoutubeCommentsWebhookUseCase {

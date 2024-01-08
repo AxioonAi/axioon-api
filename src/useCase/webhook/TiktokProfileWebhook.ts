@@ -6,13 +6,7 @@ import { TiktokVideoDataRepository } from "@/repositories/TiktokVideoDataReposit
 import { NotificationType } from "@prisma/client";
 
 interface TiktokProfileWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class TiktokProfileWebhookUseCase {

@@ -43,9 +43,7 @@ export class AwsNotificationProductionRepository
 	async S3YoutubeCommentsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationYoutubeCommentsAwsDataInterface[] =
 			await axios
-				.get(
-					`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-				)
+				.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 				.then(({ data }) => {
 					return data;
 				})
@@ -77,9 +75,7 @@ export class AwsNotificationProductionRepository
 
 	async S3TiktokCommentsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationTiktokCommentsAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -105,9 +101,7 @@ export class AwsNotificationProductionRepository
 
 	async S3InstagramPostNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationInstagramPostAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -138,9 +132,7 @@ export class AwsNotificationProductionRepository
 
 	async S3NewsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationNewsAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -198,9 +190,7 @@ export class AwsNotificationProductionRepository
 
 	async S3MetaAdvertisingNotification(data: S3NotificationInterface) {
 		const awsData = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -213,9 +203,7 @@ export class AwsNotificationProductionRepository
 
 	async S3YoutubeVideoNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationYoutubeVideoAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -246,9 +234,7 @@ export class AwsNotificationProductionRepository
 	async S3FacebookProfileNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationFacebookProfileAwsDataInterface[] =
 			await axios
-				.get(
-					`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-				)
+				.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 				.then(({ data }) => {
 					return data;
 				})
@@ -275,9 +261,7 @@ export class AwsNotificationProductionRepository
 	async S3InstagramCommentsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationInstagramCommentsAwsDataInterface[] =
 			await axios
-				.get(
-					`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-				)
+				.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 				.then(({ data }) => {
 					return data;
 				})
@@ -307,9 +291,7 @@ export class AwsNotificationProductionRepository
 	async S3InstagramMentionsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationInstagramMentionAwsDataInterface[] =
 			await axios
-				.get(
-					`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-				)
+				.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 				.then(({ data }) => {
 					return data;
 				})
@@ -346,9 +328,7 @@ export class AwsNotificationProductionRepository
 	async S3InstagramProfileNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationInstagramProfileAwsDataInterface[] =
 			await axios
-				.get(
-					`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-				)
+				.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 				.then(({ data }) => {
 					return data;
 				})
@@ -378,9 +358,7 @@ export class AwsNotificationProductionRepository
 
 	async S3TiktokProfileNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationTiktokProfileAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -439,9 +417,7 @@ export class AwsNotificationProductionRepository
 
 	async S3FacebookPostNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationFacebookPostAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -472,9 +448,7 @@ export class AwsNotificationProductionRepository
 
 	async S3FacebookAdsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationFacebookAdsAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})
@@ -534,9 +508,7 @@ export class AwsNotificationProductionRepository
 	async S3FacebookCommentsNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationFacebookCommentsAwsDataInterface[] =
 			await axios
-				.get(
-					`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-				)
+				.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 				.then(({ data }) => {
 					return data;
 				})
@@ -565,9 +537,7 @@ export class AwsNotificationProductionRepository
 
 	async S3YoutubeChannelNotification(data: S3NotificationInterface) {
 		const awsData: AwsNotificationYoutubeChannelAwsDataInterface[] = await axios
-			.get(
-				`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records[0].s3.object.key}`,
-			)
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
 			.then(({ data }) => {
 				return data;
 			})

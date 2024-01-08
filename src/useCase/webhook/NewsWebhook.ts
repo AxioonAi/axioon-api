@@ -3,13 +3,7 @@ import { NewsRepository } from "@/repositories/NewsRepository";
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface NewsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class NewsWebhookUseCase {

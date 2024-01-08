@@ -6,13 +6,12 @@ export const youtubeVideoWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	const { Records } = ZodWebhookBodySchema(request.body);
-
+	const { records } = ZodWebhookBodySchema.parse(request.body);
 	try {
 		const youtubeWebhookUseCase = makeYoutubeVideoWebhook();
 
 		const data = await youtubeWebhookUseCase.execute({
-			records: Records,
+			records,
 		});
 
 		reply.status(200).send(data);

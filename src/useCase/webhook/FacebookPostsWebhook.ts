@@ -2,13 +2,7 @@ import { AwsNotificationRepository } from "@/repositories/AwsNotificationReposit
 import { FacebookPostBaseDataRepository } from "@/repositories/FacebookPostBaseDataRepository";
 
 interface FacebookPostsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class FacebookPostsWebhookUseCase {

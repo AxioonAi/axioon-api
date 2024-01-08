@@ -6,14 +6,13 @@ export const instagramProfileWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log(request.body);
-	const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { records } = ZodWebhookBodySchema.parse(request.body);
 
 	try {
 		const instagramProfileWebhookUseCase = makeInstagramProfileWebhook();
 
 		const data = await instagramProfileWebhookUseCase.execute({
-			records: Records,
+			records,
 		});
 
 		reply.status(200).send(data);

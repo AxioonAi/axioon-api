@@ -5,13 +5,7 @@ import { PoliticianProfileMonitoringRepository } from "@/repositories/Politician
 import { NotificationType } from "@prisma/client";
 
 interface InstagramProfileWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class InstagramProfileWebhookUseCase {

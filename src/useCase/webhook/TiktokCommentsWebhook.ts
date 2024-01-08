@@ -5,13 +5,7 @@ import { TiktokVideoDataRepository } from "@/repositories/TiktokVideoDataReposit
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface TiktokCommentsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class TiktokCommentsWebhookUseCase {

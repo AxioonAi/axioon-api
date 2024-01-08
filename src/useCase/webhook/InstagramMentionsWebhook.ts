@@ -4,13 +4,7 @@ import { InstagramMentionRepository } from "@/repositories/InstagramMentionRepos
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface InstagramMentionsWebhookUseCaseRequest {
-	records: {
-		s3: {
-			object: {
-				key: string;
-			};
-		};
-	}[];
+	records: string;
 }
 
 export class InstagramMentionsWebhookUseCase {

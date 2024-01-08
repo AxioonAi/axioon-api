@@ -6,12 +6,11 @@ export const facebookPostsWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log(request.body);
-	const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { records } = ZodWebhookBodySchema.parse(request.body);
 	const facebookPostsWebhookUseCase = makeFacebookPostsWebhook();
 
 	const data = await facebookPostsWebhookUseCase.execute({
-		records: Records,
+		records,
 	});
 
 	reply.status(200).send(data);

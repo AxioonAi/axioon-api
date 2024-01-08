@@ -6,13 +6,12 @@ export const youtubeCommentsWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log(request.body);
-	const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { records } = ZodWebhookBodySchema.parse(request.body);
 
 	const youtubeCommentsWebhookUseCase = makeYoutubeCommentsWebhook();
 
 	const data = await youtubeCommentsWebhookUseCase.execute({
-		records: Records,
+		records,
 	});
 
 	reply.status(200).send(data);

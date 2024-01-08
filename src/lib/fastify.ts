@@ -15,7 +15,7 @@ export const fastifyErrorHandler = (
 	req: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log(error);
+	// console.log(error);
 	if (error instanceof ZodError) {
 		error.errors[0].path[0];
 		return reply.status(400).send(zodErrorHandler(error));

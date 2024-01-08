@@ -6,13 +6,12 @@ export const tiktokProfileWebhookController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log(request.body);
-	const { Records } = ZodWebhookBodySchema.parse(request.body);
+	const { records } = ZodWebhookBodySchema.parse(request.body);
 	try {
 		const tiktokProfileWebhookUseCase = makeTiktokProfileWebhook();
 
 		const data = await tiktokProfileWebhookUseCase.execute({
-			records: Records,
+			records,
 		});
 
 		reply.status(200).send(data);
