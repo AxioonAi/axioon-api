@@ -68,7 +68,7 @@ export class FindPoliticianProfileTiktokDetailsUseCase {
 			commentsStatistics: !formatCurrent
 				? null
 				: formatCurrent.commentsStatistics,
-			videos: !formatPrevious ? null : formatPrevious.videos,
+			posts: !formatPrevious ? null : formatPrevious.videos,
 		};
 
 		return finalStatistics;

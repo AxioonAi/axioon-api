@@ -4,7 +4,10 @@ import { authenticateUserController } from "./authenticateUser";
 import { refreshTokenController } from "./refreshToken";
 import { registerUserController } from "./registerUser";
 import { updateUserAccountController } from "./updateUserAccount";
+import { updateUserPasswordController } from "./updateUserPassword";
 import { userProfileController } from "./userProfile";
+import { userRecoverPasswordController } from "./userRecoverPassword";
+import { userRecoverPasswordCodeController } from "./userRecoverPasswordCode";
 
 export async function userRoutes(app: FastifyInstance) {
 	app.post("/login", authenticateUserController);
@@ -16,11 +19,11 @@ export async function userRoutes(app: FastifyInstance) {
 		updateUserAccountController,
 	);
 	app.get("/user/profile", { onRequest: [verifyJwt] }, userProfileController);
-	// app.put(
-	// 	"/user/password",
-	// 	{ onRequest: [verifyJwt] },
-	// 	updateUserPasswordController,
-	// );
-	// app.post("/user/recover-password/code", userRecoverPasswordCodeController);
-	// app.put("/user/recover-password", userRecoverPasswordController);
+	app.put(
+		"/user/password",
+		{ onRequest: [verifyJwt] },
+		updateUserPasswordController,
+	);
+	app.post("/user/recover-password/code", userRecoverPasswordCodeController);
+	app.put("/user/recover-password", userRecoverPasswordController);
 }
