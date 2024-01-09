@@ -41,14 +41,18 @@ export class PrismaInstagramMentionRepository
 	}
 
 	async mentionExists(ids: string[]) {
+		const urls = ids.map((id) => `https://www.instagram.com/p/${id}`);
+
 		const mentionExists = await prisma.instagramMention.findMany({
 			where: {
-				id: {
-					in: ids,
+				postUrl: {
+					in: urls,
 				},
 			},
 		});
 
-		return mentionExists.map((item) => item.id);
+		return mentionExists.map((item) =>
+			item.postUrl.replace("https://www.instagram.com/p/", ""),
+		);
 	}
 }

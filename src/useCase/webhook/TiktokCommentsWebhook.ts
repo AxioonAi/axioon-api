@@ -28,8 +28,6 @@ export class TiktokCommentsWebhookUseCase {
 			data.map((item) => item.id),
 		);
 
-		console.log(commentExists[0]);
-
 		const analysisFilter = data.filter(
 			(item) => !commentExists.includes(item.id),
 		);

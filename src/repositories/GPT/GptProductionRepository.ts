@@ -313,6 +313,8 @@ export class GptProductionRepository implements GptRepository {
 				sentimentAnalysis: Math.abs(Math.round(Math.random() * 900 + 100)),
 			});
 		}
+
+		console.log(finalData.length);
 		return finalData;
 	}
 	async newsAnalysis(data: GptNewsDataInterface[]) {

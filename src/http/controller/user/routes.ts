@@ -9,7 +9,7 @@ import { userProfileController } from "./userProfile";
 export async function userRoutes(app: FastifyInstance) {
 	app.post("/login", authenticateUserController);
 	app.post("/register", registerUserController);
-	app.patch("/user/token", refreshTokenController);
+	app.patch("/user/token", { onRequest: [verifyJwt] }, refreshTokenController);
 	app.put(
 		"/user/profile",
 		{ onRequest: [verifyJwt] },

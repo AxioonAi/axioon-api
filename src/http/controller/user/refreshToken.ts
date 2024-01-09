@@ -4,7 +4,6 @@ export async function refreshTokenController(
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) {
-	await request.jwtVerify();
 	const token = await reply.jwtSign({
 		sub: request.user.sub,
 	});

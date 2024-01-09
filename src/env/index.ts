@@ -6,6 +6,8 @@ const envSchema = z.object({
 	JWT_SECRET: z.string(),
 	PORT: z.coerce.number().default(3333),
 	GPT_KEY: z.string(),
+	SMTP_LOGIN: z.string(),
+	SMTP_KEY: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

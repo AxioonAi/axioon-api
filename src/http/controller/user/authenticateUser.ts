@@ -22,6 +22,7 @@ export const authenticateUserController = async (
 
 	const refreshToken = await reply.jwtSign({
 		sub: user.id,
+		type: "user",
 		expiresIn: "7d",
 	});
 

@@ -18,6 +18,7 @@ export const authenticateSubUserController = async (
 	const token = await reply.jwtSign({
 		sub: user.user_id,
 		type: "subUser",
+		sub_user_id: user.id,
 	});
 
 	const refreshToken = await reply.jwtSign({

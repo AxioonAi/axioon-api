@@ -55,6 +55,7 @@ model User {
   sex SexType @default(MALE)
   subUser SubUser[]
   signature UserPlan[]
+  recoverPassword UserRecoverPasswordCode[]
   notification Notification[]
   user PoliticianProfileMonitoring[]
 }
@@ -597,5 +598,13 @@ model SubUser {
   password_hash String
   user_id String
   active Boolean
+  user User @relation(references: [id], fields: [user_id])
+}
+
+model UserRecoverPasswordCode {
+  id String @unique @default(uuid())
+  code String @unique
+  user_id String
+  expires_in DateTime
   user User @relation(references: [id], fields: [user_id])
 }
