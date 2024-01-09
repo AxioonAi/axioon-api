@@ -4,7 +4,6 @@ import { authenticateUserController } from "./authenticateUser";
 import { refreshTokenController } from "./refreshToken";
 import { registerUserController } from "./registerUser";
 import { updateUserAccountController } from "./updateUserAccount";
-import { updateUserPasswordController } from "./updateUserPassword";
 import { userProfileController } from "./userProfile";
 
 export async function userRoutes(app: FastifyInstance) {
@@ -17,11 +16,11 @@ export async function userRoutes(app: FastifyInstance) {
 		updateUserAccountController,
 	);
 	app.get("/user/profile", { onRequest: [verifyJwt] }, userProfileController);
-	app.put(
-		"/user/password",
-		{ onRequest: [verifyJwt] },
-		updateUserPasswordController,
-	);
+	// app.put(
+	// 	"/user/password",
+	// 	{ onRequest: [verifyJwt] },
+	// 	updateUserPasswordController,
+	// );
 	// app.post("/user/recover-password/code", userRecoverPasswordCodeController);
 	// app.put("/user/recover-password", userRecoverPasswordController);
 }
