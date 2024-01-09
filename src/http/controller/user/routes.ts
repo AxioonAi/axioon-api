@@ -6,8 +6,6 @@ import { registerUserController } from "./registerUser";
 import { updateUserAccountController } from "./updateUserAccount";
 import { updateUserPasswordController } from "./updateUserPassword";
 import { userProfileController } from "./userProfile";
-import { userRecoverPasswordController } from "./userRecoverPassword";
-import { userRecoverPasswordCodeController } from "./userRecoverPasswordCode";
 
 export async function userRoutes(app: FastifyInstance) {
 	app.post("/login", authenticateUserController);
@@ -24,6 +22,6 @@ export async function userRoutes(app: FastifyInstance) {
 		{ onRequest: [verifyJwt] },
 		updateUserPasswordController,
 	);
-	app.post("/user/recover-password/code", userRecoverPasswordCodeController);
-	app.put("/user/recover-password", userRecoverPasswordController);
+	// app.post("/user/recover-password/code", userRecoverPasswordCodeController);
+	// app.put("/user/recover-password", userRecoverPasswordController);
 }
