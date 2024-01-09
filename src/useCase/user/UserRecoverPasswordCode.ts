@@ -2,7 +2,7 @@ import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { UserRecoverPasswordCodeRepository } from "@/repositories/UserRecoverPasswordCodeRepository";
 import { UserRepository } from "@/repositories/userRepository";
 import { generateRandomString } from "@/utils/randomString";
-import { sendEmail } from "@/utils/sendEmail";
+import { sendMail } from "@/utils/sendEmail";
 
 interface UserRecoverPasswordCodeUseCaseRequest {
 	email: string;
@@ -32,7 +32,7 @@ export class UserRecoverPasswordCodeUseCase {
 			code,
 		});
 
-		const mail = sendEmail(userExists.email, code);
+		const mail = sendMail(userExists.email, code);
 
 		return { code };
 	}
