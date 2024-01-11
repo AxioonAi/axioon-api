@@ -98,6 +98,7 @@ model PoliticianProfile {
   politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
 
   news NewsUsers[]
+  legalData LegalData[]
   notification Notification[]
   tiktokData TiktokBaseData[]
   twitterData TwitterBaseData[]
@@ -607,4 +608,20 @@ model UserRecoverPasswordCode {
   user_id String
   expires_in DateTime
   user User @relation(references: [id], fields: [user_id])
+}
+
+
+model LegalData {
+  id String @unique @default(uuid())
+  activePole String?   
+  passivePole String?  
+  startDate DateTime? 
+  lastUpdate DateTime? 
+  subject String?
+  judgingBy String?   
+  causeValue String?   
+  court String?
+  url String?   
+  politician_id String 
+  politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id]) 
 }

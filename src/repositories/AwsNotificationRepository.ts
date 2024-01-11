@@ -20,6 +20,7 @@ export interface S3NotificationInterface {
 }
 
 export interface AwsNotificationRepository {
+	S3LegalNotification(data: S3NotificationInterface): Promise<any>;
 	S3YoutubeCommentsNotification(
 		data: S3NotificationInterface,
 	): Promise<AwsNotificationYoutubeCommentsResponseInterface[]>;

@@ -401,3 +401,87 @@ export interface AwsNotificationNewsResponseInterface {
 		user_id: string;
 	}[];
 }
+
+export interface AwsNotificationLegalResponseInterface {
+	politician_id: string;
+	subject: string | null;
+	judgingBy: string | null;
+	causeValue: string | null;
+	court: string | null;
+	url: string | null;
+	id: string;
+	activePole: string;
+	passivePole: string;
+	startDate: Date;
+	lastUpdate: Date;
+}
+
+export interface AwsNotificationLegalDataInterface {
+	envolvido_encontrado: {
+		nome: string;
+	};
+	items: {
+		numero_cnj: string;
+		titulo_polo_ativo: string;
+		titulo_polo_passivo: string;
+		ano_inicio: number;
+		data_inicio: string;
+		estado_origem: Estado;
+		data_ultima_movimentacao: string;
+		quantidade_movimentacoes: number;
+		fontes_tribunais_estao_arquivadas: boolean;
+		data_ultima_verificacao: string;
+		tempo_desde_ultima_verificacao: string;
+		tipo_match: string;
+		match_fontes: MatchFontes;
+		fontes: {
+			data_inicio: string;
+			capa: Capa | null;
+			url: string | null;
+			tribunal: Tribunal;
+			quantidade_envolvidos: number;
+			quantidade_movimentacoes: number;
+			data_ultima_verificacao: string;
+			tipos_envolvido_pesquisado: TipoEnvolvidoPesquisado[];
+			match_documento_por: string | null;
+		}[];
+	}[];
+	user_id: string;
+}
+
+interface Estado {
+	nome: string;
+	sigla: string;
+}
+
+interface MatchFontes {
+	tribunal: boolean;
+	diario_oficial: boolean;
+}
+
+interface Capa {
+	classe: string;
+	assunto: string;
+	assunto_principal_normalizado: {
+		nome: string;
+	};
+	orgao_julgador: string;
+	valor_causa: {
+		valor: string;
+		moeda: string;
+		valor_formatado: string;
+	};
+}
+
+interface Tribunal {
+	id: number;
+	nome: string;
+	sigla: string;
+}
+
+interface TipoEnvolvidoPesquisado {
+	id: number;
+	tipo: string;
+	tipo_normalizado: string;
+	polo: string;
+}

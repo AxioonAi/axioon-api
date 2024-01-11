@@ -8,6 +8,7 @@ import { instagramMentionCommentsWebhookController } from "./instagramMentionCom
 import { instagramMentionsWebhookController } from "./instagramMentionsWebhook";
 import { instagramPostWebhookController } from "./instagramPostWebhook";
 import { instagramProfileWebhookController } from "./instagramProfileWebhook";
+import { legalWebhookController } from "./legalWebhook";
 import { newsWebhookController } from "./newsWebhook";
 import { tiktokCommentsWebhookController } from "./tiktokCommentsWebhook";
 import { tiktokProfileWebhookController } from "./tiktokProfileWebhook";
@@ -34,4 +35,5 @@ export async function webhookRoutes(app: FastifyInstance) {
 	app.post("/webhook/facebook/ads", facebookAdsWebhookController);
 	app.post("/webhook/facebook/comments", facebookCommentsWebhookController);
 	app.post("/webhook/news", newsWebhookController);
+	app.post("/webhook/legal", legalWebhookController);
 }

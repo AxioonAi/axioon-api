@@ -6,6 +6,15 @@ import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
 export class PrismaPoliticianProfileRepository
 	implements PoliticianProfileRepository
 {
+	async findCpfList() {
+		return await prisma.politicianProfile.findMany({
+			select: {
+				cpf: true,
+				id: true,
+			},
+		});
+	}
+
 	async create(data: {
 		cpf: string;
 		instagram: string;

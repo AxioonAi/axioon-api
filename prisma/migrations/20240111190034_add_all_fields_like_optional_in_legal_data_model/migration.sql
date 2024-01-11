@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "LegalData" ALTER COLUMN "activePole" DROP NOT NULL,
+ALTER COLUMN "passivePole" DROP NOT NULL,
+ALTER COLUMN "startDate" DROP NOT NULL,
+ALTER COLUMN "lastUpdate" DROP NOT NULL;

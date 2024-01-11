@@ -102,6 +102,13 @@ export interface PoliticianProfileRepository {
 		id: string;
 		period: number;
 	}): Promise<postData | null>;
+
+	findCpfList(): Promise<findCpfListData[]>;
+}
+
+interface findCpfListData {
+	id: string;
+	cpf: string;
 }
 
 interface youtubeData {

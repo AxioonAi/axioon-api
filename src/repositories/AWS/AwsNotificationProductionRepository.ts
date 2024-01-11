@@ -15,6 +15,8 @@ import {
 	AwsNotificationInstagramPostResponseInterface,
 	AwsNotificationInstagramProfileAwsDataInterface,
 	AwsNotificationInstagramProfileResponseInterface,
+	AwsNotificationLegalDataInterface,
+	AwsNotificationLegalResponseInterface,
 	AwsNotificationNewsAwsDataInterface,
 	AwsNotificationNewsResponseInterface,
 	AwsNotificationTiktokCommentsAwsDataInterface,
@@ -50,7 +52,8 @@ export class AwsNotificationProductionRepository
 				.catch((err) => {});
 
 		const formattedData: AwsNotificationYoutubeCommentsResponseInterface[] = [];
-		awsData.forEach((item) => {
+
+		for (const item of awsData) {
 			if (item.comment) {
 				formattedData.push({
 					id: item.cid,
@@ -61,7 +64,7 @@ export class AwsNotificationProductionRepository
 					author: item.author,
 				});
 			}
-		});
+		}
 
 		return formattedData.filter((item) => {
 			for (const chave in item) {
@@ -71,6 +74,55 @@ export class AwsNotificationProductionRepository
 			}
 			return true;
 		});
+	}
+
+	async S3LegalNotification(data: S3NotificationInterface) {
+		const awsData: AwsNotificationLegalDataInterface = await axios
+			.get(`https://nightapp.s3.sa-east-1.amazonaws.com/${data.records}`)
+			.then(({ data }) => {
+				return data;
+			})
+			.catch((err) => {});
+
+		const formattedData: AwsNotificationLegalResponseInterface[] = [];
+
+		for (const item of awsData.items) {
+			const relevantData: {
+				subject: string | null;
+				judgingBy: string | null;
+				causeValue: string | null;
+				court: string | null;
+				url: string | null;
+			} = {
+				subject: null,
+				judgingBy: null,
+				causeValue: null,
+				court: null,
+				url: null,
+			};
+
+			for (const fount of item.fontes) {
+				if (fount.capa?.assunto) relevantData.subject = fount.capa.assunto;
+				if (fount.capa?.orgao_julgador)
+					relevantData.judgingBy = fount.capa.orgao_julgador;
+				if (fount.capa?.valor_causa)
+					relevantData.causeValue = fount.capa?.valor_causa.valor_formatado;
+				if (fount.tribunal?.nome) relevantData.court = fount.tribunal.nome;
+				if (fount.url) relevantData.url = fount.url;
+			}
+
+			formattedData.push({
+				id: item.numero_cnj,
+				activePole: item.titulo_polo_ativo,
+				passivePole: item.titulo_polo_passivo,
+				startDate: moment(item.data_inicio).toDate(),
+				lastUpdate: moment(item.data_ultima_movimentacao).toDate(),
+				...relevantData,
+				politician_id: awsData.user_id,
+			});
+		}
+
+		return formattedData;
 	}
 
 	async S3TiktokCommentsNotification(data: S3NotificationInterface) {
@@ -244,7 +296,7 @@ export class AwsNotificationProductionRepository
 
 		const formattedData: AwsNotificationFacebookProfileResponseInterface[] = [];
 
-		awsData.forEach((item) => {
+		for (const item of awsData) {
 			if (item.likes) {
 				formattedData.push({
 					politician_id: item.facebook_id,
@@ -253,7 +305,7 @@ export class AwsNotificationProductionRepository
 					followers_count: item.followers,
 				});
 			}
-		});
+		}
 
 		return formattedData;
 	}
@@ -406,6 +458,7 @@ export class AwsNotificationProductionRepository
 		};
 
 		for (const key in formattedData) {
+			// biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
 			if (formattedData.hasOwnProperty(key)) {
 				finalData.videoData.push(...formattedData[key].videos);
 				finalData.profileData.push(formattedData[key].profile);
@@ -435,10 +488,9 @@ export class AwsNotificationProductionRepository
 					like: item.likes,
 					shares: item.shares,
 					comments: item.comments,
-					thumbnail:
-						item.media && item.media[0]
-							? item.media[0].thumbnail
-							: "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
+					thumbnail: item.media?.[0]
+						? item.media[0].thumbnail
+						: "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
 					politician_id: item.facebook_id,
 				};
 			});
@@ -462,8 +514,8 @@ export class AwsNotificationProductionRepository
 			demographicDistributionData: [],
 		};
 
-		awsData.forEach((element) => {
-			element.data.forEach((item) => {
+		for (const element of awsData) {
+			for (const item of element.data) {
 				formattedData.advertisingData.push({
 					id: item.id,
 					politician_id: element.Meta_id,
@@ -483,24 +535,24 @@ export class AwsNotificationProductionRepository
 					impressions_upper_bound: item.impressions.upper_bound,
 				});
 
-				item.delivery_by_region.forEach((region) => {
-					formattedData.deliveryRegionData.push({
-						region: region.region,
-						advertising_id: item.id,
-						percentage: region.percentage,
-					});
-				});
-
-				item.demographic_distribution.forEach((distribution) => {
+				for (const data of item.demographic_distribution) {
 					formattedData.demographicDistributionData.push({
 						advertising_id: item.id,
-						age: distribution.age,
-						gender: distribution.gender,
-						percentage: distribution.percentage,
+						age: data.age,
+						gender: data.gender,
+						percentage: data.percentage,
 					});
-				});
-			});
-		});
+				}
+
+				for (const data of item.delivery_by_region) {
+					formattedData.deliveryRegionData.push({
+						advertising_id: item.id,
+						region: data.region,
+						percentage: data.percentage,
+					});
+				}
+			}
+		}
 
 		return formattedData;
 	}
