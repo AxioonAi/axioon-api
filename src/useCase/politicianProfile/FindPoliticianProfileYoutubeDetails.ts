@@ -1,4 +1,5 @@
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
+import { CommentWordCount } from "@/utils/dataFormatter/commentWordCount";
 import { youtubeDataFormatter } from "@/utils/dataFormatter/youtube";
 
 interface FindPoliticianProfileYoutubeDetailsUseCaseRequest {
@@ -25,6 +26,16 @@ export class FindPoliticianProfileYoutubeDetailsUseCase {
 
 		const formatCurrent = !current ? null : youtubeDataFormatter(current);
 		const formatPrevious = !previous ? null : youtubeDataFormatter(previous);
+
+		const comments = current?.youtubeCommentData;
+		const wordCount = !comments
+			? null
+			: CommentWordCount({
+					youtubeCommentData: comments,
+					tiktokComments: [],
+					instagramPostComments: [],
+					facebookPostComments: [],
+			  });
 
 		const finalStatistics = {
 			keyIndicators: [
@@ -69,6 +80,7 @@ export class FindPoliticianProfileYoutubeDetailsUseCase {
 				? null
 				: formatCurrent.commentsStatistics,
 			posts: !formatPrevious ? null : formatPrevious.videos,
+			wordCloud: wordCount,
 		};
 
 		return finalStatistics;
