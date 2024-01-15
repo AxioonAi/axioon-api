@@ -1,9 +1,9 @@
-import { PrismaMetaAdvertisingLibRepository } from "@/repositories/Prisma/PrismaMetaAdvertisingLibRepository";
+import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaPoliticianProfileRepository";
 import { FindPoliticianProfileMetaAdvertisingUseCase } from "@/useCase/politicianProfile/FindPoliticianProfileMetaAdvertising";
 
 export function makeFindPoliticianProfileAdvertisingDetails() {
-	const metaAdvertisingLibRepository = new PrismaMetaAdvertisingLibRepository();
+	const politicianProfileRepository = new PrismaPoliticianProfileRepository();
 	return new FindPoliticianProfileMetaAdvertisingUseCase(
-		metaAdvertisingLibRepository,
+		politicianProfileRepository,
 	);
 }

@@ -5,6 +5,7 @@ import { findPoliticianProfileAdvertisingDetailsController } from "./findPolitic
 import { findPoliticianProfileByCpfController } from "./findPoliticianProfileByCpf";
 import { findPoliticianProfileFacebookDetailsController } from "./findPoliticianProfileFacebookDetails";
 import { findPoliticianProfileInstagramDetailsController } from "./findPoliticianProfileInstagramDetails";
+import { findPoliticianProfileMentionDetailsController } from "./findPoliticianProfileMentionDetails";
 import { findPoliticianProfileMonitoringListController } from "./findPoliticianProfileMonitoringList";
 import { findPoliticianProfileSocialMediaHomeDataController } from "./findPoliticianProfileSocialMediaHomeData";
 import { findPoliticianProfileTiktokDetailsController } from "./findPoliticianProfileTiktokDetails";
@@ -38,6 +39,10 @@ export async function politicianProfileRoutes(app: FastifyInstance) {
 	app.get(
 		"/profile/instagram/:id",
 		findPoliticianProfileInstagramDetailsController,
+	);
+	app.get(
+		"/profile/mentions/:id",
+		findPoliticianProfileMentionDetailsController,
 	);
 }
 

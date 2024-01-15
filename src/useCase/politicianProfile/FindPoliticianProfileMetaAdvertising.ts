@@ -1,29 +1,27 @@
-import { MetaAdvertisingLibRepository } from "@/repositories/MetaAdvertisingLibRepository";
+import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
+import { metaAdsFormatter } from "@/utils/dataFormatter/metaAds";
 
 interface FindPoliticianProfileMetaAdvertisingUseCaseRequest {
 	id: string;
-	startDate: Date;
-	endDate: Date;
 }
 
 interface FindPoliticianProfileMetaAdvertisingUseCaseResponse {}
 
 export class FindPoliticianProfileMetaAdvertisingUseCase {
 	constructor(
-		private metaAdvertisingLibRepository: MetaAdvertisingLibRepository,
+		private politicianProfileRepository: PoliticianProfileRepository,
 	) {}
 
 	async execute({
 		id,
-		startDate,
-		endDate,
 	}: FindPoliticianProfileMetaAdvertisingUseCaseRequest): Promise<FindPoliticianProfileMetaAdvertisingUseCaseResponse> {
-		const data = await this.metaAdvertisingLibRepository.findDetails({
-			id,
-			startDate,
-			endDate,
-		});
+		const { advertising } =
+			await this.politicianProfileRepository.findMetaAdsStatistics({
+				id,
+			});
 
-		return { advertising: data };
+		const metaFormatted = metaAdsFormatter(advertising);
+
+		return { advertising: metaFormatted };
 	}
 }

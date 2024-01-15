@@ -945,4 +945,91 @@ export class PrismaPoliticianProfileRepository
 			},
 		});
 	}
+
+	async findMetaAdsStatistics(data: { id: string }) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				advertising: {
+					include: {
+						deliveryByRegion: true,
+						demographicDistribution: true,
+					},
+				},
+			},
+		});
+	}
+
+	async findMentionsStatistics(data: { id: string; period: number }) {
+		const [current, previous] = await Promise.all([
+			prisma.politicianProfile.findUnique({
+				where: {
+					id: data.id,
+				},
+				select: {
+					news: {
+						where: {
+							news: {
+								last_update: {
+									gte: moment().subtract(data.period, "day").toDate(),
+								},
+							},
+						},
+						include: {
+							news: true,
+						},
+					},
+					instagramMention: {
+						where: {
+							pubDate: {
+								gte: moment().subtract(data.period, "day").toDate(),
+							},
+						},
+						include: {
+							comments: true,
+						},
+					},
+				},
+			}),
+			prisma.politicianProfile.findUnique({
+				where: {
+					id: data.id,
+				},
+				select: {
+					instagramMention: {
+						where: {
+							pubDate: {
+								gte: moment()
+									.subtract(data.period * 2, "day")
+									.toDate(),
+								lte: moment().subtract(data.period, "day").toDate(),
+							},
+						},
+						include: {
+							comments: true,
+						},
+					},
+					news: {
+						where: {
+							news: {
+								last_update: {
+									gte: moment()
+										.subtract(data.period * 2, "day")
+										.toDate(),
+									lte: moment().subtract(data.period, "day").toDate(),
+								},
+							},
+						},
+						include: {
+							news: true,
+						},
+					},
+				},
+			}),
+		]);
+
+		return { current, previous };
+	}
 }

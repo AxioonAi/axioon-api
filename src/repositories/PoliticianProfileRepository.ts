@@ -70,6 +70,13 @@ export interface PoliticianProfileRepository {
 	findFacebookList(): Promise<UserFacebookInterface[]>;
 	findByState(state: string): Promise<findByStateData[]>;
 	findNamesAndRoles(): Promise<findNamesAndRolesData[]>;
+	findMentionsStatistics(data: {
+		id: string;
+		period: number;
+	}): Promise<newsData>;
+	findMetaAdsStatistics(data: {
+		id: string;
+	}): Promise<MetaAdsData>;
 	findYoutubeStatistics(data: {
 		id: string;
 		period: number;

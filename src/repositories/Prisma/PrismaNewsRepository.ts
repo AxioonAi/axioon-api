@@ -2,6 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { randomUUID } from "crypto";
 import { CreateNewsInterface, NewsRepository } from "../NewsRepository";
 
+interface CreateNewsProps {
+	id: string;
+	title: string;
+	url: string;
+	last_update: Date;
+}
+
 export class PrismaNewsRepository implements NewsRepository {
 	async createMany(data: CreateNewsInterface[]) {
 		const createUserData: {
@@ -9,23 +16,45 @@ export class PrismaNewsRepository implements NewsRepository {
 			politician_id: string;
 			sentimentAnalysis: number;
 		}[] = [];
-		const createData = data.map((item) => {
-			const { users, ...rest } = item;
-			const id = randomUUID();
-			createUserData.push(
-				...users.map((user) => ({
-					politician_id: user.politician_id,
-					sentimentAnalysis: Number(user.sentimentAnalysis),
-					news_id: id,
-				})),
-			);
-			return {
-				...rest,
-				id,
-			};
+
+		const urlExists = data.map((item) => item.url);
+
+		const exists = await prisma.news.findMany({
+			where: {
+				url: {
+					in: urlExists,
+				},
+			},
 		});
 
-		console.log(createUserData);
+		const createData: CreateNewsProps[] = [];
+		const updateData: CreateNewsProps[] = [];
+
+		for (const item of data) {
+			if (!exists.find((news) => news.url === item.url)) {
+				const { users, ...rest } = item;
+				const id = randomUUID();
+				createUserData.push(
+					...users.map((user) => ({
+						politician_id: user.politician_id,
+						sentimentAnalysis: Number(user.sentimentAnalysis),
+						news_id: id,
+					})),
+				);
+				createData.push({
+					...rest,
+					id,
+				});
+			} else {
+				const exist = exists.find((news) => news.url === item.url);
+				if (exist) {
+					updateData.push({
+						id: exist.id,
+						...item,
+					});
+				}
+			}
+		}
 
 		await prisma.news.createMany({
 			data: createData,
