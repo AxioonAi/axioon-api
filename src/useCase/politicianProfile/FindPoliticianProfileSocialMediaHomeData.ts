@@ -78,6 +78,26 @@ export class FindPoliticianProfileSocialMediaHomeDataUseCase {
 			},
 			wordCloud: wordCount,
 			engagement,
+			staticData: {
+				facebook: {
+					like: followers.current.facebookData[0].likes_count,
+					followers: followers.current.facebookData[0].followers_count,
+				},
+				tiktok: {
+					likes: followers.current.tiktokData[0].heart,
+					followers: followers.current.tiktokData[0].fans,
+				},
+				youtube: {
+					subs: followers.current.youtubeBaseData[0].channel_total_subs,
+					views: followers.current.youtubeBaseData[0].channel_total_views,
+				},
+				instagram: {
+					followers: followers.current.instagramData[0].followers,
+					posts:
+						followers.current.instagramData[0].posts_count +
+						followers.current.instagramData[0].reels_count,
+				},
+			},
 		};
 
 		return data;
