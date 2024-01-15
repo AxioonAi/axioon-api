@@ -63,9 +63,17 @@ model User {
 model SignaturePlan {
   id String @unique @default(uuid())
   name String 
+  description String @default("")
   pixValue Float
   creditValue Float
-  amount_of_monitoring Int
+  amount_of_monitoring Int @default(1)
+  amount_of_users Int @default(1)
+  facebook_ads_monitoring Boolean @default(false)
+  electoral_history Boolean @default(false)
+  population_data Boolean @default(false)
+  legal_data Boolean @default(false)
+  ai_access Boolean @default(true)
+  political_accessory Boolean @default(false)
   duration Int @default(12)
   userPlan UserPlan[]
 }
