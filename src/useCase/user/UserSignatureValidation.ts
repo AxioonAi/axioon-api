@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "@/helper/errors/UnauthorizedError";
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
 
 interface UserSignatureValidationUseCaseRequest {
@@ -14,7 +15,7 @@ export class UserSignatureValidationUseCase {
 	}: UserSignatureValidationUseCaseRequest): Promise<void> {
 		const signature = await this.userPlanRepository.findActivePlan(id);
 		if (!signature) {
-			throw new Error("Signature not found");
+			throw new UnauthorizedError();
 		}
 
 		switch (type) {

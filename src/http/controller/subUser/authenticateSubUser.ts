@@ -23,6 +23,8 @@ export const authenticateSubUserController = async (
 
 	const refreshToken = await reply.jwtSign({
 		sub: user.id,
+		type: "subUser",
+		sub_user_id: user.id,
 		expiresIn: "7d",
 	});
 

@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "@/helper/errors/UnauthorizedError";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
 import { metaAdsFormatter } from "@/utils/dataFormatter/metaAds";
@@ -22,7 +23,7 @@ export class FindPoliticianProfileMetaAdvertisingUseCase {
 		const userPlan = await this.userPlanRepository.findActivePlan(userId);
 
 		if (!userPlan || !userPlan.plan.facebook_ads_monitoring) {
-			throw new Error("User not authorized");
+			throw new UnauthorizedError();
 		}
 
 		const { advertising } =

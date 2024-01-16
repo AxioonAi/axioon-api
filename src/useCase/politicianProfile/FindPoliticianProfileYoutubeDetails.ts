@@ -24,6 +24,9 @@ export class FindPoliticianProfileYoutubeDetailsUseCase {
 				period,
 			});
 
+		// console.log("current: ", current?.youtubeVideoData);
+		// console.log("previous: ", previous?.youtubeVideoData);
+
 		const formatCurrent = !current ? null : youtubeDataFormatter(current);
 		const formatPrevious = !previous ? null : youtubeDataFormatter(previous);
 

@@ -67,7 +67,7 @@ export const youtubeDataFormatter = (data: {
 		commentStatisticsData.sentimentStatistics.totalSentiment /
 		youtubeCommentData.length;
 
-	const mostOldVideo = data.youtubeVideoData.sort((a, b) => {
+	const mostOldVideo = youtubeVideoData.sort((a, b) => {
 		return a.date < b.date ? -1 : 1;
 	})[0];
 	const oldVideoDateDiff = Math.ceil(
@@ -84,25 +84,23 @@ export const youtubeDataFormatter = (data: {
 		sentiment: commentStatisticsData.sentimentStatistics.sentimentAverage,
 	};
 
-	for (const key in data.youtubeVideoData) {
+	for (const key in youtubeVideoData) {
 		videoEngagementData.like += youtubeVideoData[key].likes;
 		videoEngagementData.comments += youtubeVideoData[key].commentsCount;
 		videoEngagementData.views += youtubeVideoData[key].viewCount;
 		const timeDiff =
-			Math.abs(
-				Date.now() - new Date(data.youtubeVideoData[key].date).getTime(),
-			) /
+			Math.abs(Date.now() - new Date(youtubeVideoData[key].date).getTime()) /
 			(1000 * 60 * 60 * 24);
 
 		const engagementSum =
-			data.youtubeVideoData[key].commentsCount * 1 +
-			data.youtubeVideoData[key].likes * 1.2 +
-			data.youtubeVideoData[key].viewCount * 1;
+			youtubeVideoData[key].commentsCount * 1 +
+			youtubeVideoData[key].likes * 1.2 +
+			youtubeVideoData[key].viewCount * 1;
 
 		const dateDiffRelation = 1 - timeDiff / oldVideoDateDiff;
 
-		const comments = data.youtubeCommentData.filter(
-			(comment) => comment.video_id === data.youtubeVideoData[key].id,
+		const comments = youtubeCommentData.filter(
+			(comment) => comment.video_id === youtubeVideoData[key].id,
 		);
 
 		let sentimentSum = 0;
@@ -122,10 +120,10 @@ export const youtubeDataFormatter = (data: {
 		const engagement =
 			(engagementSum * dateDiffRelation) /
 			100 /
-			(data.youtubeBaseData[0].channel_total_subs / 1000);
+			(youtubeBaseData[0].channel_total_subs / 1000);
 
 		dataWithEngagement.push({
-			...data.youtubeVideoData[key],
+			...youtubeVideoData[key],
 			engagement,
 			comments: formattedComments,
 			sentiment: sentimentSum / comments.length,

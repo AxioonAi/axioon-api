@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "@/helper/errors/UnauthorizedError";
 import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
@@ -23,7 +24,7 @@ export class FindPoliticianProfileCityDetailsUseCase {
 		const userPlan = await this.userPlanRepository.findActivePlan(userId);
 
 		if (!userPlan || !userPlan.plan.facebook_ads_monitoring) {
-			throw new Error("User not authorized");
+			throw new UnauthorizedError();
 		}
 		const user = await this.politicianProfileRepository.findUserCity(userId);
 

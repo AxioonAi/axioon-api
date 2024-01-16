@@ -116,6 +116,12 @@ export class PrismaPoliticianProfileRepository
 	}
 
 	async findYoutubeStatistics(data: { id: string; period: number }) {
+		console.log(data.period);
+		console.log(
+			moment()
+				.subtract(data.period + 1, "day")
+				.toDate(),
+		);
 		const [current, previous] = await Promise.all([
 			prisma.politicianProfile.findUnique({
 				where: {
@@ -160,9 +166,7 @@ export class PrismaPoliticianProfileRepository
 								gte: moment()
 									.subtract(data.period * 2, "day")
 									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
+								lte: moment().subtract(data.period, "day").toDate(),
 							},
 						},
 					},
@@ -172,9 +176,7 @@ export class PrismaPoliticianProfileRepository
 								gte: moment()
 									.subtract(data.period * 2, "day")
 									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
+								lte: moment().subtract(data.period, "day").toDate(),
 							},
 						},
 					},
@@ -185,9 +187,7 @@ export class PrismaPoliticianProfileRepository
 									gte: moment()
 										.subtract(data.period * 2, "day")
 										.toDate(),
-									lte: moment()
-										.subtract(data.period + 1, "day")
-										.toDate(),
+									lte: moment().subtract(data.period, "day").toDate(),
 								},
 							},
 						},
