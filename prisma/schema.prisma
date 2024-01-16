@@ -633,3 +633,46 @@ model LegalData {
   politician_id String 
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id]) 
 }
+
+model PersonalData {
+  id String @unique @default(uuid())
+  federalStatus String
+  fatherName String
+  federalCrime String
+  federalCrimeCertificate String
+  address PersonalAddress[]
+  economicRelationship PersonalEconomicRelationship[]
+}
+
+model PersonalAddress {
+  id String @unique @default(uuid())
+  zipcode String
+  country String
+  address String
+  city String
+  addressType String
+  neighborhood String
+  state String
+  personal_data_id String
+  personalData PersonalData @relation(references: [id], fields: [personal_data_id])
+}
+
+model PersonalEconomicRelationship {
+  id String @unique @default(uuid())
+  country String
+  relationshipType String
+  endDate DateTime
+  name String
+  cnpj String
+  startDate DateTime
+  relationshipLevel String
+  personal_data_id String
+  personalData PersonalData @relation(references: [id], fields: [personal_data_id])
+}
+
+model personalIncomeTaxReturns {
+  id String @unique @default(uuid())
+  year String
+  bakAgency String?
+  situation String
+}
