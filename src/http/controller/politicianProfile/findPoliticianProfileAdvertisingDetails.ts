@@ -1,5 +1,4 @@
 import { ZodIdParamsSchema } from "@/lib/zod/global";
-import { ZodFindPoliticianProfileDetailsQuerySchema } from "@/lib/zod/politicianProfile";
 import { makeFindPoliticianProfileAdvertisingDetails } from "@/useCase/@factories/politicianProfile/makeFindPoliticianProfileAdvertisingDetails";
 import { FastifyReply, FastifyRequest } from "fastify";
 
@@ -8,15 +7,13 @@ export const findPoliticianProfileAdvertisingDetailsController = async (
 	reply: FastifyReply,
 ) => {
 	const { id } = ZodIdParamsSchema.parse(request.params);
-	const { startDate, endDate } =
-		ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
+
 	const findPoliticianProfileAdvertisingDetailsUseCase =
 		makeFindPoliticianProfileAdvertisingDetails();
 
 	const data = await findPoliticianProfileAdvertisingDetailsUseCase.execute({
 		id,
-		startDate,
-		endDate,
+		userId: request.user.sub,
 	});
 
 	return reply.status(200).send(data);

@@ -1,4 +1,8 @@
-import { Status, UserPlan } from "@prisma/client";
+import { SignaturePlan, Status, UserPlan } from "@prisma/client";
+
+interface FindActivePlanDetails extends UserPlan {
+	plan: SignaturePlan;
+}
 
 export interface UserPlanRepository {
 	create(data: {
@@ -16,5 +20,5 @@ export interface UserPlanRepository {
 		paymentId: string,
 		data: { status: Status },
 	): Promise<UserPlan | null>;
-	findActivePlan(userId: string): Promise<UserPlan | null>;
+	findActivePlan(userId: string): Promise<FindActivePlanDetails | null>;
 }

@@ -14,7 +14,6 @@ export const ZodNewCreditCardPaymentBodySchema = z.object({
 		cpfCnpj: z.string(),
 		postalCode: z.string(),
 		addressNumber: z.string(),
-		mobilePhone: z.string(),
 		phone: z.string(),
 	}),
 	saveCreditCard: z.boolean(),

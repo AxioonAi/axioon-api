@@ -7,6 +7,7 @@ export const newCreditCardPurchaseController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
+	console.log(request.body);
 	const data = ZodNewCreditCardPaymentBodySchema.parse(request.body);
 	const { id } = ZodIdParamsSchema.parse(request.params);
 	const newCreditCardPurchaseUseCase = makeNewCreditCardPayment();

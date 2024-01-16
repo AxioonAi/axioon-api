@@ -8,6 +8,7 @@ const envSchema = z.object({
 	GPT_KEY: z.string(),
 	SMTP_LOGIN: z.string(),
 	SMTP_KEY: z.string(),
+	ID_CERBERUS_KEY: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

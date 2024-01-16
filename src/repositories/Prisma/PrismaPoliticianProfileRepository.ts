@@ -946,10 +946,10 @@ export class PrismaPoliticianProfileRepository
 		});
 	}
 
-	async findMetaAdsStatistics(data: { id: string }) {
+	async findMetaAdsStatistics(id: string) {
 		return await prisma.politicianProfile.findUnique({
 			where: {
-				id: data.id,
+				id: id,
 			},
 			select: {
 				advertising: {

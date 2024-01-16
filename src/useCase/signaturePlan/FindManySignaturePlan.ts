@@ -1,8 +1,16 @@
 import { SignaturePlanRepository } from "@/repositories/SignaturePlanRepository";
-import { SignaturePlan } from "@prisma/client";
 
 interface FindManySignaturePlanUseCaseResponse {
-	plans: SignaturePlan[];
+	plans: {
+		title: string;
+		description: string;
+		id: string;
+		value: number;
+		benefits: {
+			name: string;
+			description: string;
+		}[];
+	}[];
 }
 
 export class FindManySignaturePlanUseCase {

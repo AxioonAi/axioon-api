@@ -2,7 +2,6 @@ import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastify from "fastify";
 import { env } from "./env";
-import { cityRoutes } from "./http/controller/city/routes";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
 import {
@@ -35,7 +34,6 @@ app.register(fastifyJwt, {
 });
 
 app.register(userRoutes); // TESTADO
-app.register(cityRoutes); // TESTADO
 app.register(scrapeRoutes); // TESTADO
 app.register(subUserRoutes);
 app.register(webhookRoutes);

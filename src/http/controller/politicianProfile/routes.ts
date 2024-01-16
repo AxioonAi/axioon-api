@@ -3,6 +3,7 @@ import { FastifyInstance } from "fastify";
 import { createPoliticianProfileController } from "./createPoliticianProfile";
 import { findPoliticianProfileAdvertisingDetailsController } from "./findPoliticianProfileAdvertisingDetails";
 import { findPoliticianProfileByCpfController } from "./findPoliticianProfileByCpf";
+import { findPoliticianProfileCityDetailsController } from "./findPoliticianProfileCityDetails";
 import { findPoliticianProfileFacebookDetailsController } from "./findPoliticianProfileFacebookDetails";
 import { findPoliticianProfileInstagramDetailsController } from "./findPoliticianProfileInstagramDetails";
 import { findPoliticianProfileMentionDetailsController } from "./findPoliticianProfileMentionDetails";
@@ -44,6 +45,7 @@ export async function politicianProfileRoutes(app: FastifyInstance) {
 		"/profile/mentions/:id",
 		findPoliticianProfileMentionDetailsController,
 	);
+	app.get("/profile/city/:id", findPoliticianProfileCityDetailsController);
 }
 
 export async function politicianProfileMonitoringListRoutes(

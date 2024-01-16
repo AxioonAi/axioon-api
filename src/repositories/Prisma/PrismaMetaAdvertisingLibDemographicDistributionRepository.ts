@@ -34,41 +34,34 @@ export class PrismaMetaAdvertisingLibDemographicDistributionRepository
 			[];
 		const updateData: UpdateDataProps[] = [];
 
-		data.forEach(
-			(item: {
-				age: string;
-				gender: string;
-				percentage: string;
-				advertising_id: string;
-			}) => {
-				if (
-					!exists.find(
-						(meta) =>
-							meta.age === item.age &&
-							meta.gender === item.gender &&
-							meta.percentage === item.percentage &&
-							meta.advertising_id === item.advertising_id,
-					)
-				) {
-					createData.push(item);
-				} else {
-					const exist = exists.find(
-						(meta) =>
-							meta.age === item.age &&
-							meta.gender === item.gender &&
-							meta.percentage === item.percentage &&
-							meta.advertising_id === item.advertising_id,
-					);
+		for (const item of data) {
+			if (
+				!exists.find(
+					(meta) =>
+						meta.age === item.age &&
+						meta.gender === item.gender &&
+						meta.percentage === item.percentage &&
+						meta.advertising_id === item.advertising_id,
+				)
+			) {
+				createData.push(item);
+			} else {
+				const exist = exists.find(
+					(meta) =>
+						meta.age === item.age &&
+						meta.gender === item.gender &&
+						meta.percentage === item.percentage &&
+						meta.advertising_id === item.advertising_id,
+				);
 
-					if (exist) {
-						updateData.push({
-							id: exist.id,
-							...item,
-						});
-					}
+				if (exist) {
+					updateData.push({
+						id: exist.id,
+						...item,
+					});
 				}
-			},
-		);
+			}
+		}
 
 		await prisma.$transaction([
 			prisma.metaAdvertisingLibDemographicDistribution.createMany({

@@ -20,13 +20,13 @@ export class PrismaMetaAdvertisingLibRepository
 		const createData: MetaAdvertisingLibCreateInterface[] = [];
 		const updateData: MetaAdvertisingLibCreateInterface[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (!metaExists.find((meta) => meta.id === item.id)) {
 				createData.push(item);
 			} else {
 				updateData.push(item);
 			}
-		});
+		}
 
 		await prisma.$transaction([
 			prisma.metaAdvertisingLib.createMany({ data: createData }),

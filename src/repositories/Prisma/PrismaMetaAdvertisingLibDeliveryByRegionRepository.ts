@@ -26,7 +26,7 @@ export class PrismaMetaAdvertisingLibDeliveryByRegionRepository
 		const createData: MetaAdvertisingLibDeliveryByRegionCreateInterface[] = [];
 		const updateData: UpdateDataProps[] = [];
 
-		data.forEach((item) => {
+		for (const item of data) {
 			if (
 				!exists.find(
 					(meta) =>
@@ -49,7 +49,7 @@ export class PrismaMetaAdvertisingLibDeliveryByRegionRepository
 					});
 				}
 			}
-		});
+		}
 
 		console.log(updateData.length);
 

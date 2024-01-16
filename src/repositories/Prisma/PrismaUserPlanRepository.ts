@@ -67,6 +67,9 @@ export class PrismaUserPlanRepository implements UserPlanRepository {
 					gte: new Date(),
 				},
 			},
+			include: {
+				plan: true,
+			},
 		});
 	}
 }
