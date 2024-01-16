@@ -26,7 +26,7 @@ export class FindPoliticianProfileCityDetailsUseCase {
 		if (!userPlan || !userPlan.plan.facebook_ads_monitoring) {
 			throw new UnauthorizedError();
 		}
-		const user = await this.politicianProfileRepository.findUserCity(userId);
+		const user = await this.politicianProfileRepository.findUserCity(id);
 
 		if (!user) {
 			throw new UserNotFoundError();
