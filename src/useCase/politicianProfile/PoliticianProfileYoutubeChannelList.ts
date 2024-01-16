@@ -1,15 +1,16 @@
+import { UserYoutubeChannelInterface } from "@/@types/politicianProfileRepository";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 
-interface PoliticianProfileYoutubeChannelListUseCaseRequest {}
-
-interface PoliticianProfileYoutubeChannelListUseCaseResponse {}
+interface PoliticianProfileYoutubeChannelListUseCaseResponse {
+	youtube: UserYoutubeChannelInterface[];
+}
 
 export class PoliticianProfileYoutubeChannelListUseCase {
 	constructor(
 		private politicianProfileRepository: PoliticianProfileRepository,
 	) {}
 
-	async execute({}: PoliticianProfileYoutubeChannelListUseCaseRequest): Promise<PoliticianProfileYoutubeChannelListUseCaseResponse> {
+	async execute(): Promise<PoliticianProfileYoutubeChannelListUseCaseResponse> {
 		const youtube =
 			await this.politicianProfileRepository.findYoutubeChannelList();
 

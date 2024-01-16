@@ -1,15 +1,21 @@
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 
-interface FindPoliticianProfileNamesUseCaseRequest {}
-
-interface FindPoliticianProfileNamesUseCaseResponse {}
+interface FindPoliticianProfileNamesUseCaseResponse {
+	list: {
+		id: string;
+		name: string;
+		social_name: string;
+		role: string;
+		facebook: string;
+	}[];
+}
 
 export class FindPoliticianProfileNamesUseCase {
 	constructor(
 		private politicianProfileRepository: PoliticianProfileRepository,
 	) {}
 
-	async execute({}: FindPoliticianProfileNamesUseCaseRequest): Promise<FindPoliticianProfileNamesUseCaseResponse> {
+	async execute(): Promise<FindPoliticianProfileNamesUseCaseResponse> {
 		const names = await this.politicianProfileRepository.findNamesAndRoles();
 
 		const formattedData: {
@@ -20,24 +26,24 @@ export class FindPoliticianProfileNamesUseCase {
 			facebook: string;
 		}[] = [];
 
-		names.forEach((user) => {
+		for (const item of names) {
 			if (
-				user.id &&
-				user.full_name &&
-				user.social_name &&
-				user.role &&
-				user.facebookData.length > 0
+				item.id &&
+				item.full_name &&
+				item.social_name &&
+				item.role &&
+				item.facebookData.length > 0
 			) {
-				return formattedData.push({
-					id: user.id,
-					name: user.full_name,
-					social_name: user.social_name,
-					role: user.role,
+				formattedData.push({
+					id: item.id,
+					name: item.full_name,
+					social_name: item.social_name,
+					role: item.role,
 					facebook:
-						user.facebookData.length > 0 ? user.facebookData[0].title : "null",
+						item.facebookData.length > 0 ? item.facebookData[0].title : "null",
 				});
 			}
-		});
+		}
 
 		return { list: formattedData };
 	}

@@ -1,13 +1,14 @@
+import { UserTikTokInterface } from "@/@types/politicianProfileRepository";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 
-interface PoliticianProfileTikTokListUseCaseRequest {}
-
-interface PoliticianProfileTikTokListUseCaseResponse {}
+interface PoliticianProfileTikTokListUseCaseResponse {
+	tiktok: UserTikTokInterface[];
+}
 
 export class PoliticianProfileTikTokListUseCase {
 	constructor(private userRepository: PoliticianProfileRepository) {}
 
-	async execute({}: PoliticianProfileTikTokListUseCaseRequest): Promise<PoliticianProfileTikTokListUseCaseResponse> {
+	async execute(): Promise<PoliticianProfileTikTokListUseCaseResponse> {
 		const user = await this.userRepository.findTikTokList();
 
 		return {

@@ -29,6 +29,10 @@ interface newCreditCardPurchaseUseCaseRequest {
 	saveCreditCard: boolean;
 }
 
+interface newCreditCardPurchaseUseCaseResponse {
+	message: string;
+}
+
 export class newCreditCardPurchaseUseCase {
 	constructor(
 		private userRepository: UserRepository,
@@ -44,7 +48,7 @@ export class newCreditCardPurchaseUseCase {
 		creditCardHolderInfo,
 		installmentCount,
 		saveCreditCard,
-	}: newCreditCardPurchaseUseCaseRequest): Promise<void> {
+	}: newCreditCardPurchaseUseCaseRequest): Promise<newCreditCardPurchaseUseCaseResponse> {
 		const [user, plan] = await Promise.all([
 			this.userRepository.findById(userId),
 			this.planRepository.findById(planId),
@@ -76,9 +80,7 @@ export class newCreditCardPurchaseUseCase {
 			installmentCount === 1 ? fullPaymentData : installmentPaymentData,
 		);
 
-		console.log(asaasPayment);
-
-		const userPlan = await this.userPlanRepository.create({
+		await this.userPlanRepository.create({
 			user_id: userId,
 			plan_id: planId,
 			status: Status.ACTIVE,
@@ -86,13 +88,6 @@ export class newCreditCardPurchaseUseCase {
 			expires_in: moment().add(1, "year").toDate(),
 		});
 
-		// if (saveCreditCard) {
-		//   await this.userCreditCardRepository.create({
-		//     ...asaasPayment.creditCard,
-		//     user_id: userId,
-		//   });
-		// }
-
-		return;
+		return { message: "Pagamento efetuado com Sucesso" };
 	}
 }

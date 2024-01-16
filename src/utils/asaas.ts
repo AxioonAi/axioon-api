@@ -26,9 +26,6 @@ export const createConnection = async (
 				body: JSON.stringify(req),
 			},
 			(error, response, body) => {
-				console.log("error:", error);
-				console.log("response:", response);
-				console.log("body:", body);
 				const status = response.statusCode;
 				if (status === 403) {
 					return {

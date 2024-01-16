@@ -2,13 +2,20 @@ import { PlanNotFoundError } from "@/helper/errors/PlanNotFoundError";
 import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { SignaturePlanRepository } from "@/repositories/SignaturePlanRepository";
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
-import { AsaasRepository } from "@/repositories/asaasRepository";
+import {
+	AsaasPaymentResponseInterface,
+	AsaasRepository,
+} from "@/repositories/asaasRepository";
 import { UserRepository } from "@/repositories/userRepository";
 import { Status } from "@prisma/client";
 import moment from "moment";
 interface PixPurchaseUseCaseRequest {
 	userId: string;
 	planId: string;
+}
+
+interface PixPurchaseUseCaseResponse {
+	payment: AsaasPaymentResponseInterface;
 }
 
 export class PixPurchaseUseCase {
@@ -19,7 +26,10 @@ export class PixPurchaseUseCase {
 		private asaasRepository: AsaasRepository,
 	) {}
 
-	async execute({ userId, planId }: PixPurchaseUseCaseRequest): Promise<void> {
+	async execute({
+		userId,
+		planId,
+	}: PixPurchaseUseCaseRequest): Promise<PixPurchaseUseCaseResponse> {
 		const [user, plan] = await Promise.all([
 			this.userRepository.findById(userId),
 			this.signaturePlanRepository.findById(planId),
@@ -41,6 +51,6 @@ export class PixPurchaseUseCase {
 			expires_in: moment().add(1, "year").toDate(),
 		});
 
-		return;
+		return { payment };
 	}
 }

@@ -1,8 +1,6 @@
+import { findByStateData } from "@/@types/politicianProfileRepository";
 import { WebsiteNotFoundError } from "@/helper/errors/WebsiteNotFoundError";
-import {
-	PoliticianProfileRepository,
-	findByStateData,
-} from "@/repositories/PoliticianProfileRepository";
+import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { WebSiteRepository } from "@/repositories/WebsiteRepository";
 
 interface FindWebsiteUsersUseCaseRequest {
