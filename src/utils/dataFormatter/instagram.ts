@@ -153,6 +153,7 @@ export const instagramDataFormatter = (data: {
 		dataWithEngagement.push({
 			...instagramPosts[key],
 			engagement,
+			text: instagramPosts[key].description,
 			comments: formattedComments,
 			sentiment: sentimentSum / comments.length,
 		});

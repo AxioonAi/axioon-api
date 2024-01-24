@@ -95,7 +95,10 @@ export const FacebookDataFormatter = (data: {
 	})[0];
 
 	const oldPostDateDiff = Math.ceil(
-		Math.abs(Date.now() - new Date(mostOldPost.date).getTime()) /
+		Math.abs(
+			Date.now() -
+				new Date(mostOldPost.date ? mostOldPost.date : Date.now()).getTime(),
+		) /
 			(1000 * 60 * 60 * 24),
 	);
 

@@ -28,8 +28,10 @@ export class FindPoliticianProfileFacebookDetailsUseCase {
 			});
 
 		const formatCurrent = current ? FacebookDataFormatter(current) : null;
-		const formatPrevious = previous ? FacebookDataFormatter(previous) : null;
+		console.log("chegou 1");
 
+		const formatPrevious = previous ? FacebookDataFormatter(previous) : null;
+		console.log("chegou 2");
 		const finalStatistics = {
 			keyIndicators: [
 				{

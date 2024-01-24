@@ -51,4 +51,5 @@ export interface PoliticianProfileRepository {
 	findCommentsStatistics(data: StatisticsData): Promise<commentData | null>;
 	findPostsStatistics(data: StatisticsData): Promise<postData | null>;
 	findCpfList(): Promise<findCpfListData[]>;
+	findLegalDetails(id:string): Promise<LegalDetailsData>;
 }

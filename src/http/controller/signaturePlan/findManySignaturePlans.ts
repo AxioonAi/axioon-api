@@ -8,5 +8,10 @@ export const findManySignaturePlansController = async (
 	const findManySignaturePlansUseCase = makeFindManySignaturePlans();
 	const plans = await findManySignaturePlansUseCase.execute({});
 
+
+
+
 	return reply.status(200).send(plans);
+
+
 };

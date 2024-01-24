@@ -1032,4 +1032,19 @@ export class PrismaPoliticianProfileRepository
 
 		return { current, previous };
 	}
+
+	async findLegalDetails(id: string) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: id,
+			},
+			include: {
+				legalData: true,
+				personalData: true,
+				address: true,
+				economicRelationship: true,
+				incomeTax: true,
+			},
+		});
+	}
 }

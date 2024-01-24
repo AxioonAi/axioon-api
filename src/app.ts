@@ -16,6 +16,7 @@ import { tutorialVideoRoutes } from "./http/controller/tutorialVideo/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
 import { fastifyErrorHandler } from "./lib/fastify";
+import { prisma } from "./lib/prisma";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -45,3 +46,33 @@ app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
+
+app.get("/dorner", async (request, reply) => {
+	await prisma.facebookPostBaseData.deleteMany({
+		where: {
+			politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
+		},
+	});
+	// await prisma.tiktokBaseData.deleteMany({
+	// 	where: {
+	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
+	// 	},
+	// });
+	// await prisma.instagramBaseData.deleteMany({
+	// 	where: {
+	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
+	// 	},
+	// });
+	// await prisma.youtubeBaseData.deleteMany({
+	// 	where: {
+	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
+	// 	},
+	// });
+	// await prisma.youtubeVideoData.deleteMany({
+	// 	where: {
+	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
+	// 	},
+	// });
+
+	reply.send("foi");
+});

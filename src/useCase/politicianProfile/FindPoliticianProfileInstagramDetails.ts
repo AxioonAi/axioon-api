@@ -25,7 +25,6 @@ export class FindPoliticianProfileInstagramDetailsUseCase {
 
 		const formatCurrent = !current ? null : instagramDataFormatter(current);
 		const formatPrevious = !previous ? null : instagramDataFormatter(previous);
-
 		const finalStatistics = {
 			keyIndicators: [
 				{

@@ -107,6 +107,8 @@ model PoliticianProfile {
 
   news NewsUsers[]
   legalData LegalData[]
+  address PersonalAddress[]
+  personalData PersonalData[]
   notification Notification[]
   tiktokData TiktokBaseData[]
   twitterData TwitterBaseData[]
@@ -121,10 +123,12 @@ model PoliticianProfile {
   instagramMention InstagramMention[]
   youtubeVideoData YoutubeVideoData[]
   facebookPosts FacebookPostBaseData[]
+  incomeTax personalIncomeTaxReturns[]
   youtubeCommentData YoutubeCommentData[]
   facebookPostComments FacebookPostComments[]
   instagramPostComments InstagramPostComment[]
   instagramMentionComments InstagramMentionComment[]
+  economicRelationship PersonalEconomicRelationship[]
 }
 
 model PoliticianProfileMonitoring {
@@ -640,8 +644,10 @@ model PersonalData {
   fatherName String
   federalCrime String
   federalCrimeCertificate String
-  address PersonalAddress[]
-  economicRelationship PersonalEconomicRelationship[]
+  estimated_recipe String @default("")
+  estimated_patrimony String @default("")
+  politician_id String
+  politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model PersonalAddress {
@@ -653,21 +659,19 @@ model PersonalAddress {
   addressType String
   neighborhood String
   state String
-  personal_data_id String
-  personalData PersonalData @relation(references: [id], fields: [personal_data_id])
+  politician_id String
+  politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model PersonalEconomicRelationship {
   id String @unique @default(uuid())
   country String
   relationshipType String
-  endDate DateTime
   name String
   cnpj String
-  startDate DateTime
   relationshipLevel String
-  personal_data_id String
-  personalData PersonalData @relation(references: [id], fields: [personal_data_id])
+  politician_id String
+  politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model personalIncomeTaxReturns {
@@ -675,4 +679,6 @@ model personalIncomeTaxReturns {
   year String
   bakAgency String?
   situation String
+  politician_id String
+  politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }

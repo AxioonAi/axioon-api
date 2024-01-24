@@ -11,6 +11,7 @@ import { findPoliticianProfileMonitoringListController } from "./findPoliticianP
 import { findPoliticianProfileSocialMediaHomeDataController } from "./findPoliticianProfileSocialMediaHomeData";
 import { findPoliticianProfileTiktokDetailsController } from "./findPoliticianProfileTiktokDetails";
 import { findPoliticianProfileYoutubeDetailsController } from "./findPoliticianProfileYoutubeDetails";
+import { findPoliticianProfileLegalDetailsController } from "./findPoliticianProfileLegalDetails";
 
 export async function politicianProfileRoutes(app: FastifyInstance) {
 	app.addHook("onRequest", verifyJwt);
@@ -46,6 +47,7 @@ export async function politicianProfileRoutes(app: FastifyInstance) {
 		findPoliticianProfileMentionDetailsController,
 	);
 	app.get("/profile/city/:id", findPoliticianProfileCityDetailsController);
+	app.get("/profile/legal/:id", findPoliticianProfileLegalDetailsController);
 }
 
 export async function politicianProfileMonitoringListRoutes(
