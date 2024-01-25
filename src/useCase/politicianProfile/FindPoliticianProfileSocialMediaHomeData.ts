@@ -60,19 +60,19 @@ interface FindPoliticianProfileSocialMediaHomeDataUseCaseResponse {
 			facebook: {
 				like: number;
 				followers: number;
-			};
+			} | null;
 			tiktok: {
 				likes: number;
 				followers: number;
-			};
+			} | null;
 			youtube: {
 				subs: number;
 				views: number;
-			};
+			} | null;
 			instagram: {
 				followers: number;
 				posts: number;
-			};
+			} | null;
 		};
 	};
 }
@@ -168,24 +168,32 @@ export class FindPoliticianProfileSocialMediaHomeDataUseCase {
 			wordCloud: wordCount,
 			engagement,
 			staticData: {
-				facebook: {
-					like: currentFollowers.facebookData[0].likes_count,
-					followers: currentFollowers.facebookData[0].followers_count,
-				},
-				tiktok: {
-					likes: currentFollowers.tiktokData[0].heart,
-					followers: currentFollowers.tiktokData[0].fans,
-				},
-				youtube: {
-					subs: currentFollowers.youtubeBaseData[0].channel_total_subs,
-					views: currentFollowers.youtubeBaseData[0].channel_total_views,
-				},
-				instagram: {
-					followers: currentFollowers.instagramData[0].followers,
-					posts:
-						currentFollowers.instagramData[0].posts_count +
-						currentFollowers.instagramData[0].reels_count,
-				},
+				facebook: currentFollowers.facebookData[0]
+					? {
+							like: currentFollowers.facebookData[0].likes_count,
+							followers: currentFollowers.facebookData[0].followers_count,
+					  }
+					: null,
+				tiktok: currentFollowers.tiktokData[0]
+					? {
+							likes: currentFollowers.tiktokData[0].heart,
+							followers: currentFollowers.tiktokData[0].fans,
+					  }
+					: null,
+				youtube: currentFollowers.youtubeBaseData[0]
+					? {
+							subs: currentFollowers.youtubeBaseData[0].channel_total_subs,
+							views: currentFollowers.youtubeBaseData[0].channel_total_views,
+					  }
+					: null,
+				instagram: currentFollowers.instagramData[0]
+					? {
+							followers: currentFollowers.instagramData[0].followers,
+							posts:
+								currentFollowers.instagramData[0].posts_count +
+								currentFollowers.instagramData[0].reels_count,
+					  }
+					: null,
 			},
 		};
 
