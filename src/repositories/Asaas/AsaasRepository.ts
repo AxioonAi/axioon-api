@@ -46,7 +46,6 @@ export class AsaasProductionRepository implements AsaasRepository {
 			"POST",
 		);
 		if (createPayment.status !== 200) {
-			console.log(createPayment.body.errors[0]);
 			throw new AsaasError(createPayment.body.errors[0].description);
 		}
 

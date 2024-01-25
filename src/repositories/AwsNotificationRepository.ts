@@ -7,6 +7,7 @@ import {
 	AwsNotificationInstagramMentionResponseInterface,
 	AwsNotificationInstagramPostResponseInterface,
 	AwsNotificationInstagramProfileResponseInterface,
+	AwsNotificationLegalResponseInterface,
 	AwsNotificationNewsResponseInterface,
 	AwsNotificationTiktokCommentsResponseInterface,
 	AwsNotificationTiktokProfileResponseInterface,
@@ -20,7 +21,9 @@ export interface S3NotificationInterface {
 }
 
 export interface AwsNotificationRepository {
-	S3LegalNotification(data: S3NotificationInterface): Promise<any>;
+	S3LegalNotification(
+		data: S3NotificationInterface,
+	): Promise<AwsNotificationLegalResponseInterface[]>;
 	S3YoutubeCommentsNotification(
 		data: S3NotificationInterface,
 	): Promise<AwsNotificationYoutubeCommentsResponseInterface[]>;

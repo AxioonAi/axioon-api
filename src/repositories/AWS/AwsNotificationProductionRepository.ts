@@ -38,6 +38,7 @@ import {
 	AwsNotificationRepository,
 	S3NotificationInterface,
 } from "../AwsNotificationRepository";
+import { AwsError } from "@/helper/errors/AwsError";
 
 export class AwsNotificationProductionRepository
 	implements AwsNotificationRepository
@@ -158,7 +159,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const formattedData: AwsNotificationInstagramPostResponseInterface[] =
@@ -189,7 +190,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const format: AwsNotificationNewsResponseInterface[] = awsData.map(
@@ -198,7 +199,9 @@ export class AwsNotificationProductionRepository
 					title: item.title,
 					url: item.link,
 					content: item.content,
-					last_update: moment(item.updated).toDate(),
+					last_update: moment(item.updated).isValid()
+						? moment(item.updated).toDate()
+						: moment().toDate(),
 					users: item.users.map((user) => {
 						return {
 							name: user.name,
@@ -247,7 +250,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		return awsData;
@@ -260,7 +263,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const formattedData: AwsNotificationYoutubeVideoResponseInterface[] =
@@ -291,7 +294,7 @@ export class AwsNotificationProductionRepository
 					return data;
 				})
 				.catch((err) => {
-					console.log(err);
+					throw new AwsError();
 				});
 
 		const formattedData: AwsNotificationFacebookProfileResponseInterface[] = [];
@@ -318,7 +321,7 @@ export class AwsNotificationProductionRepository
 					return data;
 				})
 				.catch((err) => {
-					console.log(err);
+					throw new AwsError();
 				});
 
 		const commentData: AwsNotificationInstagramCommentsResponseInterface[] = [];
@@ -348,7 +351,7 @@ export class AwsNotificationProductionRepository
 					return data;
 				})
 				.catch((err) => {
-					console.log(err);
+					throw new AwsError();
 				});
 
 		const mentionData: AwsNotificationInstagramMentionResponseInterface[] = [];
@@ -385,7 +388,7 @@ export class AwsNotificationProductionRepository
 					return data;
 				})
 				.catch((err) => {
-					console.log(err);
+					throw new AwsError();
 				});
 
 		const formattedData: AwsNotificationInstagramProfileResponseInterface[] =
@@ -415,7 +418,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const formattedData: AwsNotificationTiktokProfileFormattedDataInterface =
@@ -475,7 +478,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const formattedData: AwsNotificationFacebookPostResponseInterface[] =
@@ -505,7 +508,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const formattedData: AwsNotificationFacebookAdsResponseInterface = {
@@ -565,7 +568,7 @@ export class AwsNotificationProductionRepository
 					return data;
 				})
 				.catch((err) => {
-					console.log(err);
+					throw new AwsError();
 				});
 
 		const formattedData: AwsNotificationFacebookCommentsResponseInterface[] =
@@ -594,7 +597,7 @@ export class AwsNotificationProductionRepository
 				return data;
 			})
 			.catch((err) => {
-				console.log(err);
+				throw new AwsError();
 			});
 
 		const formattedData: AwsNotificationYoutubeChannelResponseInterface[] =

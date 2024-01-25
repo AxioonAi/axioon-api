@@ -10,13 +10,16 @@ import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import { ZodError } from "zod";
 import { zodErrorHandler } from "./zod/errorHandler";
+import { AwsError } from "@/helper/errors/AwsError";
+import { CodeNotFoundError } from "@/helper/errors/CodeNotFoundError";
+import { DataNotFoundError } from "@/helper/errors/DataNotFound";
+import { EmailSendError } from "@/helper/errors/EmailSendError";
 
 export const fastifyErrorHandler = (
 	error: FastifyError,
 	req: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	// console.log(error);
 	if (error instanceof ZodError) {
 		error.errors[0].path[0];
 		return reply.status(400).send(zodErrorHandler(error));
@@ -33,7 +36,11 @@ export const fastifyErrorHandler = (
 		error instanceof CityNotFoundError ||
 		error instanceof ProfileNotFoundError ||
 		error instanceof ProfileNotFoundError ||
-		error instanceof UnauthorizedError
+		error instanceof UnauthorizedError ||
+		error instanceof AwsError ||
+		error instanceof CodeNotFoundError ||
+		error instanceof DataNotFoundError ||
+		EmailSendError
 	) {
 		return reply.status(401).send(error.message);
 	}

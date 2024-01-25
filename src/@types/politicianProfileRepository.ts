@@ -7,8 +7,19 @@ import {
 	FacebookPostBaseData,
 	FacebookPostComments,
 	InstagramBaseData,
+	InstagramMention,
+	InstagramMentionComment,
 	InstagramPost,
 	InstagramPostComment,
+	LegalData,
+	MetaAdvertisingLib,
+	MetaAdvertisingLibDeliveryByRegion,
+	MetaAdvertisingLibDemographicDistribution,
+	News,
+	NewsUsers,
+	PersonalAddress,
+	PersonalData,
+	PersonalEconomicRelationship,
 	PoliticianProfile,
 	TiktokBaseData,
 	TiktokCommentData,
@@ -16,6 +27,7 @@ import {
 	YoutubeBaseData,
 	YoutubeCommentData,
 	YoutubeVideoData,
+	personalIncomeTaxReturns,
 } from "@prisma/client";
 
 export interface UserCityInterface extends PoliticianProfile {
@@ -24,7 +36,8 @@ export interface UserCityInterface extends PoliticianProfile {
 
 export interface StatisticsData {
 	id: string;
-	period: number;
+	gte: Date;
+	lte: Date;
 }
 
 export interface CityWithIBGEInterface extends City {
@@ -59,100 +72,48 @@ export interface findCpfListData {
 }
 
 export interface youtubeData {
-	current: {
-		youtubeBaseData: YoutubeBaseData[];
-		youtubeVideoData: YoutubeVideoData[];
-		youtubeCommentData: YoutubeCommentData[];
-	} | null;
-	previous: {
-		youtubeBaseData: YoutubeBaseData[];
-		youtubeVideoData: YoutubeVideoData[];
-		youtubeCommentData: YoutubeCommentData[];
-	} | null;
+	youtubeBaseData: YoutubeBaseData[];
+	youtubeVideoData: YoutubeVideoData[];
+	youtubeCommentData: YoutubeCommentData[];
 }
 
 export interface facebookData {
-	current: {
-		facebookData: FacebookBaseData[];
-		facebookPosts: FacebookPostBaseData[];
-		facebookPostComments: FacebookPostComments[];
-	} | null;
-	previous: {
-		facebookData: FacebookBaseData[];
-		facebookPosts: FacebookPostBaseData[];
-		facebookPostComments: FacebookPostComments[];
-	} | null;
+	facebookData: FacebookBaseData[];
+	facebookPosts: FacebookPostBaseData[];
+	facebookPostComments: FacebookPostComments[];
 }
 export interface tiktokData {
-	current: {
-		tiktokData: TiktokBaseData[];
-		tiktokVideoData: TiktokVideoData[];
-		tiktokComments: TiktokCommentData[];
-	} | null;
-	previous: {
-		tiktokData: TiktokBaseData[];
-		tiktokVideoData: TiktokVideoData[];
-		tiktokComments: TiktokCommentData[];
-	} | null;
+	tiktokData: TiktokBaseData[];
+	tiktokVideoData: TiktokVideoData[];
+	tiktokComments: TiktokCommentData[];
 }
 
 export interface instagramData {
-	current: {
-		instagramData: InstagramBaseData[];
-		instagramPosts: InstagramPost[];
-		instagramPostComments: InstagramPostComment[];
-	} | null;
-	previous: {
-		instagramData: InstagramBaseData[];
-		instagramPosts: InstagramPost[];
-		instagramPostComments: InstagramPostComment[];
-	} | null;
+	instagramData: InstagramBaseData[];
+	instagramPosts: InstagramPost[];
+	instagramPostComments: InstagramPostComment[];
 }
 
 export interface socialMediaData {
-	current: {
-		youtubeBaseData: YoutubeBaseData[];
-		youtubeVideoData: YoutubeVideoData[];
-		youtubeCommentData: YoutubeCommentData[];
-		facebookData: FacebookBaseData[];
-		facebookPosts: FacebookPostBaseData[];
-		facebookPostComments: FacebookPostComments[];
-		tiktokData: TiktokBaseData[];
-		tiktokVideoData: TiktokVideoData[];
-		tiktokComments: TiktokCommentData[];
-		instagramData: InstagramBaseData[];
-		instagramPosts: InstagramPost[];
-		instagramPostComments: InstagramPostComment[];
-	} | null;
-	previous: {
-		youtubeBaseData: YoutubeBaseData[];
-		youtubeVideoData: YoutubeVideoData[];
-		youtubeCommentData: YoutubeCommentData[];
-		facebookData: FacebookBaseData[];
-		facebookPosts: FacebookPostBaseData[];
-		facebookPostComments: FacebookPostComments[];
-		tiktokData: TiktokBaseData[];
-		tiktokVideoData: TiktokVideoData[];
-		tiktokComments: TiktokCommentData[];
-		instagramData: InstagramBaseData[];
-		instagramPosts: InstagramPost[];
-		instagramPostComments: InstagramPostComment[];
-	} | null;
+	youtubeBaseData: YoutubeBaseData[];
+	youtubeVideoData: YoutubeVideoData[];
+	youtubeCommentData: YoutubeCommentData[];
+	facebookData: FacebookBaseData[];
+	facebookPosts: FacebookPostBaseData[];
+	facebookPostComments: FacebookPostComments[];
+	tiktokData: TiktokBaseData[];
+	tiktokVideoData: TiktokVideoData[];
+	tiktokComments: TiktokCommentData[];
+	instagramData: InstagramBaseData[];
+	instagramPosts: InstagramPost[];
+	instagramPostComments: InstagramPostComment[];
 }
 
 export interface followersData {
-	current: {
-		instagramData: InstagramBaseData[];
-		tiktokData: TiktokBaseData[];
-		facebookData: FacebookBaseData[];
-		youtubeBaseData: YoutubeBaseData[];
-	} | null;
-	previous: {
-		instagramData: InstagramBaseData[];
-		tiktokData: TiktokBaseData[];
-		facebookData: FacebookBaseData[];
-		youtubeBaseData: YoutubeBaseData[];
-	} | null;
+	instagramData: InstagramBaseData[];
+	tiktokData: TiktokBaseData[];
+	facebookData: FacebookBaseData[];
+	youtubeBaseData: YoutubeBaseData[];
 }
 
 export interface commentData {
@@ -178,4 +139,34 @@ export interface findNamesAndRolesData extends PoliticianProfile {
 	facebookData: {
 		title: string;
 	}[];
+}
+
+export interface LegalDetailsData extends PoliticianProfile {
+	legalData: LegalData[];
+	personalData: PersonalData[];
+	address: PersonalAddress[];
+	economicRelationship: PersonalEconomicRelationship[];
+	incomeTax: personalIncomeTaxReturns[];
+}
+
+export interface MetaAdsData {
+	advertising: metaAds[];
+}
+
+interface metaAds extends MetaAdvertisingLib {
+	deliveryByRegion: MetaAdvertisingLibDeliveryByRegion[];
+	demographicDistribution: MetaAdvertisingLibDemographicDistribution[];
+}
+
+export interface MentionsData {
+	news: newsUser[];
+	instagramMention: instagramMention[];
+}
+
+interface newsUser extends NewsUsers {
+	news: News;
+}
+
+interface instagramMention extends InstagramMention {
+	comments: InstagramMentionComment[];
 }

@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { EmailSendError } from "@/helper/errors/EmailSendError";
 import nodemailer from "nodemailer";
 export const sendMail = async (email: string, code: string) => {
 	const transporter = nodemailer.createTransport({
@@ -21,7 +22,7 @@ export const sendMail = async (email: string, code: string) => {
 
 	transporter.sendMail(mailOptions, (error, info) => {
 		if (error) {
-			return console.log(error);
+			throw new EmailSendError();
 		}
 	});
 };

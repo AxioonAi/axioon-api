@@ -7,9 +7,7 @@ export const findPoliticianProfileMentionDetailsController = async (
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) => {
-	console.log("entrou");
 	const { id } = ZodIdParamsSchema.parse(request.params);
-	console.log("id", id);
 	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
 		request.query,
 	);

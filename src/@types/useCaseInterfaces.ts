@@ -80,7 +80,7 @@ export interface InstagramDataFormatterFinalDataInterface {
 		post_id: string;
 		username: string;
 		ownerProfilePicUrl: string;
-		timestamp: string;
+		timestamp: Date;
 		likeCount: number;
 		sentimentAnalysis: number;
 	}[];

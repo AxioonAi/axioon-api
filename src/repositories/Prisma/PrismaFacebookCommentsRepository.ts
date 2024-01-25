@@ -49,8 +49,6 @@ export class PrismaFacebookCommentsRepository
 			}
 		}
 
-		console.log(createData);
-
 		await prisma.$transaction([
 			prisma.facebookPostComments.createMany({ data: createData }),
 			...updateData.map((update) =>

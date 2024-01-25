@@ -7,14 +7,11 @@ export const youtubeChannelWebhookController = async (
 	reply: FastifyReply,
 ) => {
 	const { records } = ZodWebhookBodySchema.parse(request.body);
+	const youtubeChannelWebhookUseCase = makeYoutubeChannelWebhook();
 
-	try {
-		const youtubeChannelWebhookUseCase = makeYoutubeChannelWebhook();
+	const data = await youtubeChannelWebhookUseCase.execute({
+		records,
+	});
 
-		const data = await youtubeChannelWebhookUseCase.execute({
-			records,
-		});
-
-		reply.status(200).send(data);
-	} catch (error) {}
+	reply.status(200).send(data);
 };

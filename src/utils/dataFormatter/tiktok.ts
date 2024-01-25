@@ -1,115 +1,14 @@
 import { TiktokDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
 
-export const tiktokDataFormatter = (data: {
-	tiktokData: {
-		id: string;
-		fans: number;
-		videos: number;
-		verified: boolean;
-		avatar: string;
-		heart: number;
-	}[];
-	tiktokVideoData: {
-		id: string;
-		text: string;
-		url: string;
-		diggCount: number;
-		commentCount: number;
-		shareCount: number;
-		playCount: number;
-		date: Date;
-	}[];
-	tiktokComments: {
-		id: string;
-		diggCount: number;
-		date: Date;
-		replyCount: number;
-		author: string;
-		video_id: string;
-		text: string;
-		sentimentAnalysis: number;
-	}[];
-}) => {
+export const tiktokDataFormatter = (
+	data: TiktokDataFormatterInterface,
+	alternativeBaseData: TiktokDataFormatterBaseDataInterface,
+) => {
 	const { tiktokData, tiktokVideoData, tiktokComments } = data;
 
-	const commentStatisticsData = tiktokComments.reduce(
-		(accumulator, comment) => {
-			const sentiment = comment.sentimentAnalysis;
-
-			const time = new Date(comment.date).getHours();
-			// Calcula a média
-			accumulator.sentimentStatistics.totalSentiment += sentiment;
-
-			if (time >= 0 && time < 4) {
-				accumulator.commentTime.midnight_to_four_am++;
-			} else if (time >= 4 && time < 10) {
-				accumulator.commentTime.four_am_to_ten_am++;
-			} else if (time >= 10 && time < 14) {
-				accumulator.commentTime.ten_am_to_two_pm++;
-			} else if (time >= 14 && time < 18) {
-				accumulator.commentTime.two_pm_to_six_pm++;
-			} else if (time >= 18 && time < 21) {
-				accumulator.commentTime.six_pm_to_nine_pm++;
-			} else {
-				accumulator.commentTime.nine_pm_to_midnight++;
-			}
-
-			// Conta a quantidade de comentários em diferentes faixas de tempo
-
-			// Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
-			if (sentiment >= 0 && sentiment <= 350) {
-				accumulator.sentimentStatistics.countSentiment0To350++;
-			} else if (sentiment > 350 && sentiment <= 650) {
-				accumulator.sentimentStatistics.countSentiment351To650++;
-			} else if (sentiment > 650 && sentiment <= 1000) {
-				accumulator.sentimentStatistics.countSentiment651To1000++;
-			}
-
-			return accumulator;
-		},
-		{
-			sentimentStatistics: {
-				totalSentiment: 0,
-				countSentiment0To350: 0,
-				countSentiment351To650: 0,
-				countSentiment651To1000: 0,
-				sentimentAverage: 0,
-			},
-			commentTime: {
-				midnight_to_four_am: 0,
-				four_am_to_ten_am: 0,
-				ten_am_to_two_pm: 0,
-				two_pm_to_six_pm: 0,
-				six_pm_to_nine_pm: 0,
-				nine_pm_to_midnight: 0,
-			},
-		},
-	);
-
-	commentStatisticsData.sentimentStatistics.sentimentAverage =
-		commentStatisticsData.sentimentStatistics.totalSentiment /
-		tiktokComments.length;
-
-	const mostWatchedVideo = tiktokVideoData.sort(
-		(a, b) => b.playCount - a.playCount,
-	)[0];
-	const mostLikedVideo = tiktokVideoData.sort(
-		(a, b) => b.diggCount - a.diggCount,
-	)[0];
-	const mostCommentedVideo = tiktokVideoData.sort(
-		(a, b) => b.commentCount - a.commentCount,
-	)[0];
-	const mostOldVideo = tiktokVideoData.sort((a, b) => {
-		return a.date < b.date ? -1 : 1;
-	})[0];
-	const mostSharedVideo = tiktokVideoData.sort(
-		(a, b) => b.shareCount - a.shareCount,
-	)[0];
-
-	const oldVideoDateDiff = Math.ceil(
-		Math.abs(Date.now() - new Date(mostOldVideo.date).getTime()) /
-			(1000 * 60 * 60 * 24),
-	);
+	const baseData = tiktokData[0] ? tiktokData[0] : alternativeBaseData;
+	const commentStatisticsData = commentFormatter(tiktokComments);
+	const oldVideoDateDiff = mostOldVideoDiffCalculator(tiktokVideoData);
 
 	const dataWithEngagement = [];
 
@@ -156,7 +55,7 @@ export const tiktokDataFormatter = (data: {
 		}
 
 		const engagement =
-			(engagementSum * dataDiffRelation) / (tiktokData[0].fans * timeDiff);
+			(engagementSum * dataDiffRelation) / (baseData.fans * timeDiff);
 
 		dataWithEngagement.push({
 			...tiktokVideoData[key],
@@ -220,3 +119,115 @@ export const tiktokDataFormatter = (data: {
 		videos: finalData,
 	};
 };
+
+const commentFormatter = (
+	comments: TiktokDataFormatterCommentDataInterface[],
+) => {
+	const commentStatisticsData = comments.reduce(
+		(accumulator, comment) => {
+			const sentiment = comment.sentimentAnalysis;
+
+			const time = new Date(comment.date).getHours();
+			// Calcula a média
+			accumulator.sentimentStatistics.totalSentiment += sentiment;
+
+			if (time >= 0 && time < 4) {
+				accumulator.commentTime.midnight_to_four_am++;
+			} else if (time >= 4 && time < 10) {
+				accumulator.commentTime.four_am_to_ten_am++;
+			} else if (time >= 10 && time < 14) {
+				accumulator.commentTime.ten_am_to_two_pm++;
+			} else if (time >= 14 && time < 18) {
+				accumulator.commentTime.two_pm_to_six_pm++;
+			} else if (time >= 18 && time < 21) {
+				accumulator.commentTime.six_pm_to_nine_pm++;
+			} else {
+				accumulator.commentTime.nine_pm_to_midnight++;
+			}
+
+			// Conta a quantidade de comentários em diferentes faixas de tempo
+
+			// Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
+			if (sentiment >= 0 && sentiment <= 350) {
+				accumulator.sentimentStatistics.countSentiment0To350++;
+			} else if (sentiment > 350 && sentiment <= 650) {
+				accumulator.sentimentStatistics.countSentiment351To650++;
+			} else if (sentiment > 650 && sentiment <= 1000) {
+				accumulator.sentimentStatistics.countSentiment651To1000++;
+			}
+
+			return accumulator;
+		},
+		{
+			sentimentStatistics: {
+				totalSentiment: 0,
+				countSentiment0To350: 0,
+				countSentiment351To650: 0,
+				countSentiment651To1000: 0,
+				sentimentAverage: 0,
+			},
+			commentTime: {
+				midnight_to_four_am: 0,
+				four_am_to_ten_am: 0,
+				ten_am_to_two_pm: 0,
+				two_pm_to_six_pm: 0,
+				six_pm_to_nine_pm: 0,
+				nine_pm_to_midnight: 0,
+			},
+		},
+	);
+
+	commentStatisticsData.sentimentStatistics.sentimentAverage =
+		commentStatisticsData.sentimentStatistics.totalSentiment / comments.length;
+
+	return commentStatisticsData;
+};
+
+const mostOldVideoDiffCalculator = (
+	videos: TiktokDataFormatterVideoDataInterface[],
+) => {
+	const mostOldVideo = videos.sort((a, b) => {
+		return a.date < b.date ? -1 : 1;
+	})[0];
+	return mostOldVideo
+		? Math.ceil(
+				Math.abs(Date.now() - new Date(mostOldVideo.date).getTime()) /
+					(1000 * 60 * 60 * 24),
+		  )
+		: 0;
+};
+
+export interface TiktokDataFormatterInterface {
+	tiktokData: TiktokDataFormatterBaseDataInterface[];
+	tiktokVideoData: TiktokDataFormatterVideoDataInterface[];
+	tiktokComments: TiktokDataFormatterCommentDataInterface[];
+}
+
+export interface TiktokDataFormatterBaseDataInterface {
+	id: string;
+	fans: number;
+	videos: number;
+	verified: boolean;
+	avatar: string;
+	heart: number;
+}
+export interface TiktokDataFormatterVideoDataInterface {
+	id: string;
+	text: string;
+	url: string;
+	diggCount: number;
+	commentCount: number;
+	shareCount: number;
+	playCount: number;
+	date: Date;
+}
+export interface TiktokDataFormatterCommentDataInterface {
+	id: string;
+	diggCount: number;
+	date: Date;
+	replyCount: number;
+	author: string;
+	video_id: string;
+	text: string;
+	sentimentAnalysis: number;
+}

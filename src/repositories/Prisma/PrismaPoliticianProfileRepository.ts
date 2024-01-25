@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 import moment from "moment";
 import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
+import { StatisticsData } from "@/@types/politicianProfileRepository";
 
 export class PrismaPoliticianProfileRepository
 	implements PoliticianProfileRepository
@@ -115,91 +116,40 @@ export class PrismaPoliticianProfileRepository
 		});
 	}
 
-	async findYoutubeStatistics(data: { id: string; period: number }) {
-		console.log(data.period);
-		console.log(
-			moment()
-				.subtract(data.period + 1, "day")
-				.toDate(),
-		);
-		const [current, previous] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
+	async findYoutubeStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				youtubeBaseData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
 				},
-				select: {
-					youtubeBaseData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
+				youtubeVideoData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
-					youtubeVideoData: {
-						where: {
+				},
+				youtubeCommentData: {
+					where: {
+						video: {
 							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
-							},
-						},
-					},
-					youtubeCommentData: {
-						where: {
-							video: {
-								date: {
-									gte: moment().subtract(data.period, "day").toDate(),
-									lte: moment().toDate(),
-								},
+								gte: data.gte,
+								lte: data.lte,
 							},
 						},
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				select: {
-					youtubeBaseData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					youtubeVideoData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					youtubeCommentData: {
-						where: {
-							video: {
-								date: {
-									gte: moment()
-										.subtract(data.period * 2, "day")
-										.toDate(),
-									lte: moment().subtract(data.period, "day").toDate(),
-								},
-							},
-						},
-					},
-				},
-			}),
-		]);
-
-		return {
-			current,
-			previous,
-		};
+			},
+		});
 	}
 
 	async findNamesAndRoles() {
@@ -229,634 +179,279 @@ export class PrismaPoliticianProfileRepository
 		});
 	}
 
-	async findFacebookStatistics(data: { id: string; period: number }) {
-		const [current, previous] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
+	async findFacebookStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				facebookData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
 				},
-				include: {
-					facebookData: {
-						where: {
+				facebookPostComments: {
+					where: {
+						post: {
 							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
-							},
-						},
-					},
-					facebookPosts: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
-							},
-						},
-					},
-					facebookPostComments: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
+								gte: data.gte,
+								lte: data.lte,
 							},
 						},
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				include: {
-					facebookData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					facebookPosts: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					facebookPostComments: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
+				facebookPosts: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-		]);
-
-		return {
-			current,
-			previous,
-		};
+			},
+		});
 	}
 
-	async findTiktokStatistics(data: { id: string; period: number }) {
-		const [current, previous] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				include: {
-					tiktokData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					tiktokVideoData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					tiktokComments: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
+	async findTiktokStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				tiktokData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
+				tiktokVideoData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
 				},
-				include: {
-					tiktokData: {
-						where: {
+				tiktokComments: {
+					where: {
+						video: {
 							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					tiktokVideoData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					tiktokComments: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
+								gte: data.gte,
+								lte: data.lte,
 							},
 						},
 					},
 				},
-			}),
-		]);
-
-		return {
-			current,
-			previous,
-		};
+			},
+		});
 	}
 
-	async findInstagramStatistics(data: { id: string; period: number }) {
-		const [current, previous] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				include: {
-					instagramData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					instagramPosts: {
-						where: {
-							pubDate: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					instagramPostComments: {
-						where: {
-							timestamp: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
+	async findInstagramStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				instagramData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				include: {
-					instagramData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					instagramPosts: {
-						where: {
-							pubDate: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					instagramPostComments: {
-						where: {
-							timestamp: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
+				instagramPosts: {
+					where: {
+						pubDate: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-		]);
-
-		return {
-			current,
-			previous,
-		};
+				instagramPostComments: {
+					where: {
+						timestamp: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+			},
+		});
 	}
 
-	async findSocialMediaStatistics(data: { id: string; period: number }) {
-		const [current, previous] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
+	async findSocialMediaStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				instagramData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
 				},
-				select: {
-					instagramData: {
-						where: {
+				instagramPosts: {
+					where: {
+						pubDate: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				instagramPostComments: {
+					where: {
+						timestamp: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				youtubeBaseData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				youtubeVideoData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				youtubeCommentData: {
+					where: {
+						video: {
 							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					instagramPosts: {
-						where: {
-							pubDate: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					instagramPostComments: {
-						where: {
-							timestamp: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					youtubeBaseData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					youtubeVideoData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
-							},
-						},
-					},
-					youtubeCommentData: {
-						where: {
-							video: {
-								date: {
-									gte: moment().subtract(data.period, "day").toDate(),
-									lte: moment().toDate(),
-								},
-							},
-						},
-					},
-					tiktokData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					tiktokVideoData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					tiktokComments: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					facebookData: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
-							},
-						},
-					},
-					facebookPosts: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
-							},
-						},
-					},
-					facebookPostComments: {
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-								lte: moment().toDate(),
+								gte: data.gte,
+								lte: data.lte,
 							},
 						},
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				select: {
-					instagramData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					instagramPosts: {
-						where: {
-							pubDate: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					instagramPostComments: {
-						where: {
-							timestamp: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					tiktokData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					tiktokVideoData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					tiktokComments: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					facebookData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					facebookPosts: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					facebookPostComments: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					youtubeBaseData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					youtubeVideoData: {
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					youtubeCommentData: {
-						where: {
-							video: {
-								date: {
-									gte: moment()
-										.subtract(data.period * 2, "day")
-										.toDate(),
-									lte: moment()
-										.subtract(data.period + 1, "day")
-										.toDate(),
-								},
-							},
+				tiktokData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-		]);
-
-		return {
-			current: current,
-			previous: previous,
-		};
+				tiktokVideoData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				tiktokComments: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				facebookData: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				facebookPosts: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				facebookPostComments: {
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+			},
+		});
 	}
 
-	async findFollowersStatistics(data: { id: string; period: number }) {
-		const [previous, current] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				select: {
-					instagramData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
+	async findFollowersStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				instagramData: {
+					orderBy: {
+						date: "asc",
 					},
-					tiktokData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					facebookData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-					},
-					youtubeBaseData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
+					take: 1,
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				select: {
-					instagramData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
+				tiktokData: {
+					orderBy: {
+						date: "asc",
 					},
-					tiktokData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					facebookData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
-						},
-					},
-					youtubeBaseData: {
-						orderBy: {
-							date: "asc",
-						},
-						take: 1,
-						where: {
-							date: {
-								gte: moment()
-									.subtract(data.period + 1, "day")
-									.toDate(),
-							},
+					take: 1,
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
 				},
-			}),
-		]);
-
-		return {
-			current: current,
-			previous: previous,
-		};
+				facebookData: {
+					orderBy: {
+						date: "asc",
+					},
+					take: 1,
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+				youtubeBaseData: {
+					orderBy: {
+						date: "asc",
+					},
+					take: 1,
+					where: {
+						date: {
+							gte: data.gte,
+							lte: data.lte,
+						},
+					},
+				},
+			},
+		});
 	}
 
-	async findCommentsStatistics(data: { id: string; period: number }) {
+	async findCommentsStatistics(data: StatisticsData) {
 		return await prisma.politicianProfile.findUnique({
 			where: {
 				id: data.id,
@@ -865,7 +460,7 @@ export class PrismaPoliticianProfileRepository
 				instagramPostComments: {
 					where: {
 						timestamp: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 					select: {
@@ -875,7 +470,7 @@ export class PrismaPoliticianProfileRepository
 				tiktokComments: {
 					where: {
 						date: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 					select: {
@@ -885,7 +480,7 @@ export class PrismaPoliticianProfileRepository
 				facebookPostComments: {
 					where: {
 						date: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 					select: {
@@ -896,7 +491,7 @@ export class PrismaPoliticianProfileRepository
 					where: {
 						video: {
 							date: {
-								gte: moment().subtract(data.period, "day").toDate(),
+								gte: data.gte,
 							},
 						},
 					},
@@ -908,7 +503,7 @@ export class PrismaPoliticianProfileRepository
 		});
 	}
 
-	async findPostsStatistics(data: { id: string; period: number }) {
+	async findPostsStatistics(data: StatisticsData) {
 		return await prisma.politicianProfile.findUnique({
 			where: {
 				id: data.id,
@@ -917,28 +512,28 @@ export class PrismaPoliticianProfileRepository
 				instagramPosts: {
 					where: {
 						pubDate: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 				},
 				tiktokVideoData: {
 					where: {
 						date: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 				},
 				facebookPosts: {
 					where: {
 						date: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 				},
 				youtubeVideoData: {
 					where: {
 						date: {
-							gte: moment().subtract(data.period, "day").toDate(),
+							gte: data.gte,
 						},
 					},
 				},
@@ -962,75 +557,38 @@ export class PrismaPoliticianProfileRepository
 		});
 	}
 
-	async findMentionsStatistics(data: { id: string; period: number }) {
-		const [current, previous] = await Promise.all([
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				select: {
-					news: {
-						where: {
-							news: {
-								last_update: {
-									gte: moment().subtract(data.period, "day").toDate(),
-								},
+	async findMentionsStatistics(data: StatisticsData) {
+		return await prisma.politicianProfile.findUnique({
+			where: {
+				id: data.id,
+			},
+			select: {
+				news: {
+					where: {
+						news: {
+							last_update: {
+								gte: data.gte,
+								lte: data.lte,
 							},
 						},
-						include: {
-							news: true,
-						},
 					},
-					instagramMention: {
-						where: {
-							pubDate: {
-								gte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-						include: {
-							comments: true,
-						},
+					include: {
+						news: true,
 					},
 				},
-			}),
-			prisma.politicianProfile.findUnique({
-				where: {
-					id: data.id,
-				},
-				select: {
-					instagramMention: {
-						where: {
-							pubDate: {
-								gte: moment()
-									.subtract(data.period * 2, "day")
-									.toDate(),
-								lte: moment().subtract(data.period, "day").toDate(),
-							},
-						},
-						include: {
-							comments: true,
+				instagramMention: {
+					where: {
+						pubDate: {
+							gte: data.gte,
+							lte: data.lte,
 						},
 					},
-					news: {
-						where: {
-							news: {
-								last_update: {
-									gte: moment()
-										.subtract(data.period * 2, "day")
-										.toDate(),
-									lte: moment().subtract(data.period, "day").toDate(),
-								},
-							},
-						},
-						include: {
-							news: true,
-						},
+					include: {
+						comments: true,
 					},
 				},
-			}),
-		]);
-
-		return { current, previous };
+			},
+		});
 	}
 
 	async findLegalDetails(id: string) {

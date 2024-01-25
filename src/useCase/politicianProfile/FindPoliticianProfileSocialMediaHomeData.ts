@@ -1,13 +1,81 @@
+import { ProfileNotFoundError } from "@/helper/errors/ProfileNotFoundError";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 import { CommentWordCount } from "@/utils/dataFormatter/commentWordCount";
 import { EngagementDataFormatter } from "@/utils/dataFormatter/engagement";
+import moment from "moment";
 
 interface FindPoliticianProfileSocialMediaHomeDataUseCaseRequest {
 	id: string;
 	period: number;
 }
 
-interface FindPoliticianProfileSocialMediaHomeDataUseCaseResponse {}
+interface FindPoliticianProfileSocialMediaHomeDataUseCaseResponse {
+	data: {
+		followers: {
+			currentTotal: number;
+			previousTotal: number;
+			current: {
+				instagram: number;
+				tiktok: number;
+				facebook: number;
+				youtube: number;
+			};
+			previous: {
+				instagram: number;
+				tiktok: number;
+				facebook: number;
+				youtube: number;
+			};
+		};
+		wordCloud:
+			| {
+					text: string;
+			  }[]
+			| {
+					word: string;
+					quantity: number;
+			  }[];
+		engagement: {
+			facebook: {
+				likes: number;
+				comments: number;
+				shares: number;
+			};
+			instagram: {
+				likes: number;
+				comments: number;
+			};
+			tiktok: {
+				digg: number;
+				comments: number;
+				play: number;
+			};
+			youtube: {
+				likes: number;
+				comments: number;
+				views: number;
+			};
+		};
+		staticData: {
+			facebook: {
+				like: number;
+				followers: number;
+			};
+			tiktok: {
+				likes: number;
+				followers: number;
+			};
+			youtube: {
+				subs: number;
+				views: number;
+			};
+			instagram: {
+				followers: number;
+				posts: number;
+			};
+		};
+	};
+}
 
 export class FindPoliticianProfileSocialMediaHomeDataUseCase {
 	constructor(
@@ -18,46 +86,67 @@ export class FindPoliticianProfileSocialMediaHomeDataUseCase {
 		id,
 		period,
 	}: FindPoliticianProfileSocialMediaHomeDataUseCaseRequest): Promise<FindPoliticianProfileSocialMediaHomeDataUseCaseResponse> {
-		const [followers, comments, posts] = await Promise.all([
-			this.politicianProfileRepository.findFollowersStatistics({ id, period }),
-			this.politicianProfileRepository.findCommentsStatistics({ id, period }),
-			this.politicianProfileRepository.findPostsStatistics({ id, period }),
-		]);
+		const [currentFollowers, previousFollowers, comments, posts] =
+			await Promise.all([
+				this.politicianProfileRepository.findFollowersStatistics({
+					id,
+					gte: moment().subtract(period, "day").toDate(),
+					lte: moment().toDate(),
+				}),
+				this.politicianProfileRepository.findFollowersStatistics({
+					id,
+					gte: moment()
+						.subtract(period * 2, "day")
+						.toDate(),
+					lte: moment()
+						.subtract(period - 1, "day")
+						.toDate(),
+				}),
+				this.politicianProfileRepository.findCommentsStatistics({
+					id,
+					gte: moment().subtract(period, "day").toDate(),
+					lte: moment().toDate(),
+				}),
+				this.politicianProfileRepository.findPostsStatistics({
+					id,
+					gte: moment().subtract(period, "day").toDate(),
+					lte: moment().toDate(),
+				}),
+			]);
 
-		const wordCount = !comments ? null : CommentWordCount(comments);
-		const engagement = !posts ? null : EngagementDataFormatter(posts);
+		if (!comments || !posts || !currentFollowers || !previousFollowers)
+			throw new ProfileNotFoundError();
 
-		if (!followers.current || !followers.previous) {
-			throw new Error("Data not found");
-		}
+		const wordCount = CommentWordCount(comments);
+		const engagement = EngagementDataFormatter(posts);
 
 		const followersData = {
 			current: {
-				instagram: followers.current.instagramData[0]
-					? followers.current.instagramData[0].followers
+				instagram: currentFollowers.instagramData[0]
+					? currentFollowers.instagramData[0].followers
 					: 0,
-				tiktok: followers.current.tiktokData[0]
-					? followers.current.tiktokData[0].fans
+				tiktok: currentFollowers.tiktokData[0]
+					? currentFollowers.tiktokData[0].fans
 					: 0,
-				facebook: followers.current.facebookData[0]
-					? followers.current.facebookData[0].followers_count
+				facebook: currentFollowers.facebookData[0]
+					? currentFollowers.facebookData[0].followers_count
 					: 0,
-				youtube: followers.current.youtubeBaseData[0]
-					? followers.current.youtubeBaseData[0].channel_total_subs
+				youtube: currentFollowers.youtubeBaseData[0]
+					? currentFollowers.youtubeBaseData[0].channel_total_subs
 					: 0,
 			},
 			previous: {
-				instagram: followers.previous.instagramData[0]
-					? followers.previous.instagramData[0].followers
+				instagram: previousFollowers.instagramData[0]
+					? previousFollowers.instagramData[0].followers
 					: 0,
-				tiktok: followers.previous.tiktokData[0]
-					? followers.previous.tiktokData[0].fans
+				tiktok: previousFollowers.tiktokData[0]
+					? previousFollowers.tiktokData[0].fans
 					: 0,
-				facebook: followers.previous.facebookData[0]
-					? followers.previous.facebookData[0].followers_count
+				facebook: previousFollowers.facebookData[0]
+					? previousFollowers.facebookData[0].followers_count
 					: 0,
-				youtube: followers.previous.youtubeBaseData[0]
-					? followers.previous.youtubeBaseData[0].channel_total_subs
+				youtube: previousFollowers.youtubeBaseData[0]
+					? previousFollowers.youtubeBaseData[0].channel_total_subs
 					: 0,
 			},
 		};
@@ -80,26 +169,26 @@ export class FindPoliticianProfileSocialMediaHomeDataUseCase {
 			engagement,
 			staticData: {
 				facebook: {
-					like: followers.current.facebookData[0].likes_count,
-					followers: followers.current.facebookData[0].followers_count,
+					like: currentFollowers.facebookData[0].likes_count,
+					followers: currentFollowers.facebookData[0].followers_count,
 				},
 				tiktok: {
-					likes: followers.current.tiktokData[0].heart,
-					followers: followers.current.tiktokData[0].fans,
+					likes: currentFollowers.tiktokData[0].heart,
+					followers: currentFollowers.tiktokData[0].fans,
 				},
 				youtube: {
-					subs: followers.current.youtubeBaseData[0].channel_total_subs,
-					views: followers.current.youtubeBaseData[0].channel_total_views,
+					subs: currentFollowers.youtubeBaseData[0].channel_total_subs,
+					views: currentFollowers.youtubeBaseData[0].channel_total_views,
 				},
 				instagram: {
-					followers: followers.current.instagramData[0].followers,
+					followers: currentFollowers.instagramData[0].followers,
 					posts:
-						followers.current.instagramData[0].posts_count +
-						followers.current.instagramData[0].reels_count,
+						currentFollowers.instagramData[0].posts_count +
+						currentFollowers.instagramData[0].reels_count,
 				},
 			},
 		};
 
-		return data;
+		return { data };
 	}
 }

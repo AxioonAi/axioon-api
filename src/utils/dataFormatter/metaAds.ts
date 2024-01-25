@@ -1,9 +1,33 @@
-export const metaAdsFormatter = (data: any) => {
+export const metaAdsFormatter = (
+	data: {
+		id: string;
+		adCreationTime: Date;
+		ad_delivery_stop_time: Date | null;
+		ad_delivery_start_time: Date;
+		adSnapshotUrl: string;
+		currency: string;
+		pageName: string;
+		bylines: string;
+		spend_lower_bound: string;
+		spend_upper_bound: string;
+		impressions_lower_bound: string;
+		impressions_upper_bound: string;
+		status: string;
+		deliveryByRegion: {
+			region: string;
+			percentage: string;
+		}[];
+		demographicDistribution: {
+			age: string;
+			gender: string;
+			percentage: string;
+		}[];
+	}[],
+) => {
 	const formattedData = [];
 
 	for (const item of data) {
 		const deliveryRegion = [];
-		const demographicDistribution = [];
 
 		for (const delivery of item.deliveryByRegion) {
 			deliveryRegion.push({
@@ -12,19 +36,20 @@ export const metaAdsFormatter = (data: any) => {
 			});
 		}
 
-		const totalByGender = item.demographicDistribution.reduce((acc, item) => {
-			const percentage = parseFloat(item.percentage);
-			if (!acc[item.gender]) {
-				acc[item.gender] = 0;
-			}
-			acc[item.gender] += percentage;
-			return acc;
-		}, {});
-
-		console.log("chegou");
+		const totalByGender = item.demographicDistribution.reduce(
+			(acc: { [key: string]: number }, item) => {
+				const percentage = parseFloat(item.percentage);
+				if (!acc[item.gender]) {
+					acc[item.gender] = 0;
+				}
+				acc[item.gender] += percentage;
+				return acc;
+			},
+			{},
+		);
 
 		// Mapeando faixas etárias para os ranges especificados
-		const mapAgeToRange = (age) => {
+		const mapAgeToRange = (age: string) => {
 			if (age === "65+") return "60+";
 			const ageNumber = parseInt(age.split("-")[0]);
 			if (ageNumber < 20) return "0-19";
@@ -127,15 +152,15 @@ export const metaAdsFormatter = (data: any) => {
 			totalByGender: [
 				{
 					name: "Homens",
-					value: totalByGender["male"] * impressions,
+					value: totalByGender.male * impressions,
 				},
 				{
 					name: "female",
-					value: totalByGender["female"] * impressions,
+					value: totalByGender.female * impressions,
 				},
 				{
 					name: "unknown",
-					value: totalByGender["unknown"] * impressions,
+					value: totalByGender.unknown * impressions,
 				},
 			],
 		});

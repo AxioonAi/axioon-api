@@ -17,6 +17,8 @@ import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
 import { fastifyErrorHandler } from "./lib/fastify";
 import { prisma } from "./lib/prisma";
+import { randomUUID } from "crypto";
+import moment from "moment";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -47,32 +49,37 @@ app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
 
-app.get("/dorner", async (request, reply) => {
-	await prisma.facebookPostBaseData.deleteMany({
-		where: {
-			politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
-		},
-	});
-	// await prisma.tiktokBaseData.deleteMany({
-	// 	where: {
-	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
-	// 	},
-	// });
-	// await prisma.instagramBaseData.deleteMany({
-	// 	where: {
-	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
-	// 	},
-	// });
-	// await prisma.youtubeBaseData.deleteMany({
-	// 	where: {
-	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
-	// 	},
-	// });
-	// await prisma.youtubeVideoData.deleteMany({
-	// 	where: {
-	// 		politician_id: "91ce803a-2df5-4f14-b386-54927dd12cbc",
-	// 	},
-	// });
+app.get("/duplicate", async (req, res) => {
+	const data = await prisma.tiktokBaseData.findMany({});
 
-	reply.send("foi");
+	const createData = [];
+
+	for (const item of data) {
+		createData.push({
+			...item,
+			id: randomUUID(),
+			date: moment().subtract(7, "days").toDate(),
+		});
+		createData.push({
+			...item,
+			id: randomUUID(),
+			date: moment().subtract(10, "days").toDate(),
+		});
+		createData.push({
+			...item,
+			id: randomUUID(),
+			date: moment().subtract(15, "days").toDate(),
+		});
+		createData.push({
+			...item,
+			id: randomUUID(),
+			date: moment().subtract(30, "days").toDate(),
+		});
+	}
+
+	const create = await prisma.tiktokBaseData.createMany({
+		data: createData,
+	});
+
+	return res.send(create);
 });

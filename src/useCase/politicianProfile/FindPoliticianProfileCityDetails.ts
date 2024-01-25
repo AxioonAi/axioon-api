@@ -9,7 +9,42 @@ interface FindPoliticianProfileCityDetailsUseCaseRequest {
 	userId: string;
 }
 
-interface FindPoliticianProfileCityDetailsUseCaseResponse {}
+interface FindPoliticianProfileCityDetailsUseCaseResponse {
+	city: {
+		id: string;
+		name: string;
+		state: string;
+		electorate: {
+			total: number;
+			gender: {
+				name: string;
+				value: number;
+			}[];
+			with_disability: number;
+			with_biometry: number;
+			schoolLevel: {
+				name: string;
+				value: number;
+			}[];
+			ageRange: {
+				name: string;
+				value: number;
+			}[];
+		};
+		population: {
+			total: number;
+			male: number;
+			female: number;
+			ageRange: {
+				name: string;
+				total: number;
+				Homens: number;
+				Mulheres: number;
+			}[];
+		};
+		politician: number;
+	};
+}
 
 export class FindPoliticianProfileCityDetailsUseCase {
 	constructor(
@@ -26,6 +61,7 @@ export class FindPoliticianProfileCityDetailsUseCase {
 		if (!userPlan || !userPlan.plan.facebook_ads_monitoring) {
 			throw new UnauthorizedError();
 		}
+
 		const user = await this.politicianProfileRepository.findUserCity(id);
 
 		if (!user) {

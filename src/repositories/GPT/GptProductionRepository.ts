@@ -314,7 +314,6 @@ export class GptProductionRepository implements GptRepository {
 			});
 		}
 
-		console.log(finalData.length);
 		return finalData;
 	}
 	async newsAnalysis(data: GptNewsDataInterface[]) {

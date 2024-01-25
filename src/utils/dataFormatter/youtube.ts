@@ -1,79 +1,22 @@
+import {
+	YoutubeDataFormatterBaseDataInterface,
+	YoutubeDataFormatterCommentDataInterface,
+	YoutubeDataFormatterInterface,
+	YoutubeDataFormatterVideoDataInterface,
+} from "@/@types/formatData";
 import { YoutubeDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
 
-export const youtubeDataFormatter = (data: {
-	youtubeBaseData: {
-		id: string;
-		channel_name: string;
-		channel_total_views: number;
-		channel_total_subs: number;
-		channel_total_videos: number;
-	}[];
-	youtubeVideoData: {
-		id: string;
-		title: string;
-		url: string;
-		duration: string;
-		viewCount: number;
-		commentsCount: number;
-		likes: number;
-		date: Date;
-		description: string;
-		imgUrl: string;
-	}[];
-	youtubeCommentData: {
-		id: string;
-		text: string;
-		likeCount: number;
-		replyCount: number;
-		author: string;
-		video_id: string;
-		sentimentAnalysis: number;
-	}[];
-}) => {
+export const youtubeDataFormatter = (
+	data: YoutubeDataFormatterInterface,
+	alternativeBaseData: YoutubeDataFormatterBaseDataInterface,
+) => {
 	const { youtubeBaseData, youtubeVideoData, youtubeCommentData } = data;
 
-	const commentStatisticsData = youtubeCommentData.reduce(
-		(accumulator, comment) => {
-			const sentiment = comment.sentimentAnalysis;
-
-			// Calcula a média
-			accumulator.sentimentStatistics.totalSentiment += sentiment;
-
-			// Conta a quantidade de comentários em diferentes faixas de tempo
-
-			// Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
-			if (sentiment >= 0 && sentiment <= 350) {
-				accumulator.sentimentStatistics.countSentiment0To350++;
-			} else if (sentiment > 350 && sentiment <= 650) {
-				accumulator.sentimentStatistics.countSentiment351To650++;
-			} else if (sentiment > 650 && sentiment <= 1000) {
-				accumulator.sentimentStatistics.countSentiment651To1000++;
-			}
-
-			return accumulator;
-		},
-		{
-			sentimentStatistics: {
-				totalSentiment: 0,
-				countSentiment0To350: 0,
-				countSentiment351To650: 0,
-				countSentiment651To1000: 0,
-				sentimentAverage: 0,
-			},
-		},
-	);
-
-	commentStatisticsData.sentimentStatistics.sentimentAverage =
-		commentStatisticsData.sentimentStatistics.totalSentiment /
-		youtubeCommentData.length;
-
-	const mostOldVideo = youtubeVideoData.sort((a, b) => {
-		return a.date < b.date ? -1 : 1;
-	})[0];
-	const oldVideoDateDiff = Math.ceil(
-		Math.abs(Date.now() - new Date(mostOldVideo.date).getTime()) /
-			(1000 * 60 * 60 * 24),
-	);
+	const baseData = youtubeBaseData[0]
+		? youtubeBaseData[0]
+		: alternativeBaseData;
+	const commentStatisticsData = commentFormatter(youtubeCommentData);
+	const oldVideoDateDiff = mostOldVideoDiffCalculator(youtubeVideoData);
 
 	const dataWithEngagement = [];
 
@@ -120,7 +63,7 @@ export const youtubeDataFormatter = (data: {
 		const engagement =
 			(engagementSum * dateDiffRelation) /
 			100 /
-			(youtubeBaseData[0].channel_total_subs / 1000);
+			(baseData.channel_total_subs / 1000);
 
 		dataWithEngagement.push({
 			...youtubeVideoData[key],
@@ -153,4 +96,58 @@ export const youtubeDataFormatter = (data: {
 		videoEngagementData,
 		videos: finalData,
 	};
+};
+
+const commentFormatter = (
+	comments: YoutubeDataFormatterCommentDataInterface[],
+) => {
+	const commentStatisticsData = comments.reduce(
+		(accumulator, comment) => {
+			const sentiment = comment.sentimentAnalysis;
+
+			// Calcula a média
+			accumulator.sentimentStatistics.totalSentiment += sentiment;
+
+			// Conta a quantidade de comentários em diferentes faixas de tempo
+
+			// Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
+			if (sentiment >= 0 && sentiment <= 350) {
+				accumulator.sentimentStatistics.countSentiment0To350++;
+			} else if (sentiment > 350 && sentiment <= 650) {
+				accumulator.sentimentStatistics.countSentiment351To650++;
+			} else if (sentiment > 650 && sentiment <= 1000) {
+				accumulator.sentimentStatistics.countSentiment651To1000++;
+			}
+
+			return accumulator;
+		},
+		{
+			sentimentStatistics: {
+				totalSentiment: 0,
+				countSentiment0To350: 0,
+				countSentiment351To650: 0,
+				countSentiment651To1000: 0,
+				sentimentAverage: 0,
+			},
+		},
+	);
+
+	commentStatisticsData.sentimentStatistics.sentimentAverage =
+		commentStatisticsData.sentimentStatistics.totalSentiment / comments.length;
+
+	return commentStatisticsData;
+};
+
+const mostOldVideoDiffCalculator = (
+	videos: YoutubeDataFormatterVideoDataInterface[],
+) => {
+	const mostOldVideo = videos.sort((a, b) => {
+		return a.date < b.date ? -1 : 1;
+	})[0];
+	return mostOldVideo
+		? Math.ceil(
+				Math.abs(Date.now() - new Date(mostOldVideo.date).getTime()) /
+					(1000 * 60 * 60 * 24),
+		  )
+		: 0;
 };

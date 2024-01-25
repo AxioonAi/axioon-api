@@ -43,7 +43,6 @@ export class PrismaInstagramCommentRepository
 						post.postUrl === `https://www.instagram.com/p/${item.post_id}`,
 				);
 				if (post && item.text) {
-					console.log("entrou criar comment");
 					createData.push({
 						...item,
 						post_id: post.id,
@@ -65,8 +64,6 @@ export class PrismaInstagramCommentRepository
 				}
 			}
 		}
-
-		console.log(createData.length);
 
 		await prisma.$transaction([
 			prisma.instagramPostComment.createMany({ data: createData }),

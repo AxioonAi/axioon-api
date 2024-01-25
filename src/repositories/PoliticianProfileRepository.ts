@@ -1,4 +1,7 @@
 import {
+	LegalDetailsData,
+	MentionsData,
+	MetaAdsData,
 	StatisticsData,
 	UserCityInterface,
 	UserFacebookInterface,
@@ -40,16 +43,18 @@ export interface PoliticianProfileRepository {
 	findFacebookList(): Promise<UserFacebookInterface[]>;
 	findByState(state: string): Promise<findByStateData[]>;
 	findNamesAndRoles(): Promise<findNamesAndRolesData[]>;
-	findMentionsStatistics(data: StatisticsData): Promise<newsData>;
-	findMetaAdsStatistics(id: string): Promise<MetaAdsData>;
-	findYoutubeStatistics(data: StatisticsData): Promise<youtubeData>;
-	findFacebookStatistics(data: StatisticsData): Promise<facebookData>;
-	findTiktokStatistics(data: StatisticsData): Promise<tiktokData>;
-	findInstagramStatistics(data: StatisticsData): Promise<instagramData>;
-	findSocialMediaStatistics(data: StatisticsData): Promise<socialMediaData>;
-	findFollowersStatistics(data: StatisticsData): Promise<followersData>;
+	findMentionsStatistics(data: StatisticsData): Promise<MentionsData | null>;
+	findMetaAdsStatistics(id: string): Promise<MetaAdsData | null>;
+	findYoutubeStatistics(data: StatisticsData): Promise<youtubeData | null>;
+	findFacebookStatistics(data: StatisticsData): Promise<facebookData | null>;
+	findTiktokStatistics(data: StatisticsData): Promise<tiktokData | null>;
+	findInstagramStatistics(data: StatisticsData): Promise<instagramData | null>;
+	findSocialMediaStatistics(
+		data: StatisticsData,
+	): Promise<socialMediaData | null>;
+	findFollowersStatistics(data: StatisticsData): Promise<followersData | null>;
 	findCommentsStatistics(data: StatisticsData): Promise<commentData | null>;
 	findPostsStatistics(data: StatisticsData): Promise<postData | null>;
 	findCpfList(): Promise<findCpfListData[]>;
-	findLegalDetails(id:string): Promise<LegalDetailsData>;
+	findLegalDetails(id: string): Promise<LegalDetailsData | null>;
 }

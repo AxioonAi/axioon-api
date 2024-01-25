@@ -1,3 +1,4 @@
+import { CodeNotFoundError } from "@/helper/errors/CodeNotFoundError";
 import { UserRecoverPasswordCodeRepository } from "@/repositories/UserRecoverPasswordCodeRepository";
 import { UserRepository } from "@/repositories/userRepository";
 import { hash } from "bcryptjs";
@@ -21,7 +22,7 @@ export class UserRecoverPasswordUseCase {
 		const userRecoverPasswordCode =
 			await this.userRecoverPasswordCodeRepository.findByCode(code);
 
-		if (!userRecoverPasswordCode) throw new Error("invalid code or expired");
+		if (!userRecoverPasswordCode) throw new CodeNotFoundError();
 
 		const password_hash = await hash(password, 6);
 

@@ -1,4 +1,4 @@
-import { UserCityInterface } from "@/repositories/PoliticianProfileRepository";
+import { UserCityInterface } from "@/@types/politicianProfileRepository";
 
 export const CityDataFormatter = ({ city, role }: UserCityInterface) => {
 	return {
@@ -224,7 +224,6 @@ export const CityDataFormatter = ({ city, role }: UserCityInterface) => {
 				},
 			],
 		},
-		pollingPlace: {},
 		politician: city.politician.filter((politician) => {
 			return politician.role === role;
 		}).length,

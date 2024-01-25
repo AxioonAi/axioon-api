@@ -51,8 +51,6 @@ export class PrismaMetaAdvertisingLibDeliveryByRegionRepository
 			}
 		}
 
-		console.log(updateData.length);
-
 		await prisma.$transaction([
 			prisma.metaAdvertisingLibDeliveryByRegion.createMany({
 				data: createData,

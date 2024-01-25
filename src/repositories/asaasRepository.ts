@@ -45,7 +45,7 @@ export interface AsaasRepository {
 		value?: number;
 		installmentCount?: number;
 		dueDate: Date;
-	}): Promise<any>;
+	}): Promise<{ creditCard: string; paymentId: string }>;
 	existsCreditCardPayment(data: {
 		customer: string;
 		billingType: string;
@@ -54,6 +54,6 @@ export interface AsaasRepository {
 		installmentCount?: number;
 		dueDate: Date;
 		creditCardToken: string;
-	}): Promise<any>;
+	}): Promise<{ paymentId: string }>;
 	recoverPixPayment(paymentId: string): Promise<AsaasPaymentResponseInterface>;
 }

@@ -1,106 +1,50 @@
 import { FacebookDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
 
-export const FacebookDataFormatter = (data: {
-	facebookData: {
+export const FacebookDataFormatter = (
+	data: {
+		facebookData: {
+			id: string;
+			title: string;
+			likes_count: number;
+			followers_count: number;
+		}[];
+		facebookPosts: {
+			id: string;
+			url: string;
+			text: string;
+			date: Date;
+			like: number;
+			comments: number;
+			shares: number;
+			thumbnail: string;
+		}[];
+		facebookPostComments: {
+			id: string;
+			postUrl: string;
+			text: string;
+			likeCount: number;
+			date: Date;
+			username: string;
+			post_id: string;
+			politician_id: string;
+			sentimentAnalysis: number;
+		}[];
+	},
+	alternativeData: {
 		id: string;
 		title: string;
 		likes_count: number;
 		followers_count: number;
-	}[];
-	facebookPosts: {
-		id: string;
-		url: string;
-		text: string;
-		date: Date;
-		like: number;
-		comments: number;
-		shares: number;
-		thumbnail: string;
-	}[];
-	facebookPostComments: {
-		id: string;
-		postUrl: string;
-		text: string;
-		likeCount: number;
-		date: Date;
-		username: string;
-		post_id: string;
-		politician_id: string;
-		sentimentAnalysis: number;
-	}[];
-}) => {
+	},
+) => {
 	const { facebookData, facebookPosts, facebookPostComments } = data;
 
-	const currentFacebookData = facebookData[0];
+	const currentFacebookData = facebookData[0]
+		? facebookData[0]
+		: alternativeData;
 
-	const commentStatisticsData = facebookPostComments.reduce(
-		(accumulator, comment) => {
-			const sentiment = comment.sentimentAnalysis;
-			const time = new Date(comment.date).getHours();
-
-			// Calcula a média
-			accumulator.sentimentStatistics.totalSentiment += sentiment;
-
-			// Conta a quantidade de comentários em diferentes faixas de tempo
-			if (time >= 0 && time < 4) {
-				accumulator.commentTime.midnight_to_four_am++;
-			} else if (time >= 4 && time < 10) {
-				accumulator.commentTime.four_am_to_ten_am++;
-			} else if (time >= 10 && time < 14) {
-				accumulator.commentTime.ten_am_to_two_pm++;
-			} else if (time >= 14 && time < 18) {
-				accumulator.commentTime.two_pm_to_six_pm++;
-			} else if (time >= 18 && time < 21) {
-				accumulator.commentTime.six_pm_to_nine_pm++;
-			} else {
-				accumulator.commentTime.nine_pm_to_midnight++;
-			}
-
-			// Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
-			if (sentiment >= 0 && sentiment <= 350) {
-				accumulator.sentimentStatistics.countSentiment0To350++;
-			} else if (sentiment > 350 && sentiment <= 650) {
-				accumulator.sentimentStatistics.countSentiment351To650++;
-			} else if (sentiment > 650 && sentiment <= 1000) {
-				accumulator.sentimentStatistics.countSentiment651To1000++;
-			}
-
-			return accumulator;
-		},
-		{
-			sentimentStatistics: {
-				totalSentiment: 0,
-				countSentiment0To350: 0,
-				countSentiment351To650: 0,
-				countSentiment651To1000: 0,
-				sentimentAverage: 0,
-			},
-			commentTime: {
-				midnight_to_four_am: 0,
-				four_am_to_ten_am: 0,
-				ten_am_to_two_pm: 0,
-				two_pm_to_six_pm: 0,
-				six_pm_to_nine_pm: 0,
-				nine_pm_to_midnight: 0,
-			},
-		},
-	);
-
-	commentStatisticsData.sentimentStatistics.sentimentAverage =
-		commentStatisticsData.sentimentStatistics.totalSentiment /
-		facebookPostComments.length;
-
-	const mostOldPost = facebookPosts.sort((a, b) => {
-		return a.date < b.date ? -1 : 1;
-	})[0];
-
-	const oldPostDateDiff = Math.ceil(
-		Math.abs(
-			Date.now() -
-				new Date(mostOldPost.date ? mostOldPost.date : Date.now()).getTime(),
-		) /
-			(1000 * 60 * 60 * 24),
-	);
+	const commentStatisticsData = commentFormatter(facebookPostComments);
+	const oldPostDateDiff = mostOldPostDiffCalculator(facebookPosts);
 
 	const dataWithEngagement = [];
 
@@ -200,4 +144,92 @@ export const FacebookDataFormatter = (data: {
 		postEngagementData,
 		posts: finalData,
 	};
+};
+
+const commentFormatter = (
+	comments: {
+		id: string;
+		postUrl: string;
+		text: string;
+		likeCount: number;
+		date: Date;
+		username: string;
+		post_id: string;
+		politician_id: string;
+		sentimentAnalysis: number;
+	}[],
+) => {
+	const commentStatisticsData = comments.reduce(
+		(accumulator, comment) => {
+			const sentiment = comment.sentimentAnalysis;
+			const time = new Date(comment.date).getHours();
+
+			// Calcula a média
+			accumulator.sentimentStatistics.totalSentiment += sentiment;
+
+			// Conta a quantidade de comentários em diferentes faixas de tempo
+			if (time >= 0 && time < 4) {
+				accumulator.commentTime.midnight_to_four_am++;
+			} else if (time >= 4 && time < 10) {
+				accumulator.commentTime.four_am_to_ten_am++;
+			} else if (time >= 10 && time < 14) {
+				accumulator.commentTime.ten_am_to_two_pm++;
+			} else if (time >= 14 && time < 18) {
+				accumulator.commentTime.two_pm_to_six_pm++;
+			} else if (time >= 18 && time < 21) {
+				accumulator.commentTime.six_pm_to_nine_pm++;
+			} else {
+				accumulator.commentTime.nine_pm_to_midnight++;
+			}
+
+			// Conta a quantidade de comentários em diferentes faixas de sentimentAnalysis
+			if (sentiment >= 0 && sentiment <= 350) {
+				accumulator.sentimentStatistics.countSentiment0To350++;
+			} else if (sentiment > 350 && sentiment <= 650) {
+				accumulator.sentimentStatistics.countSentiment351To650++;
+			} else if (sentiment > 650 && sentiment <= 1000) {
+				accumulator.sentimentStatistics.countSentiment651To1000++;
+			}
+
+			return accumulator;
+		},
+		{
+			sentimentStatistics: {
+				totalSentiment: 0,
+				countSentiment0To350: 0,
+				countSentiment351To650: 0,
+				countSentiment651To1000: 0,
+				sentimentAverage: 0,
+			},
+			commentTime: {
+				midnight_to_four_am: 0,
+				four_am_to_ten_am: 0,
+				ten_am_to_two_pm: 0,
+				two_pm_to_six_pm: 0,
+				six_pm_to_nine_pm: 0,
+				nine_pm_to_midnight: 0,
+			},
+		},
+	);
+
+	commentStatisticsData.sentimentStatistics.sentimentAverage =
+		commentStatisticsData.sentimentStatistics.totalSentiment / comments.length;
+
+	return commentStatisticsData;
+};
+
+const mostOldPostDiffCalculator = (
+	posts: {
+		date: Date;
+	}[],
+) => {
+	const mostOldVideo = posts.sort((a, b) => {
+		return a.date < b.date ? -1 : 1;
+	})[0];
+	return mostOldVideo
+		? Math.ceil(
+				Math.abs(Date.now() - new Date(mostOldVideo.date).getTime()) /
+					(1000 * 60 * 60 * 24),
+		  )
+		: 0;
 };

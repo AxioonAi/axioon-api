@@ -1,3 +1,4 @@
+import { SignatureNotFoundError } from "@/helper/errors/SignatureNotFoundError";
 import { UnauthorizedError } from "@/helper/errors/UnauthorizedError";
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
 
@@ -20,18 +21,18 @@ export class UserSignatureValidationUseCase {
 
 		switch (type) {
 			case "ai":
-				if (!signature.plan.ai_access) throw new Error("Signature not found");
+				if (!signature.plan.ai_access) throw new SignatureNotFoundError();
 				break;
 			case "electoral":
 				if (!signature.plan.electoral_history)
-					throw new Error("Signature not found");
+					throw new SignatureNotFoundError();
 				break;
 			case "legal":
-				if (!signature.plan.legal_data) throw new Error("Signature not found");
+				if (!signature.plan.legal_data) throw new SignatureNotFoundError();
 				break;
 			case "ads":
 				if (!signature.plan.facebook_ads_monitoring)
-					throw new Error("Signature not found");
+					throw new SignatureNotFoundError();
 				break;
 		}
 

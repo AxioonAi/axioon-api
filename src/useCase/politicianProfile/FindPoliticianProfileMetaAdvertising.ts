@@ -8,7 +8,32 @@ interface FindPoliticianProfileMetaAdvertisingUseCaseRequest {
 	userId: string;
 }
 
-interface FindPoliticianProfileMetaAdvertisingUseCaseResponse {}
+interface FindPoliticianProfileMetaAdvertisingUseCaseResponse {
+	advertising: {
+		id: string;
+		bylines: string;
+		currency: string;
+		spend: number;
+		start_date: Date;
+		end_date: Date | null;
+		status: string;
+		impressions: number;
+		deliveryRegion: {
+			region: string;
+			percentage: string;
+		}[];
+		totalByAgeRange: {
+			name: string;
+			value: number;
+			Homens: number;
+			Mulheres: number;
+		}[];
+		totalByGender: {
+			name: string;
+			value: number;
+		}[];
+	}[];
+}
 
 export class FindPoliticianProfileMetaAdvertisingUseCase {
 	constructor(

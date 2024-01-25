@@ -1,3 +1,5 @@
+import { LegalDetailsData } from "@/@types/politicianProfileRepository";
+import { ProfileNotFoundError } from "@/helper/errors/ProfileNotFoundError";
 import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRepository";
 
 interface FindPoliticianProfileLegalDetailsUseCaseRequest {
@@ -5,7 +7,7 @@ interface FindPoliticianProfileLegalDetailsUseCaseRequest {
 }
 
 interface FindPoliticianProfileLegalDetailsUseCaseResponse {
-	politicianProfile: any;
+	politicianProfile: LegalDetailsData;
 }
 
 export class FindPoliticianProfileLegalDetailsUseCase {
@@ -18,6 +20,8 @@ export class FindPoliticianProfileLegalDetailsUseCase {
 	}: FindPoliticianProfileLegalDetailsUseCaseRequest): Promise<FindPoliticianProfileLegalDetailsUseCaseResponse> {
 		const politicianProfile =
 			await this.politicianProfileRepository.findLegalDetails(id);
+
+		if (!politicianProfile) throw new ProfileNotFoundError();
 
 		return {
 			politicianProfile,

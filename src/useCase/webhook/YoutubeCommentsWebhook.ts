@@ -28,13 +28,10 @@ export class YoutubeCommentsWebhookUseCase {
 			data.map((item) => item.id),
 		);
 
-		console.log(commentExists[0]);
-
 		const analysisFilter = data.filter(
 			(item) => !commentExists.includes(item.id),
 		);
 
-		console.log(analysisFilter.length);
 		const videoExists = await this.youtubeVideoRepository.videoExists(
 			analysisFilter.map((item) => item.video_id),
 		);
@@ -42,8 +39,6 @@ export class YoutubeCommentsWebhookUseCase {
 		const gptAnalysis = await this.gptRepository.commentAnalysis(
 			analysisFilter.filter((item) => videoExists.includes(item.video_id)),
 		);
-
-		console.log(gptAnalysis);
 
 		const createData: YoutubeCommentCreateInterface[] = [];
 
