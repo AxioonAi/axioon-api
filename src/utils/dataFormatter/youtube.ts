@@ -68,6 +68,7 @@ export const youtubeDataFormatter = (
 		dataWithEngagement.push({
 			...youtubeVideoData[key],
 			engagement,
+			text: youtubeVideoData[key].title,
 			comments: formattedComments,
 			sentiment: sentimentSum / comments.length,
 		});
