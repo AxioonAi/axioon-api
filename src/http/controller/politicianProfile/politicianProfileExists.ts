@@ -10,12 +10,12 @@ export const politicianProfileExistsController = async (
 
 	const politicianProfileExistsUseCase = makePoliticianProfileExists();
 
-	const exists = await politicianProfileExistsUseCase.execute({
+	const { profile } = await politicianProfileExistsUseCase.execute({
 		data: {
 			...data,
 			user_id: request.user.sub,
 		},
 	});
 
-	return reply.status(200).send({ exists });
+	return reply.status(200).send({ profile });
 };
