@@ -93,18 +93,16 @@ model PoliticianProfile {
   id String @unique @default(uuid())
   social_name String
   full_name String
-  cpf String @unique
+  cpf String?
   role Role @default(MAYOR)
   instagram String
   youtube String?
   tiktok String?
   facebook String?
-
   city_id String
   political_group_id String
   city City  @relation(references: [id], fields: [city_id])
   politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
-
   news NewsUsers[]
   legalData LegalData[]
   address PersonalAddress[]

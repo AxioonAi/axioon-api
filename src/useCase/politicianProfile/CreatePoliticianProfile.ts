@@ -42,11 +42,20 @@ export class CreatePoliticianProfileUseCase {
 
 		const [cityExists, profileExists] = await Promise.all([
 			this.cityRepository.findByNameAndState(city.name, city.state),
-			this.politicianProfileRepository.findByCpf(cpf),
+			this.politicianProfileRepository.profileExists({
+				cpf,
+				fullName: rest.full_name,
+				instagram: rest.instagram,
+				youtube: rest.youtube,
+				tiktok: rest.tiktok,
+				facebook: rest.facebook,
+			}),
 		]);
 
 		if (!cityExists) throw new CityNotFoundError();
-		if (profileExists) throw new ProfileAlreadyExistsError();
+		if (profileExists) {
+			throw new ProfileAlreadyExistsError();
+		}
 
 		const formattedRole = role === "ALDERMAN" ? Role.ALDERMAN : Role.MAYOR;
 

@@ -35,7 +35,14 @@ export interface PoliticianProfileRepository {
 		role: Role;
 		political_group_id: string;
 	}): Promise<PoliticianProfile>;
-	findByCpf(cpf: string): Promise<PoliticianProfile | null>;
+	profileExists(data: {
+		cpf?: string;
+		facebook?: string;
+		youtube?: string;
+		tiktok?: string;
+		instagram?: string;
+		fullName?: string;
+	}): Promise<PoliticianProfile | null>;
 	findUserCity(id: string): Promise<UserCityInterface | null>;
 	findYoutubeChannelList(): Promise<UserYoutubeChannelInterface[]>;
 	findInstagramList(): Promise<UserInstagramInterface[]>;

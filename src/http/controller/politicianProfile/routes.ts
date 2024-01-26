@@ -2,7 +2,6 @@ import { verifyJwt } from "@/http/middleware/verify-jwt";
 import { FastifyInstance } from "fastify";
 import { createPoliticianProfileController } from "./createPoliticianProfile";
 import { findPoliticianProfileAdvertisingDetailsController } from "./findPoliticianProfileAdvertisingDetails";
-import { findPoliticianProfileByCpfController } from "./findPoliticianProfileByCpf";
 import { findPoliticianProfileCityDetailsController } from "./findPoliticianProfileCityDetails";
 import { findPoliticianProfileFacebookDetailsController } from "./findPoliticianProfileFacebookDetails";
 import { findPoliticianProfileInstagramDetailsController } from "./findPoliticianProfileInstagramDetails";
@@ -12,12 +11,14 @@ import { findPoliticianProfileSocialMediaHomeDataController } from "./findPoliti
 import { findPoliticianProfileTiktokDetailsController } from "./findPoliticianProfileTiktokDetails";
 import { findPoliticianProfileYoutubeDetailsController } from "./findPoliticianProfileYoutubeDetails";
 import { findPoliticianProfileLegalDetailsController } from "./findPoliticianProfileLegalDetails";
+import { politicianProfileExistsController } from "./politicianProfileExists";
+import { createPoliticianProfileMonitoringController } from "./createPoliticianProfileMonitoring";
 
 export async function politicianProfileRoutes(app: FastifyInstance) {
 	app.addHook("onRequest", verifyJwt);
 	// app.addHook("onRequest", verifyAccessMiddleware);
 
-	app.get("/profile/cpf/:id", findPoliticianProfileByCpfController);
+	app.post("/profile/exists", politicianProfileExistsController);
 	app.post("/profile", createPoliticianProfileController);
 	app.get(
 		"/profile/youtube/:id",
@@ -56,4 +57,8 @@ export async function politicianProfileMonitoringListRoutes(
 	app.addHook("onRequest", verifyJwt);
 
 	app.get("/profile/monitoring", findPoliticianProfileMonitoringListController);
+	app.post(
+		"/profile/monitoring/:id",
+		createPoliticianProfileMonitoringController,
+	);
 }

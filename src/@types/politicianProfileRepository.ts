@@ -68,7 +68,7 @@ export interface UserFacebookInterface {
 
 export interface findCpfListData {
 	id: string;
-	cpf: string;
+	cpf: string | null;
 }
 
 export interface youtubeData {

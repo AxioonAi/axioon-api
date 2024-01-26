@@ -41,6 +41,7 @@ interface FindPoliticianProfileSocialMediaHomeDataUseCaseResponse {
 				comments: number;
 				shares: number;
 			};
+
 			instagram: {
 				likes: number;
 				comments: number;

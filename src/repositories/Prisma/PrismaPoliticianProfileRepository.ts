@@ -9,6 +9,11 @@ export class PrismaPoliticianProfileRepository
 {
 	async findCpfList() {
 		return await prisma.politicianProfile.findMany({
+			where: {
+				cpf: {
+					not: null,
+				},
+			},
 			select: {
 				cpf: true,
 				id: true,
@@ -33,10 +38,36 @@ export class PrismaPoliticianProfileRepository
 		});
 	}
 
-	async findByCpf(cpf: string) {
-		return await prisma.politicianProfile.findUnique({
+	async profileExists(data: {
+		cpf?: string;
+		facebook?: string;
+		youtube?: string;
+		tiktok?: string;
+		instagram?: string;
+		fullName?: string;
+	}) {
+		return await prisma.politicianProfile.findFirst({
 			where: {
-				cpf: cpf,
+				OR: [
+					{
+						cpf: data.cpf,
+					},
+					{
+						facebook: data.facebook,
+					},
+					{
+						youtube: data.youtube,
+					},
+					{
+						tiktok: data.tiktok,
+					},
+					{
+						instagram: data.instagram,
+					},
+					{
+						full_name: data.fullName,
+					},
+				],
 			},
 		});
 	}
