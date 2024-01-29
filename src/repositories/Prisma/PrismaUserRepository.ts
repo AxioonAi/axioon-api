@@ -22,6 +22,9 @@ export class PrismaUserRepository implements UserRepository {
 							gt: new Date(),
 						},
 					},
+					include: {
+						plan: true,
+					},
 				},
 			},
 		});
