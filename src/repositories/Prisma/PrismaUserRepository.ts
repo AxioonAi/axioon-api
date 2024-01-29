@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, Status } from "@prisma/client";
 import { UserRepository } from "../userRepository";
 
 export class PrismaUserRepository implements UserRepository {
@@ -13,6 +13,16 @@ export class PrismaUserRepository implements UserRepository {
 		return await prisma.user.findUnique({
 			where: {
 				id,
+			},
+			include: {
+				signature: {
+					where: {
+						status: Status.ACTIVE,
+						expires_in: {
+							gt: new Date(),
+						},
+					},
+				},
 			},
 		});
 	}
