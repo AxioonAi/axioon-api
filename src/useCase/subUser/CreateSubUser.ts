@@ -21,11 +21,14 @@ export class CreateSubUserUseCase {
 
 	async execute({ data }: CreateSubUserUseCaseRequest): Promise<void> {
 		const { name, email, password, user_id } = data;
+		console.log(user_id);
 
 		const [userExists, subUserExists] = await Promise.all([
-			this.userRepository.findByEmail(email),
+			this.userRepository.findById(user_id),
 			this.subUserRepository.findByEmail(email),
 		]);
+
+		console.log(userExists);
 
 		if (!userExists) throw new UserNotFoundError();
 		if (subUserExists) throw new EmailAlreadyExistsError();
