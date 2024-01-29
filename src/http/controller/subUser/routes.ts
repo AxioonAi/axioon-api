@@ -11,5 +11,9 @@ export async function subUserRoutes(app: FastifyInstance) {
 	app.post("/sub-user/login", authenticateSubUserController);
 	app.get("/sub-user", { onRequest: [verifyJwt] }, subUserListController);
 	app.put("/sub-user/:id", { onRequest: [verifyJwt] }, updateSubUserController);
-	app.post("/sub-user", { onRequest: [verifyJwt] }, createSubUserController);
+	app.post(
+		"/sub-user/create",
+		{ onRequest: [verifyJwt] },
+		createSubUserController,
+	);
 }
