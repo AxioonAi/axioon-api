@@ -36,9 +36,9 @@ export const youtubeDataFormatter = (
 			(1000 * 60 * 60 * 24);
 
 		const engagementSum =
-			youtubeVideoData[key].commentsCount * 1 +
-			youtubeVideoData[key].likes * 1.2 +
-			youtubeVideoData[key].viewCount * 1;
+			youtubeVideoData[key].commentsCount * 1.5 +
+			youtubeVideoData[key].likes * 1 +
+			youtubeVideoData[key].viewCount * 0.5;
 
 		const dateDiffRelation = 1 - timeDiff / oldVideoDateDiff;
 

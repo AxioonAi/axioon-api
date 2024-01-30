@@ -28,10 +28,10 @@ export const tiktokDataFormatter = (
 			(1000 * 60 * 60 * 24);
 
 		const engagementSum =
-			tiktokVideoData[key].diggCount * 1 +
+			tiktokVideoData[key].diggCount * 0.5 +
 			tiktokVideoData[key].commentCount * 1 +
-			tiktokVideoData[key].shareCount * 1 +
-			tiktokVideoData[key].playCount * 1;
+			tiktokVideoData[key].shareCount * 1.5 +
+			tiktokVideoData[key].playCount * 0.2;
 
 		const dataDiffRelation = 1 - timeDiff / oldVideoDateDiff;
 

@@ -66,8 +66,8 @@ export const FacebookDataFormatter = (
 
 		const engagementSum =
 			facebookPosts[key].comments * 1 +
-			facebookPosts[key].like * 1 +
-			facebookPosts[key].shares * 1;
+			facebookPosts[key].like * 0.5 +
+			facebookPosts[key].shares * 1.5;
 
 		const dateDiffRelation = 1 - timeDiff / oldPostDateDiff;
 
