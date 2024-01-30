@@ -10,4 +10,5 @@ export interface CreateNewsInterface {
 
 export interface NewsRepository {
 	createMany(data: CreateNewsInterface[]): Promise<void>;
+	newsExists(urls: string[]): Promise<string[]>;
 }

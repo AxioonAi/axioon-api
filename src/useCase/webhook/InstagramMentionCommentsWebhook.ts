@@ -33,9 +33,12 @@ export class InstagramMentionCommentsWebhookUseCase {
 			(item) => !commentExists.includes(item.id),
 		);
 
-		const mentionExists = await this.instagramMentionRepository.mentionExists(
-			analysisFilter.map((item) => item.post_id),
-		);
+		console.log(analysisFilter.length);
+
+		const mentionExists =
+			await this.instagramMentionRepository.mentionExistsByUrls(
+				analysisFilter.map((item) => item.post_id),
+			);
 
 		const gptAnalysis = await this.gptRepository.commentAnalysis(
 			analysisFilter.filter((item) => mentionExists.includes(item.post_id)),

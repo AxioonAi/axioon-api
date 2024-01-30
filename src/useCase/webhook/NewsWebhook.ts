@@ -18,7 +18,15 @@ export class NewsWebhookUseCase {
 			records,
 		});
 
-		const gptAnalysis = await this.gptRepository.newsAnalysis(data);
+		const newsExists = await this.newsRepository.newsExists(
+			data.map((item) => item.url),
+		);
+
+		const analysisFilter = data.filter(
+			(item) => !newsExists.includes(item.url),
+		);
+
+		const gptAnalysis = await this.gptRepository.newsAnalysis(analysisFilter);
 
 		const createData = [];
 

@@ -66,4 +66,16 @@ export class PrismaNewsRepository implements NewsRepository {
 
 		return;
 	}
+
+	async newsExists(urls: string[]) {
+		const news = await prisma.news.findMany({
+			where: {
+				url: {
+					in: urls,
+				},
+			},
+		});
+
+		return news.map((item) => item.url);
+	}
 }

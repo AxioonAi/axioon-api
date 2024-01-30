@@ -8,13 +8,11 @@ export const instagramMentionsWebhookController = async (
 ) => {
 	const { records } = ZodWebhookBodySchema.parse(request.body);
 
-	try {
-		const instagramMentionsWebhookUseCase = makeInstagramMentionsWebhook();
+	const instagramMentionsWebhookUseCase = makeInstagramMentionsWebhook();
 
-		const data = await instagramMentionsWebhookUseCase.execute({
-			records,
-		});
+	const data = await instagramMentionsWebhookUseCase.execute({
+		records,
+	});
 
-		reply.status(200).send(data);
-	} catch (error) {}
+	reply.status(200).send(data);
 };

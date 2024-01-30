@@ -46,6 +46,7 @@ export class PrismaInstagramMentionCommentRepository
 					createData.push({
 						...item,
 						post_id: post.id,
+						sentimentAnalysis: Number(item.sentimentAnalysis),
 						politician_id: post.politician_id,
 					});
 				} else {
