@@ -43,48 +43,33 @@ export const EngagementDataFormatter = (data: {
 	}[];
 }) => {
 	const engagement = {
-		facebook: {
-			likes: 0,
-			comments: 0,
-			shares: 0,
-		},
-		instagram: {
-			likes: 0,
-			comments: 0,
-		},
-		tiktok: {
-			digg: 0,
-			comments: 0,
-			play: 0,
-		},
-		youtube: {
-			likes: 0,
-			comments: 0,
-			views: 0,
-		},
+		facebook: 0,
+		instagram: 0,
+		tiktok: 0,
+		youtube: 0,
 	};
 
 	for (const item of data.facebookPosts) {
-		engagement.facebook.likes += item.like;
-		engagement.facebook.comments += item.comments;
-		engagement.facebook.shares += item.shares;
+		engagement.facebook += item.like;
+		engagement.facebook += item.comments;
+		engagement.facebook += item.shares;
 	}
 
 	for (const item of data.instagramPosts) {
-		engagement.instagram.likes += item.likeCount;
-		engagement.instagram.comments += item.commentCount;
+		engagement.instagram += item.likeCount;
+		engagement.instagram += item.commentCount;
 	}
 
 	for (const item of data.tiktokVideoData) {
-		engagement.tiktok.digg += item.diggCount;
-		engagement.tiktok.comments += item.commentCount;
-		engagement.tiktok.play += item.playCount;
+		engagement.tiktok += item.diggCount;
+		engagement.tiktok += item.commentCount;
+		engagement.tiktok += item.playCount;
 	}
 
 	for (const item of data.youtubeVideoData) {
-		engagement.youtube.likes += item.likes;
-		engagement.youtube.comments += item.commentsCount;
-		engagement.youtube.views += item.viewCount;
+		engagement.youtube += item.likes;
+		engagement.youtube += item.commentsCount;
+		engagement.youtube += item.viewCount;
 	}
 
 	return engagement;

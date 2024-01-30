@@ -36,26 +36,11 @@ interface FindPoliticianProfileSocialMediaHomeDataUseCaseResponse {
 					quantity: number;
 			  }[];
 		engagement: {
-			facebook: {
-				likes: number;
-				comments: number;
-				shares: number;
-			};
+			facebook: number;
 
-			instagram: {
-				likes: number;
-				comments: number;
-			};
-			tiktok: {
-				digg: number;
-				comments: number;
-				play: number;
-			};
-			youtube: {
-				likes: number;
-				comments: number;
-				views: number;
-			};
+			instagram: number;
+			tiktok: number;
+			youtube: number;
 		};
 		staticData: {
 			facebook: {
@@ -197,6 +182,8 @@ export class FindPoliticianProfileSocialMediaHomeDataUseCase {
 					: null,
 			},
 		};
+
+		console.log(data.engagement);
 
 		return { data };
 	}
