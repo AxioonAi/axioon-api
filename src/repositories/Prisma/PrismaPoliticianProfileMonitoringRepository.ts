@@ -28,6 +28,14 @@ export class PrismaPoliticianProfileMonitoringRepository
 				politicianProfile: {
 					include: {
 						politicalGroup: true,
+						instagramData: {
+							select: {
+								profilePicture: true,
+							},
+							orderBy: {
+								date: "desc",
+							},
+						},
 					},
 				},
 			},
@@ -45,6 +53,15 @@ export class PrismaPoliticianProfileMonitoringRepository
 				politicianProfile: {
 					include: {
 						politicalGroup: true,
+
+						instagramData: {
+							select: {
+								profilePicture: true,
+							},
+							orderBy: {
+								date: "desc",
+							},
+						},
 					},
 				},
 			},

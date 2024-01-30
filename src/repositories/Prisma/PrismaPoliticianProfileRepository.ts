@@ -30,6 +30,7 @@ export class PrismaPoliticianProfileRepository
 		youtube?: string;
 		tiktok?: string;
 		facebook?: string;
+		campaign_name?: string;
 		role: Role;
 		political_group_id: string;
 	}) {

@@ -13,6 +13,7 @@ export const ZodCreatePoliticianProfileBodySchema = z.object({
 	youtube: z.string().optional(),
 	tiktok: z.string().optional(),
 	facebook: z.string().optional(),
+	campaign_name: z.string().optional(),
 	city: z.object({
 		name: z.string(),
 		state: z.string(),

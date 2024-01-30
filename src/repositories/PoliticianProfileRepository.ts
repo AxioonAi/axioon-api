@@ -33,6 +33,7 @@ export interface PoliticianProfileRepository {
 		city_id: string;
 		full_name: string;
 		role: Role;
+		campaign_name?: string;
 		political_group_id: string;
 	}): Promise<PoliticianProfile>;
 	profileExists(data: {

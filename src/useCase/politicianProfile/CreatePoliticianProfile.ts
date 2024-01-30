@@ -15,6 +15,7 @@ interface CreatePoliticianProfileUseCaseRequest {
 		tiktok?: string;
 		facebook?: string;
 		social_name: string;
+		campaign_name?: string;
 		city: {
 			name: string;
 			state: string;

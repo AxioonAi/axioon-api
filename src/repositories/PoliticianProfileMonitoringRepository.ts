@@ -6,6 +6,9 @@ import {
 
 interface PoliticianProfileWithPoliticalGroup extends PoliticianProfile {
 	politicalGroup: PoliticalGroup;
+	instagramData: {
+		profilePicture: string;
+	}[];
 }
 
 interface findUsersByProfileId extends PoliticianProfileMonitoring {

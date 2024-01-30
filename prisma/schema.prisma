@@ -99,6 +99,7 @@ model PoliticianProfile {
   youtube String?
   tiktok String?
   facebook String?
+  campaign_number String?
   city_id String
   political_group_id String
   city City  @relation(references: [id], fields: [city_id])
@@ -632,6 +633,7 @@ model LegalData {
   causeValue String?   
   court String?
   url String?   
+  status String?
   politician_id String 
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id]) 
 }
@@ -675,7 +677,7 @@ model PersonalEconomicRelationship {
 model personalIncomeTaxReturns {
   id String @unique @default(uuid())
   year String
-  bakAgency String?
+  bankAgency String?
   situation String
   politician_id String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
