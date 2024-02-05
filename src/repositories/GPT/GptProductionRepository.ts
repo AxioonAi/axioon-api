@@ -10,107 +10,108 @@ import { SexType } from "@prisma/client";
 import { GptRepository } from "../gptRepository";
 import OpenAI from "openai";
 import { env } from "@/env";
+import { gptCommentProcess } from "@/utils/gptCommentFunctions";
 
 export class GptProductionRepository implements GptRepository {
-	async commentAnalysis(data: GptCommentDataInterface[]) {
-		const openAi = new OpenAI({
-			apiKey: env.GPT_KEY,
-		});
+	// async commentAnalysis(data: GptCommentDataInterface[]) {
+	// 	const openAi = new OpenAI({
+	// 		apiKey: env.GPT_KEY,
+	// 	});
 
-		const finalData: GptCommentResponseInterface[] = [];
-		for (const item of data) {
-			let success = false;
-			let retryCount = 0;
-			const author = item.author
-				? item.author
-				: item.username
-				  ? item.username
-				  : item.ownerUsername
-					  ? item.ownerUsername
-					  : "anônimo";
+	// 	const finalData: GptCommentResponseInterface[] = [];
+	// 	for (const item of data) {
+	// 		let success = false;
+	// 		let retryCount = 0;
+	// 		const author = item.author
+	// 			? item.author
+	// 			: item.username
+	// 			  ? item.username
+	// 			  : item.ownerUsername
+	// 				  ? item.ownerUsername
+	// 				  : "anônimo";
 
-			while (!success && retryCount < 3) {
-				try {
-					console.time("Timing:");
-					const response = await openAi.chat.completions.create({
-						model: "gpt-3.5-turbo-16k",
-						messages: [
-							{
-								role: "system",
-								content: `Haja como um especialista em interpretação de comentários, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentAnalysis, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo (SEMPRE USE NÚMEROS PRA CLASSIFICAR).
-	                Use essa métrica em relação especificamente ao comentário em questão.
-	                A Resposta deve ser SOMENTE um objeto:
-	                {
-	                  "ownerUsername": "NomeDoUsuario",
-	                  "gender": "Masculino ou Feminino ou  Indefinido",
-	                  "sentimentAnalysis": "numero"
-	                }
-	                `,
-							},
-							{
-								role: "system",
-								content:
-									"O resultado de sentimentAnalysis Deve ser um número, seja crítico nesse número, use a métrica para isso.",
-							},
-							{
-								role: "system",
-								content:
-									"NUNCA COMENTE NADA, sua função é entregar os dados puros.",
-							},
-							{
-								role: "user",
-								content: `O usuário do comentário é: ${author}\n\n`,
-							},
-							{
-								role: "user",
-								content: `O texto do comentário feito pelo usuario no post original é: ${item.text}`,
-							},
-							{
-								role: "user",
-								content: `o id do comentário é: ${item.id}`,
-							},
-							{
-								role: "system",
-								content: `Lembre-se sentimentAnalysis PRECISA ser um numero e
-	                Retorne Sempre:
-	                {
-	                  "ownerUsername": "NomeDoUsuario",
-	                  "Gender": "Masculino ou Feminino ou  Indefinido",
-	                  "sentimentAnalysis": "numero",
-	            "id":"commentId"
-	                }
-	                nao comente NADA alem disso.
-	                `,
-							},
-						],
-					});
-					const answer = response.choices[0].message.content;
-					if (answer?.startsWith("{")) {
-						const finalAnswer = JSON.parse(answer);
-						finalData.push({
-							id: item.id,
-							authorGender:
-								finalAnswer.gender === "Masculino"
-									? SexType.MALE
-									: finalAnswer.gender === "Feminino"
-									  ? SexType.FEMALE
-									  : SexType.UNKNOWN,
-							sentimentAnalysis: finalAnswer.sentimentAnalysis,
-						});
+	// 		while (!success && retryCount < 3) {
+	// 			try {
+	// 				console.time("Timing:");
+	// 				const response = await openAi.chat.completions.create({
+	// 					model: "gpt-3.5-turbo-16k",
+	// 					messages: [
+	// 						{
+	// 							role: "system",
+	// 							content: `Haja como um especialista em interpretação de comentários, seja extremamente crítico e nos ajude a dar um número que será usado como Métrica para o sentimentAnalysis, sendo os números classificados como: 100 - 150: Extremamente Negativo; 150 - 300: Negativo; 300 - 700: Neutro; 700 - 850: Positivo; 850 - 1000: Extremamente positivo (SEMPRE USE NÚMEROS PRA CLASSIFICAR).
+	//                 Use essa métrica em relação especificamente ao comentário em questão.
+	//                 A Resposta deve ser SOMENTE um objeto:
+	//                 {
+	//                   "ownerUsername": "NomeDoUsuario",
+	//                   "gender": "Masculino ou Feminino ou  Indefinido",
+	//                   "sentimentAnalysis": "numero"
+	//                 }
+	//                 `,
+	// 						},
+	// 						{
+	// 							role: "system",
+	// 							content:
+	// 								"O resultado de sentimentAnalysis Deve ser um número, seja crítico nesse número, use a métrica para isso.",
+	// 						},
+	// 						{
+	// 							role: "system",
+	// 							content:
+	// 								"NUNCA COMENTE NADA, sua função é entregar os dados puros.",
+	// 						},
+	// 						{
+	// 							role: "user",
+	// 							content: `O usuário do comentário é: ${author}\n\n`,
+	// 						},
+	// 						{
+	// 							role: "user",
+	// 							content: `O texto do comentário feito pelo usuario no post original é: ${item.text}`,
+	// 						},
+	// 						{
+	// 							role: "user",
+	// 							content: `o id do comentário é: ${item.id}`,
+	// 						},
+	// 						{
+	// 							role: "system",
+	// 							content: `Lembre-se sentimentAnalysis PRECISA ser um numero e
+	//                 Retorne Sempre:
+	//                 {
+	//                   "ownerUsername": "NomeDoUsuario",
+	//                   "Gender": "Masculino ou Feminino ou  Indefinido",
+	//                   "sentimentAnalysis": "numero",
+	//             "id":"commentId"
+	//                 }
+	//                 nao comente NADA alem disso.
+	//                 `,
+	// 						},
+	// 					],
+	// 				});
+	// 				const answer = response.choices[0].message.content;
+	// 				if (answer?.startsWith("{")) {
+	// 					const finalAnswer = JSON.parse(answer);
+	// 					finalData.push({
+	// 						id: item.id,
+	// 						authorGender:
+	// 							finalAnswer.gender === "Masculino"
+	// 								? SexType.MALE
+	// 								: finalAnswer.gender === "Feminino"
+	// 								  ? SexType.FEMALE
+	// 								  : SexType.UNKNOWN,
+	// 						sentimentAnalysis: finalAnswer.sentimentAnalysis,
+	// 					});
 
-						success = true;
-					} else {
-						success = false;
-						retryCount++;
-					}
-				} catch (err) {
-					retryCount++;
-				}
-			}
-		}
+	// 					success = true;
+	// 				} else {
+	// 					success = false;
+	// 					retryCount++;
+	// 				}
+	// 			} catch (err) {
+	// 				retryCount++;
+	// 			}
+	// 		}
+	// 	}
 
-		return finalData;
-	}
+	// 	return finalData;
+	// }
 
 	async mentionAnalysis(data: GptMentionDataInterface[]) {
 		const openAi = new OpenAI({
@@ -292,6 +293,29 @@ export class GptProductionRepository implements GptRepository {
 				}
 			}
 		}
+		return finalData;
+	}
+
+	async commentAnalysis(data: GptCommentDataInterface[]) {
+		const batchSize = 50;
+		let batchStart = 0;
+		const finalData: GptCommentResponseInterface[] = [];
+
+		while (batchStart < data.length) {
+			const batch = data.slice(batchStart, batchStart + batchSize);
+			const results = await Promise.all(
+				batch.map((item) => gptCommentProcess(item)),
+			);
+
+			finalData.push(
+				...results.filter(
+					(item): item is GptCommentResponseInterface => item !== null,
+				),
+			);
+
+			batchStart += batchSize;
+		}
+
 		return finalData;
 	}
 }

@@ -33,5 +33,7 @@ export const CommentWordCount = (data: CommentWordCountDataInterface) => {
 		return { word: chave, quantity: valor };
 	});
 
-	return arrayDeObjetos.filter((objeto) => objeto.quantity > 5);
+	return arrayDeObjetos.filter(
+		(objeto) => objeto.quantity > 5 && objeto.word.length > 4,
+	);
 };

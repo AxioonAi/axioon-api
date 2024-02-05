@@ -47,7 +47,7 @@ export class PixPurchaseUseCase {
 			user_id: userId,
 			plan_id: planId,
 			paymentId: payment.payment_id,
-			status: Status.INACTIVE,
+			status: Status.ACTIVE,
 			expires_in: moment().add(1, "year").toDate(),
 		});
 
