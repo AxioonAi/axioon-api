@@ -1,4 +1,4 @@
-import { makePoliticianProfileInstagramList } from "@/useCase/@factories/politicianProfile/makePoliticianProfileInstagramList";
+import { makePoliticianProfileInstagramList } from "@/useCase/@factories/scrape/makePoliticianProfileInstagramList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userInstagramController = async (

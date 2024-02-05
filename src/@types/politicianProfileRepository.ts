@@ -170,3 +170,33 @@ interface newsUser extends NewsUsers {
 interface instagramMention extends InstagramMention {
 	comments: InstagramMentionComment[];
 }
+
+export interface findProfileWithoutFacebookDataInterface {
+	id: string;
+	facebook: string | null;
+	facebookData: FacebookBaseData[];
+}
+
+export interface findProfileWithoutInstagramDataInterface {
+	id: string;
+	instagram: string;
+	instagramData: InstagramBaseData[];
+}
+
+export interface findProfileWithoutYoutubeDataInterface {
+	id: string;
+	youtube: string | null;
+	youtubeBaseData: YoutubeBaseData[];
+}
+
+export interface findProfileWithoutTiktokDataInterface {
+	id: string;
+	tiktok: string | null;
+	tiktokData: TiktokBaseData[];
+}
+
+export interface findProfileWithoutLegalDataInterface {
+	id: string;
+	cpf: string | null;
+	legalData: LegalData[];
+}

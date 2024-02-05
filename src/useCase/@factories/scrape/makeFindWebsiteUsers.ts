@@ -1,6 +1,6 @@
 import { PrismaPoliticianProfileRepository } from "@/repositories/Prisma/PrismaPoliticianProfileRepository";
 import { PrismaWebsiteRepository } from "@/repositories/Prisma/PrismaWebsiteRepository";
-import { FindWebsiteUsersUseCase } from "@/useCase/website/FindWebsiteUsers";
+import { FindWebsiteUsersUseCase } from "@/useCase/scrape/FindWebsiteUsers";
 
 export function makeFindWebsiteUsers() {
 	const websiteRepository = new PrismaWebsiteRepository();

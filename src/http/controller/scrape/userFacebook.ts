@@ -1,4 +1,4 @@
-import { makeFindPoliticianProfileFacebookList } from "@/useCase/@factories/politicianProfile/makeFindPoliticianProfileFacebookList";
+import { makeFindPoliticianProfileFacebookList } from "@/useCase/@factories/scrape/makeFindPoliticianProfileFacebookList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userFacebookController = async (

@@ -1,4 +1,4 @@
-import { makePoliticianProfileTiktokList } from "@/useCase/@factories/politicianProfile/makePoliticianProfileTiktokList";
+import { makePoliticianProfileTiktokList } from "@/useCase/@factories/scrape/makePoliticianProfileTiktokList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userTikTokController = async (

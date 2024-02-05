@@ -1,4 +1,4 @@
-import { makePoliticianProfileYoutubeChannelList } from "@/useCase/@factories/politicianProfile/makePoliticianProfileYoutubeChannelList";
+import { makePoliticianProfileYoutubeChannelList } from "@/useCase/@factories/scrape/makePoliticianProfileYoutubeChannelList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userYoutubeController = async (

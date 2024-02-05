@@ -1,8 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { $Enums, Role } from "@prisma/client";
 import moment from "moment";
 import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
-import { StatisticsData } from "@/@types/politicianProfileRepository";
+import {
+	StatisticsData,
+	findProfileWithoutInstagramDataInterface,
+} from "@/@types/politicianProfileRepository";
 
 export class PrismaPoliticianProfileRepository
 	implements PoliticianProfileRepository
@@ -634,6 +637,86 @@ export class PrismaPoliticianProfileRepository
 				address: true,
 				economicRelationship: true,
 				incomeTax: true,
+			},
+		});
+	}
+
+	async findProfileWithoutFacebookData() {
+		return prisma.politicianProfile.findMany({
+			where: {
+				facebook: {
+					not: null,
+				},
+			},
+			select: {
+				facebook: true,
+				id: true,
+				facebookData: {
+					take: 1,
+				},
+			},
+		});
+	}
+
+	async findProfileWithoutYoutubeData() {
+		return prisma.politicianProfile.findMany({
+			where: {
+				youtube: {
+					not: null,
+				},
+			},
+			select: {
+				youtube: true,
+				id: true,
+				youtubeBaseData: {
+					take: 1,
+				},
+			},
+		});
+	}
+
+	async findProfileWithoutTiktokData() {
+		return prisma.politicianProfile.findMany({
+			where: {
+				tiktok: {
+					not: null,
+				},
+			},
+			select: {
+				tiktok: true,
+				id: true,
+				tiktokData: {
+					take: 1,
+				},
+			},
+		});
+	}
+
+	async findProfileWithoutInstagramData() {
+		return prisma.politicianProfile.findMany({
+			select: {
+				instagram: true,
+				id: true,
+				instagramData: {
+					take: 1,
+				},
+			},
+		});
+	}
+
+	async findProfileWithoutLegalData() {
+		return prisma.politicianProfile.findMany({
+			where: {
+				cpf: {
+					not: null,
+				},
+			},
+			select: {
+				cpf: true,
+				id: true,
+				legalData: {
+					take: 1,
+				},
 			},
 		});
 	}

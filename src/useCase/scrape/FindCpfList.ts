@@ -3,7 +3,7 @@ import { PoliticianProfileRepository } from "@/repositories/PoliticianProfileRep
 interface FindCpfListUseCaseResponse {
 	profiles: {
 		id: string;
-		cpf: string;
+		cpf: string | null;
 	}[];
 }
 

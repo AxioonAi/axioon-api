@@ -1,4 +1,4 @@
-import { makeFindCpfList } from "@/useCase/@factories/politicianProfile/makeFindCpfList";
+import { makeFindCpfList } from "@/useCase/@factories/scrape/makeFindCpfList";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const cpfListController = async (

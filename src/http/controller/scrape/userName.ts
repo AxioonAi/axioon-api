@@ -1,4 +1,4 @@
-import { makeFindPoliticianNames } from "@/useCase/@factories/politicianProfile/makeFindPoliticianNames";
+import { makeFindPoliticianNames } from "@/useCase/@factories/scrape/makeFindPoliticianNames";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userNameController = async (

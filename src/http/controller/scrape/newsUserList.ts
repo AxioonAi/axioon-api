@@ -1,5 +1,5 @@
 import { ZodIdParamsSchema } from "@/lib/zod/global";
-import { makeFindWebsiteUsers } from "@/useCase/@factories/website/makeFindWebsiteUsers";
+import { makeFindWebsiteUsers } from "@/useCase/@factories/scrape/makeFindWebsiteUsers";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const newsUserListController = async (

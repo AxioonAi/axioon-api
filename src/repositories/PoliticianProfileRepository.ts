@@ -13,6 +13,11 @@ import {
 	findByStateData,
 	findCpfListData,
 	findNamesAndRolesData,
+	findProfileWithoutFacebookDataInterface,
+	findProfileWithoutInstagramDataInterface,
+	findProfileWithoutLegalDataInterface,
+	findProfileWithoutTiktokDataInterface,
+	findProfileWithoutYoutubeDataInterface,
 	followersData,
 	instagramData,
 	postData,
@@ -65,4 +70,19 @@ export interface PoliticianProfileRepository {
 	findPostsStatistics(data: StatisticsData): Promise<postData | null>;
 	findCpfList(): Promise<findCpfListData[]>;
 	findLegalDetails(id: string): Promise<LegalDetailsData | null>;
+	findProfileWithoutFacebookData(): Promise<
+		findProfileWithoutFacebookDataInterface[]
+	>;
+	findProfileWithoutYoutubeData(): Promise<
+		findProfileWithoutYoutubeDataInterface[]
+	>;
+	findProfileWithoutTiktokData(): Promise<
+		findProfileWithoutTiktokDataInterface[]
+	>;
+	findProfileWithoutLegalData(): Promise<
+		findProfileWithoutLegalDataInterface[]
+	>;
+	findProfileWithoutInstagramData(): Promise<
+		findProfileWithoutInstagramDataInterface[]
+	>;
 }
