@@ -1,16 +1,17 @@
 import { FastifyInstance } from "fastify";
 import { cpfListController } from "./cpfList";
+import { findProfileWithoutFacebookController } from "./findProfileWithoutFacebook";
+import { findProfileWithoutInstagramController } from "./findProfileWithoutInstagram";
+import { findProfileWithoutLegalController } from "./findProfileWithoutLegal";
+import { findProfileWithoutNewsController } from "./findProfileWithoutNews";
+import { findProfileWithoutTiktokController } from "./findProfileWithoutTiktok";
+import { findProfileWithoutYoutubeController } from "./findProfileWithoutYoutube";
 import { newsUserListController } from "./newsUserList";
 import { userFacebookController } from "./userFacebook";
 import { userInstagramController } from "./userInstagram";
 import { userNameController } from "./userName";
 import { userTikTokController } from "./userTikTok";
 import { userYoutubeController } from "./userYoutube";
-import { findProfileWithoutInstagramController } from "./findProfileWithoutInstagram";
-import { findProfileWithoutFacebookController } from "./findProfileWithoutFacebook";
-import { findProfileWithoutTiktokController } from "./findProfileWithoutTiktok";
-import { findProfileWithoutYoutubeController } from "./findProfileWithoutYoutube";
-import { findProfileWithoutLegalController } from "./findProfileWithoutLegal";
 
 export async function scrapeRoutes(app: FastifyInstance) {
 	app.get("/scrape/instagram", userInstagramController);
@@ -25,4 +26,5 @@ export async function scrapeRoutes(app: FastifyInstance) {
 	app.get("/scrape/without/tiktok", findProfileWithoutTiktokController);
 	app.get("/scrape/without/youtube", findProfileWithoutYoutubeController);
 	app.get("/scrape/without/legal", findProfileWithoutLegalController);
+	app.get("/scrape/without/news/:id", findProfileWithoutNewsController);
 }

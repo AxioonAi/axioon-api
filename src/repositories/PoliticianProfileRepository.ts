@@ -16,6 +16,7 @@ import {
 	findProfileWithoutFacebookDataInterface,
 	findProfileWithoutInstagramDataInterface,
 	findProfileWithoutLegalDataInterface,
+	findProfileWithoutNewsDataInterface,
 	findProfileWithoutTiktokDataInterface,
 	findProfileWithoutYoutubeDataInterface,
 	followersData,
@@ -85,4 +86,7 @@ export interface PoliticianProfileRepository {
 	findProfileWithoutInstagramData(): Promise<
 		findProfileWithoutInstagramDataInterface[]
 	>;
+	findProfileWithoutNews(
+		state: string,
+	): Promise<findProfileWithoutNewsDataInterface[]>;
 }

@@ -200,3 +200,9 @@ export interface findProfileWithoutLegalDataInterface {
 	cpf: string | null;
 	legalData: LegalData[];
 }
+
+export interface findProfileWithoutNewsDataInterface {
+	id: string;
+	social_name: string;
+	news: NewsUsers[];
+}

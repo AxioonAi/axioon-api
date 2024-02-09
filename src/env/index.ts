@@ -9,6 +9,7 @@ const envSchema = z.object({
 	SMTP_LOGIN: z.string(),
 	SMTP_KEY: z.string(),
 	ID_CERBERUS_KEY: z.string(),
+	AWS_URL: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

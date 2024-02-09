@@ -35,6 +35,8 @@ export class PoliticianProfileExistsUseCase {
 		const profileExists = await this.politicianProfileRepository.profileExists({
 			...data,
 		});
+
+		console.log(profileExists);
 		return { profile: profileExists };
 	}
 }

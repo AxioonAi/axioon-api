@@ -1,6 +1,7 @@
 import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastify from "fastify";
+import { scriptsRoutes } from "scripts/routes";
 import { env } from "./env";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
@@ -16,9 +17,6 @@ import { tutorialVideoRoutes } from "./http/controller/tutorialVideo/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
 import { fastifyErrorHandler } from "./lib/fastify";
-import { prisma } from "./lib/prisma";
-import { randomUUID } from "crypto";
-import moment from "moment";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -48,38 +46,4 @@ app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
-
-app.get("/duplicate", async (req, res) => {
-	const data = await prisma.tiktokBaseData.findMany({});
-
-	const createData = [];
-
-	for (const item of data) {
-		createData.push({
-			...item,
-			id: randomUUID(),
-			date: moment().subtract(7, "days").toDate(),
-		});
-		createData.push({
-			...item,
-			id: randomUUID(),
-			date: moment().subtract(10, "days").toDate(),
-		});
-		createData.push({
-			...item,
-			id: randomUUID(),
-			date: moment().subtract(15, "days").toDate(),
-		});
-		createData.push({
-			...item,
-			id: randomUUID(),
-			date: moment().subtract(30, "days").toDate(),
-		});
-	}
-
-	const create = await prisma.tiktokBaseData.createMany({
-		data: createData,
-	});
-
-	return res.send(create);
-});
+app.register(scriptsRoutes);

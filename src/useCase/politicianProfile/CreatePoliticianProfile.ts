@@ -53,6 +53,8 @@ export class CreatePoliticianProfileUseCase {
 			}),
 		]);
 
+		console.log(profileExists);
+
 		if (!cityExists) throw new CityNotFoundError();
 		if (profileExists) {
 			throw new ProfileAlreadyExistsError();

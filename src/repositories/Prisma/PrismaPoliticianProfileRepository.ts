@@ -1,11 +1,7 @@
+import { StatisticsData } from "@/@types/politicianProfileRepository";
 import { prisma } from "@/lib/prisma";
-import { $Enums, Role } from "@prisma/client";
-import moment from "moment";
+import { Role } from "@prisma/client";
 import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
-import {
-	StatisticsData,
-	findProfileWithoutInstagramDataInterface,
-} from "@/@types/politicianProfileRepository";
 
 export class PrismaPoliticianProfileRepository
 	implements PoliticianProfileRepository
@@ -50,28 +46,43 @@ export class PrismaPoliticianProfileRepository
 		instagram?: string;
 		fullName?: string;
 	}) {
+		const conditions = [];
+
+		if (data.cpf !== "") {
+			conditions.push({ cpf: data.cpf });
+		}
+
+		if (data.facebook !== "") {
+			conditions.push({ facebook: data.facebook });
+		}
+
+		if (data.youtube !== "") {
+			conditions.push({ youtube: data.youtube });
+		}
+
+		if (data.tiktok !== "") {
+			conditions.push({ tiktok: data.tiktok });
+		}
+
+		if (data.instagram !== "") {
+			conditions.push({ instagram: data.instagram });
+		}
+
+		if (data.fullName !== "") {
+			conditions.push({ full_name: data.fullName });
+		}
+
+		// Garante que a lista OR não esteja vazia
+		if (conditions.length === 0) {
+			// Lidar com o caso de todas as condições serem nulas, por exemplo, retornando null ou lançando um erro
+			return null; // Ou qualquer outra ação desejada
+		}
+
+		console.log(conditions);
+
 		return await prisma.politicianProfile.findFirst({
 			where: {
-				OR: [
-					{
-						cpf: data.cpf,
-					},
-					{
-						facebook: data.facebook,
-					},
-					{
-						youtube: data.youtube,
-					},
-					{
-						tiktok: data.tiktok,
-					},
-					{
-						instagram: data.instagram,
-					},
-					{
-						full_name: data.fullName,
-					},
-				],
+				OR: conditions,
 			},
 		});
 	}
@@ -715,6 +726,22 @@ export class PrismaPoliticianProfileRepository
 				cpf: true,
 				id: true,
 				legalData: {
+					take: 1,
+				},
+			},
+		});
+	}
+	async findProfileWithoutNews(state: string) {
+		return prisma.politicianProfile.findMany({
+			where: {
+				city: {
+					state: state,
+				},
+			},
+			select: {
+				social_name: true,
+				id: true,
+				news: {
 					take: 1,
 				},
 			},

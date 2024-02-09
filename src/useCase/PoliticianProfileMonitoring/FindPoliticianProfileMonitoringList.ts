@@ -25,7 +25,10 @@ export class FindPoliticianProfileMonitoringListUseCase {
 				id: profile.politicianProfile.id,
 				politicalGroup: profile.politicianProfile.politicalGroup.acronym,
 				campaignNumber: profile.politicianProfile.campaign_number,
-				image: profile.politicianProfile.instagramData[0].profilePicture,
+				image:
+					profile.politicianProfile.instagramData.length < 0
+						? profile.politicianProfile.instagramData[0].profilePicture
+						: "",
 			};
 		});
 
