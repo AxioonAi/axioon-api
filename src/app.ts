@@ -1,7 +1,6 @@
 import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastify from "fastify";
-import { scriptsRoutes } from "scripts/routes";
 import { env } from "./env";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
@@ -46,4 +45,3 @@ app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
-app.register(scriptsRoutes);
