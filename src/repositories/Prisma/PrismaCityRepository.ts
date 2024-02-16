@@ -14,7 +14,7 @@ export class PrismaCityRepository implements CityRepository {
 	async findByNameAndState(name: string, state: string) {
 		return await prisma.city.findFirst({
 			where: {
-				name,
+				name: {contains : name, mode: 'insensitive'},
 				state,
 			},
 		});
