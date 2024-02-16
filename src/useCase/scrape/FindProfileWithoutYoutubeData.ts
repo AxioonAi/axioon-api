@@ -15,10 +15,11 @@ export class FindProfileWithoutYoutubeDataUseCase {
 	async execute(): Promise<FindProfileWithoutYoutubeDataUseCaseResponse> {
 		const profiles =
 			await this.politicianProfileRepository.findProfileWithoutYoutubeData();
+			console.log(profiles)
 		return {
 			profiles: profiles.filter(
 				(profile) =>
-					profile.youtube === null && profile.youtubeBaseData.length === 0,
+					profile.youtube !== null && profile.youtubeBaseData.length === 0,
 			),
 		};
 	}

@@ -15,10 +15,12 @@ export class FindProfileWithoutInstagramDataUseCase {
 	async execute(): Promise<FindProfileWithoutInstagramDataUseCaseResponse> {
 		const profiles =
 			await this.politicianProfileRepository.findProfileWithoutInstagramData();
+
+			console.log(profiles)
 		return {
 			profiles: profiles.filter(
 				(profile) =>
-					profile.instagram === null && profile.instagramData.length === 0,
+					profile.instagram !== null && profile.instagramData.length === 0,
 			),
 		};
 	}

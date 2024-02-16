@@ -15,9 +15,11 @@ export class FindProfileWithoutTiktokDataUseCase {
 	async execute(): Promise<FindProfileWithoutTiktokDataUseCaseResponse> {
 		const profiles =
 			await this.politicianProfileRepository.findProfileWithoutTiktokData();
+
+			console.log(profiles)
 		return {
 			profiles: profiles.filter(
-				(profile) => profile.tiktok === null && profile.tiktokData.length === 0,
+				(profile) => profile.tiktok !== null && profile.tiktokData.length === 0,
 			),
 		};
 	}
