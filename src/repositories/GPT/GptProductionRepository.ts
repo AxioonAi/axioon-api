@@ -13,7 +13,7 @@ import { GptRepository } from "../gptRepository";
 
 export class GptProductionRepository implements GptRepository {
 	async mentionAnalysis(data: GptMentionDataInterface[]) {
-		const batchSize = 50;
+		const batchSize = 10;
 		let batchStart = 0;
 		const finalData: GptMentionResponseInterface[] = [];
 		while (batchStart < data.length) {
@@ -35,7 +35,7 @@ export class GptProductionRepository implements GptRepository {
 	}
 
 	async newsAnalysis(data: GptNewsDataInterface[]) {
-		const batchSize = 58;
+		const batchSize = 10;
 		let batchStart = 0;
 		const finalData: GptNewsResponseInterface[] = [];
 
@@ -92,7 +92,7 @@ export class GptProductionRepository implements GptRepository {
 	// 			...item,
 	// 			authorGender:SexType.FEMALE,
 	// 			id: item.id,
-	// 			sentimentAnalysis:500
+	// 			sentimentAnalysis:100
 	// 		})
 	// 	}
 	// 	return finalData

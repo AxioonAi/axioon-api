@@ -16,7 +16,7 @@ export async function gptCommentProcess(item: {
 	let retryCount = 0;
 	const author =
 		item.author || item.username || item.ownerUsername || "anônimo";
-	while (retryCount < 3) {
+	while (retryCount < 5) {
 		try {
 			const response = await openAi.chat.completions.create({
 				model: "gpt-3.5-turbo-16k",

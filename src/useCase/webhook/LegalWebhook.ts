@@ -20,6 +20,6 @@ export class LegalWebhookUseCase {
 
 		await this.LegalDataRepository.createMany(data);
 
-		return data;
+		return 
 	}
 }

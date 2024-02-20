@@ -14,7 +14,6 @@ export class InstagramPostsWebhookUseCase {
 	async execute({
 		records,
 	}: InstagramPostsWebhookUseCaseRequest): Promise<void> {
-		console.log("entrou")
 		const data =
 			await this.awsNotificationRepository.S3InstagramPostNotification({
 				records,

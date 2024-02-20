@@ -9,7 +9,7 @@ export const gptMentionsProcess = async (data:GptMentionDataInterface) =>{
 
         let success = false;
         let retryCount = 0;
-        while (!success && retryCount < 3) {
+        while (!success && retryCount < 5) {
             try {
                 const response = await openAi.chat.completions.create({
                     model: "gpt-3.5-turbo-16k",
