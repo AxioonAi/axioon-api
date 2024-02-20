@@ -22,6 +22,7 @@ export class FacebookCommentsWebhookUseCase {
 				records,
 			});
 
+
 		const commentExists = await this.facebookCommentsRepository.commentExists(
 			data.map((item) => item.id),
 		);
@@ -29,6 +30,9 @@ export class FacebookCommentsWebhookUseCase {
 		const analysisFilter = data.filter(
 			(item) => !commentExists.includes(item.id),
 		);
+
+
+
 
 		const gptAnalysis =
 			await this.gptRepository.commentAnalysis(analysisFilter);

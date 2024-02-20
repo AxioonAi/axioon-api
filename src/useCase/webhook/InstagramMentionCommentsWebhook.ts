@@ -33,16 +33,20 @@ export class InstagramMentionCommentsWebhookUseCase {
 			(item) => !commentExists.includes(item.id),
 		);
 
-		console.log(analysisFilter.length);
 
 		const mentionExists =
 			await this.instagramMentionRepository.mentionExistsByUrls(
 				analysisFilter.map((item) => item.post_id),
 			);
 
+
+
+			console.time("time")
 		const gptAnalysis = await this.gptRepository.commentAnalysis(
 			analysisFilter.filter((item) => mentionExists.includes(item.post_id)),
 		);
+
+		console.timeEnd("time")
 
 		const createData: InstagramCommentCreateInterface[] = [];
 

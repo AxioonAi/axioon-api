@@ -101,6 +101,7 @@ export interface InstagramCommentCreateInterface {
 	text: string;
 	ownerProfilePicUrl: string;
 	post_id: string;
+	authorGender: string;
 	ownerUsername: string;
 	timestamp: Date;
 	likeCount: number;

@@ -10,7 +10,7 @@ export const pixPurchaseController = async (
 
 	const pixPurchaseUseCase = makePixPurchase();
 
-	const payment = await pixPurchaseUseCase.execute({
+		const {payment} = await pixPurchaseUseCase.execute({
 		planId: id,
 		userId: request.user.sub,
 	});

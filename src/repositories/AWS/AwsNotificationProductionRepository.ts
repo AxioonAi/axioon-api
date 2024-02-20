@@ -322,6 +322,7 @@ export class AwsNotificationProductionRepository
 					return data;
 				})
 				.catch((err) => {
+					console.log(err.message)
 					throw new AwsError();
 				});
 

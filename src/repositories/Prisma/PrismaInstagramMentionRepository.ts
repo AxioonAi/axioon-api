@@ -21,9 +21,15 @@ export class PrismaInstagramMentionRepository
 
 		for (const item of data) {
 			if (!mentionExists.find((mention) => mention.id === item.id)) {
-				createData.push(item);
+				createData.push({
+					...item,
+					sentimentAnalysis: Number(item.sentimentAnalysis),
+				});
 			} else {
-				updateData.push(item);
+				updateData.push({
+					...item,
+					sentimentAnalysis: Number(item.sentimentAnalysis),
+				});
 			}
 		}
 

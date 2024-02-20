@@ -14,11 +14,14 @@ export class InstagramPostsWebhookUseCase {
 	async execute({
 		records,
 	}: InstagramPostsWebhookUseCaseRequest): Promise<void> {
+		console.log("entrou")
 		const data =
 			await this.awsNotificationRepository.S3InstagramPostNotification({
 				records,
 			});
+			console.log(data)
 
+			console.log(data.length)
 		await this.instagramPostRepository.createMany(data);
 
 		return;

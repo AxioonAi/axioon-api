@@ -45,3 +45,20 @@ app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
+
+// app.get("/teste", async () => {
+// 	console.log(commentData.filter(item => item.sentimentAnalysis !== null).length)
+
+// 	const data = []
+// 	commentData.forEach(item => {
+		
+// 	})
+
+// 	await prisma.instagramPostComment.createMany({
+// 		data: data.map(item => ({
+// 			...item,
+// 			authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN, 
+// 		}))
+// 	})
+// 	return
+// })

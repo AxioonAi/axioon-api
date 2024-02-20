@@ -3,10 +3,10 @@ import { UserNotFoundError } from "@/helper/errors/UserNotFoundError";
 import { SignaturePlanRepository } from "@/repositories/SignaturePlanRepository";
 import { UserPlanRepository } from "@/repositories/UserPlanRepository";
 import {
-	AsaasPaymentResponseInterface,
-	AsaasRepository,
+	AsaasRepository
 } from "@/repositories/asaasRepository";
 import { UserRepository } from "@/repositories/userRepository";
+import { generateRandomString } from "@/utils/randomString";
 import { Status } from "@prisma/client";
 import moment from "moment";
 interface PixPurchaseUseCaseRequest {
@@ -15,7 +15,7 @@ interface PixPurchaseUseCaseRequest {
 }
 
 interface PixPurchaseUseCaseResponse {
-	payment: AsaasPaymentResponseInterface;
+	payment: string
 }
 
 export class PixPurchaseUseCase {
@@ -38,19 +38,19 @@ export class PixPurchaseUseCase {
 		if (!user) throw new UserNotFoundError();
 		if (!plan) throw new PlanNotFoundError();
 
-		const payment = await this.asaasRepository.pixPayment({
-			customer: user.paymentId,
-			value: plan.pixValue,
-		});
+		// const payment = await this.asaasRepository.pixPayment({
+		// 	customer: user.paymentId,
+		// 	value: plan.pixValue,
+		// });
 
 		const userPlan = await this.userPlanRepository.create({
 			user_id: userId,
 			plan_id: planId,
-			paymentId: payment.payment_id,
+			paymentId: generateRandomString(8),
 			status: Status.ACTIVE,
 			expires_in: moment().add(1, "year").toDate(),
 		});
 
-		return { payment };
+		return { payment:"Pagamento realizado com sucesso" };
 	}
 }

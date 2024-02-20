@@ -1,9 +1,11 @@
 import { InstagramCommentCreateInterface } from "@/@types/databaseInterfaces";
 import { prisma } from "@/lib/prisma";
+import { SexType } from "@prisma/client";
 import { InstagramPostCommentRepository } from "../InstagramPostCommentRepository";
 
 interface CreateCommentProps extends InstagramCommentCreateInterface {
 	politician_id: string;
+	authorGender: SexType;
 	sentimentAnalysis: number;
 }
 
@@ -34,7 +36,7 @@ export class PrismaInstagramCommentRepository
 		]);
 
 		const createData: CreateCommentProps[] = [];
-		const updateData: InstagramCommentCreateInterface[] = [];
+		const updateData: CreateCommentProps[] = [];
 
 		for (const item of data) {
 			if (!commentExists.find((comment) => comment.id === item.id)) {
@@ -42,10 +44,11 @@ export class PrismaInstagramCommentRepository
 					(post) =>
 						post.postUrl === `https://www.instagram.com/p/${item.post_id}`,
 				);
-				if (post && item.text) {
+				if (post && item.text && !Number.isNaN(item.sentimentAnalysis)) {
 					createData.push({
 						...item,
 						post_id: post.id,
+						authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN, 
 						sentimentAnalysis: Number(item.sentimentAnalysis),
 						politician_id: post.politician_id,
 					});
@@ -56,14 +59,19 @@ export class PrismaInstagramCommentRepository
 					(post) =>
 						post.postUrl === `https://www.instagram.com/p/${item.post_id}`,
 				);
-				if (post) {
+				if (post && item.text && item.sentimentAnalysis) {
 					updateData.push({
 						...item,
+						politician_id: post.politician_id,
+						authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN, 
+						sentimentAnalysis: Number(item.sentimentAnalysis),
 						post_id: post.id,
 					});
 				}
 			}
 		}
+
+		console.log("createData: ", createData.length)
 
 		await prisma.$transaction([
 			prisma.instagramPostComment.createMany({ data: createData }),
