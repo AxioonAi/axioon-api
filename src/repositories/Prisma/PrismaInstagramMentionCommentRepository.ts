@@ -42,11 +42,11 @@ export class PrismaInstagramMentionCommentRepository
 					(post) =>
 						post.postUrl === `https://www.instagram.com/p/${item.post_id}`,
 				);
-				if (post && item.text) {
+				if (post && item.text && item.sentimentAnalysis && !Number.isNaN(item.sentimentAnalysis)) {
 					createData.push({
 						...item,
 						post_id: post.id,
-						sentimentAnalysis: Number(item.sentimentAnalysis),
+						sentimentAnalysis:!Number.isNaN(item.sentimentAnalysis) ? Number(item.sentimentAnalysis) : 0,
 						politician_id: post.politician_id,
 					});
 				} else {
@@ -66,7 +66,7 @@ export class PrismaInstagramMentionCommentRepository
 		}
 
 		await prisma.$transaction([
-			prisma.instagramMentionComment.createMany({ data: createData }),
+			prisma.instagramMentionComment.createMany({ data: createData.filter((item) => !Number.isNaN(item.sentimentAnalysis))  }),
 			...updateData.map((update) =>
 				prisma.instagramMentionComment.update({
 					where: {

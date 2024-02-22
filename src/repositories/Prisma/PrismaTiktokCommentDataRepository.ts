@@ -46,7 +46,7 @@ export class PrismaTiktokCommentDataRepository {
 		}
 
 		await prisma.$transaction([
-			prisma.tiktokCommentData.createMany({ data: createData }),
+			prisma.tiktokCommentData.createMany({ data: createData.filter((item) => !Number.isNaN(item.sentimentAnalysis))  }),
 			...updateData.map((update) =>
 				prisma.tiktokCommentData.update({
 					where: {

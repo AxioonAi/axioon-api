@@ -38,14 +38,8 @@ export class InstagramCommentsWebhookUseCase {
 			analysisFilter.map((item) => item.post_id),
 		);
 
-
-		console.log(analysisFilter.filter((item) => postExists.includes(item.post_id)).length)
-
-
-
-
 		const gptAnalysis = await this.gptRepository.commentAnalysis(
-			analysisFilter.filter((item) => postExists.includes(item.post_id)).slice(0, 100),
+			analysisFilter.filter((item) => postExists.includes(item.post_id)),
 		);
 
 		const createData: InstagramCommentCreateInterface[] = [];

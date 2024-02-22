@@ -49,7 +49,7 @@ export class PrismaInstagramCommentRepository
 						...item,
 						post_id: post.id,
 						authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN, 
-						sentimentAnalysis: Number(item.sentimentAnalysis),
+						sentimentAnalysis: !Number.isNaN(item.sentimentAnalysis) ? Number(item.sentimentAnalysis) : 0,
 						politician_id: post.politician_id,
 					});
 				} else {
@@ -71,10 +71,9 @@ export class PrismaInstagramCommentRepository
 			}
 		}
 
-		console.log("createData: ", createData.length)
 
 		await prisma.$transaction([
-			prisma.instagramPostComment.createMany({ data: createData }),
+			prisma.instagramPostComment.createMany({ data: createData.filter((item) => !Number.isNaN(item.sentimentAnalysis)) }),
 			...updateData.map((update) =>
 				prisma.instagramPostComment.update({
 					where: {

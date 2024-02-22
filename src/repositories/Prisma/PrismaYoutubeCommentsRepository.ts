@@ -50,7 +50,7 @@ export class PrismaYoutubeCommentsRepository
 		}
 
 		await prisma.$transaction([
-			prisma.youtubeCommentData.createMany({ data: createData }),
+			prisma.youtubeCommentData.createMany({ data: createData.filter((item) => !Number.isNaN(item.sentimentAnalysis))  }),
 			...updateData.map((update: YoutubeCommentCreateInterface) =>
 				prisma.youtubeCommentData.update({
 					where: {

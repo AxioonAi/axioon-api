@@ -50,7 +50,7 @@ export class PrismaFacebookCommentsRepository
 		}
 
 		await prisma.$transaction([
-			prisma.facebookPostComments.createMany({ data: createData }),
+			prisma.facebookPostComments.createMany({ data: createData.filter((item) => !Number.isNaN(item.sentimentAnalysis))  }),
 			...updateData.map((update) =>
 				prisma.facebookPostComments.update({
 					where: {
