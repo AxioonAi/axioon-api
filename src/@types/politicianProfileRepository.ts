@@ -1,208 +1,214 @@
 import {
-	City,
-	CityElectorateData,
-	CityIBGEData,
-	CityPollingPlace,
-	FacebookBaseData,
-	FacebookPostBaseData,
-	FacebookPostComments,
-	InstagramBaseData,
-	InstagramMention,
-	InstagramMentionComment,
-	InstagramPost,
-	InstagramPostComment,
-	LegalData,
-	MetaAdvertisingLib,
-	MetaAdvertisingLibDeliveryByRegion,
-	MetaAdvertisingLibDemographicDistribution,
-	News,
-	NewsUsers,
-	PersonalAddress,
-	PersonalData,
-	PersonalEconomicRelationship,
-	PoliticianProfile,
-	TiktokBaseData,
-	TiktokCommentData,
-	TiktokVideoData,
-	YoutubeBaseData,
-	YoutubeCommentData,
-	YoutubeVideoData,
-	personalIncomeTaxReturns,
+  City,
+  CityElectorateData,
+  CityIBGEData,
+  CityPollingPlace,
+  FacebookBaseData,
+  FacebookPostBaseData,
+  FacebookPostComments,
+  InstagramBaseData,
+  InstagramMention,
+  InstagramMentionComment,
+  InstagramPost,
+  InstagramPostComment,
+  LegalData,
+  MetaAdvertisingLib,
+  MetaAdvertisingLibDeliveryByRegion,
+  MetaAdvertisingLibDemographicDistribution,
+  News,
+  NewsUsers,
+  PersonalAddress,
+  PersonalData,
+  PersonalEconomicRelationship,
+  PoliticianProfile,
+  TiktokBaseData,
+  TiktokCommentData,
+  TiktokVideoData,
+  YoutubeBaseData,
+  YoutubeCommentData,
+  YoutubeVideoData,
+  personalIncomeTaxReturns,
 } from "@prisma/client";
 
 export interface UserCityInterface extends PoliticianProfile {
-	city: CityWithIBGEInterface;
+  city: CityWithIBGEInterface;
 }
 
 export interface StatisticsData {
-	id: string;
-	gte: Date;
-	lte: Date;
+  id: string;
+  gte: Date;
+  lte: Date;
 }
 
 export interface CityWithIBGEInterface extends City {
-	IBGEData: CityIBGEData[];
-	pollingPlace: CityPollingPlace[];
-	electorate: CityElectorateData[];
-	politician: PoliticianProfile[];
+  IBGEData: CityIBGEData[];
+  pollingPlace: CityPollingPlace[];
+  electorate: CityElectorateData[];
+  politician: PoliticianProfile[];
 }
 
 export interface UserYoutubeChannelInterface {
-	id: string;
-	youtube: string | null;
+  id: string;
+  youtube: string | null;
 }
 
 export interface UserInstagramInterface {
-	id: string;
-	instagram: string | null;
+  id: string;
+  instagram: string | null;
 }
 export interface UserTikTokInterface {
-	id: string;
-	tiktok: string | null;
+  id: string;
+  tiktok: string | null;
 }
 
 export interface UserFacebookInterface {
-	id: string;
-	facebook: string | null;
+  id: string;
+  facebook: string | null;
 }
 
 export interface findCpfListData {
-	id: string;
-	cpf: string | null;
+  id: string;
+  cpf: string | null;
 }
 
 export interface youtubeData {
-	youtubeBaseData: YoutubeBaseData[];
-	youtubeVideoData: YoutubeVideoData[];
-	youtubeCommentData: YoutubeCommentData[];
+  youtubeBaseData: YoutubeBaseData[];
+  youtubeVideoData: YoutubeVideoData[];
+  youtubeCommentData: YoutubeCommentData[];
 }
 
 export interface facebookData {
-	facebookData: FacebookBaseData[];
-	facebookPosts: FacebookPostBaseData[];
-	facebookPostComments: FacebookPostComments[];
+  facebookData: FacebookBaseData[];
+  facebookPosts: FacebookPostBaseData[];
+  facebookPostComments: FacebookPostComments[];
 }
 export interface tiktokData {
-	tiktokData: TiktokBaseData[];
-	tiktokVideoData: TiktokVideoData[];
-	tiktokComments: TiktokCommentData[];
+  tiktokData: TiktokBaseData[];
+  tiktokVideoData: TiktokVideoData[];
+  tiktokComments: TiktokCommentData[];
 }
 
 export interface instagramData {
-	instagramData: InstagramBaseData[];
-	instagramPosts: InstagramPost[];
-	instagramPostComments: InstagramPostComment[];
+  instagramData: InstagramBaseData[];
+  instagramPosts: InstagramPost[];
+  instagramPostComments: InstagramPostComment[];
 }
 
 export interface socialMediaData {
-	youtubeBaseData: YoutubeBaseData[];
-	youtubeVideoData: YoutubeVideoData[];
-	youtubeCommentData: YoutubeCommentData[];
-	facebookData: FacebookBaseData[];
-	facebookPosts: FacebookPostBaseData[];
-	facebookPostComments: FacebookPostComments[];
-	tiktokData: TiktokBaseData[];
-	tiktokVideoData: TiktokVideoData[];
-	tiktokComments: TiktokCommentData[];
-	instagramData: InstagramBaseData[];
-	instagramPosts: InstagramPost[];
-	instagramPostComments: InstagramPostComment[];
+  youtubeBaseData: YoutubeBaseData[];
+  youtubeVideoData: YoutubeVideoData[];
+  youtubeCommentData: YoutubeCommentData[];
+  facebookData: FacebookBaseData[];
+  facebookPosts: FacebookPostBaseData[];
+  facebookPostComments: FacebookPostComments[];
+  tiktokData: TiktokBaseData[];
+  tiktokVideoData: TiktokVideoData[];
+  tiktokComments: TiktokCommentData[];
+  instagramData: InstagramBaseData[];
+  instagramPosts: InstagramPost[];
+  instagramPostComments: InstagramPostComment[];
 }
 
 export interface followersData {
-	instagramData: InstagramBaseData[];
-	tiktokData: TiktokBaseData[];
-	facebookData: FacebookBaseData[];
-	youtubeBaseData: YoutubeBaseData[];
+  instagramData: InstagramBaseData[];
+  tiktokData: TiktokBaseData[];
+  facebookData: FacebookBaseData[];
+  youtubeBaseData: YoutubeBaseData[];
 }
 
 export interface commentData {
-	youtubeCommentData: { text: string }[];
-	facebookPostComments: { text: string }[];
-	tiktokComments: { text: string }[];
-	instagramPostComments: { text: string }[];
+  youtubeCommentData: { text: string }[];
+  facebookPostComments: { text: string }[];
+  tiktokComments: { text: string }[];
+  instagramPostComments: { text: string }[];
 }
 
 export interface postData {
-	youtubeVideoData: YoutubeVideoData[];
-	facebookPosts: FacebookPostBaseData[];
-	tiktokVideoData: TiktokVideoData[];
-	instagramPosts: InstagramPost[];
+  youtubeVideoData: YoutubeVideoData[];
+  facebookPosts: FacebookPostBaseData[];
+  tiktokVideoData: TiktokVideoData[];
+  instagramPosts: InstagramPost[];
 }
 
 export interface findByStateData {
-	social_name: string;
-	id: string;
+  social_name: string;
+  id: string;
 }
 
 export interface findNamesAndRolesData extends PoliticianProfile {
-	facebookData: {
-		title: string;
-	}[];
+  facebookData: {
+    title: string;
+  }[];
 }
 
 export interface LegalDetailsData extends PoliticianProfile {
-	legalData: LegalData[];
-	personalData: PersonalData[];
-	address: PersonalAddress[];
-	economicRelationship: PersonalEconomicRelationship[];
-	incomeTax: personalIncomeTaxReturns[];
+  legalData: LegalData[];
+  personalData: PersonalData[];
+  address: PersonalAddress[];
+  economicRelationship: PersonalEconomicRelationship[];
+  incomeTax: personalIncomeTaxReturns[];
 }
 
 export interface MetaAdsData {
-	advertising: metaAds[];
+  advertising: metaAds[];
 }
 
 interface metaAds extends MetaAdvertisingLib {
-	deliveryByRegion: MetaAdvertisingLibDeliveryByRegion[];
-	demographicDistribution: MetaAdvertisingLibDemographicDistribution[];
+  deliveryByRegion: MetaAdvertisingLibDeliveryByRegion[];
+  demographicDistribution: MetaAdvertisingLibDemographicDistribution[];
 }
 
 export interface MentionsData {
-	news: newsUser[];
-	instagramMention: instagramMention[];
+  news: newsUser[];
+  instagramMention: instagramMention[];
 }
 
 interface newsUser extends NewsUsers {
-	news: News;
+  news: NewsWithName;
+}
+
+interface NewsWithName extends News {
+  website: {
+    name: string;
+  };
 }
 
 interface instagramMention extends InstagramMention {
-	comments: InstagramMentionComment[];
+  comments: InstagramMentionComment[];
 }
 
 export interface findProfileWithoutFacebookDataInterface {
-	id: string;
-	facebook: string | null;
-	facebookData: FacebookBaseData[];
+  id: string;
+  facebook: string | null;
+  facebookData: FacebookBaseData[];
 }
 
 export interface findProfileWithoutInstagramDataInterface {
-	id: string;
-	instagram: string;
-	instagramData: InstagramBaseData[];
+  id: string;
+  instagram: string;
+  instagramData: InstagramBaseData[];
 }
 
 export interface findProfileWithoutYoutubeDataInterface {
-	id: string;
-	youtube: string | null;
-	youtubeBaseData: YoutubeBaseData[];
+  id: string;
+  youtube: string | null;
+  youtubeBaseData: YoutubeBaseData[];
 }
 
 export interface findProfileWithoutTiktokDataInterface {
-	id: string;
-	tiktok: string | null;
-	tiktokData: TiktokBaseData[];
+  id: string;
+  tiktok: string | null;
+  tiktokData: TiktokBaseData[];
 }
 
 export interface findProfileWithoutLegalDataInterface {
-	id: string;
-	cpf: string | null;
-	legalData: LegalData[];
+  id: string;
+  cpf: string | null;
+  legalData: LegalData[];
 }
 
 export interface findProfileWithoutNewsDataInterface {
-	id: string;
-	social_name: string;
-	news: NewsUsers[];
+  id: string;
+  social_name: string;
+  news: NewsUsers[];
 }
