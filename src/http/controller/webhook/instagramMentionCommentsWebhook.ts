@@ -8,6 +8,8 @@ export const instagramMentionCommentsWebhookController = async (
 ) => {
 	const { records } = ZodWebhookBodySchema.parse(request.body);
 
+	console.log(records);
+
 	const instagramMentionCommentsWebhookUseCase =
 		makeInstagramMentionsCommentsWebhook();
 

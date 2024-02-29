@@ -3,16 +3,16 @@ import { makeInstagramMentionsWebhook } from "@/useCase/@factories/webhook/makeI
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const instagramMentionsWebhookController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { records } = ZodWebhookBodySchema.parse(request.body);
+  const { records } = ZodWebhookBodySchema.parse(request.body);
 
-	const instagramMentionsWebhookUseCase = makeInstagramMentionsWebhook();
+  const instagramMentionsWebhookUseCase = makeInstagramMentionsWebhook();
 
-	const data = await instagramMentionsWebhookUseCase.execute({
-		records,
-	});
+  const data = await instagramMentionsWebhookUseCase.execute({
+    records,
+  });
 
-	reply.status(200).send(data);
+  reply.status(200).send(data);
 };

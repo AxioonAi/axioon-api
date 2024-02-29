@@ -517,6 +517,8 @@ model News {
   title String
   url String
   users NewsUsers[]
+  website_id String?
+  website Website? @relation(references: [id],fields: [website_id]) 
 }
 
 model NewsUsers {
@@ -571,6 +573,7 @@ model Website {
   url String
   state_capital_id String
   city City @relation(references: [id], fields: [state_capital_id])
+  news News[]
 }
 
 model City {
