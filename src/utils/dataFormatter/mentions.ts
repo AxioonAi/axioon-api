@@ -38,7 +38,7 @@ export const mentionsFormatter = (data: MentionsData) => {
         title: item.news.title,
         url: item.news.url,
         date: item.news.last_update,
-        websiteName: item.news.website.name,
+        websiteName: item.news.website ? item.news.website.name : "",
       });
     }
     news.average = totalSentimentNews / data.news.length;
