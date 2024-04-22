@@ -17,7 +17,6 @@ import { tutorialVideoRoutes } from "./http/controller/tutorialVideo/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
 import { fastifyErrorHandler } from "./lib/fastify";
-import { scriptsRoutes } from "scripts/routes";
 export const app = fastify();
 
 app.register(fastifyCors, {
