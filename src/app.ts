@@ -46,7 +46,6 @@ app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
-app.register(dbMigrateRoutes);
 
 // app.get("/teste", async () => {
 // 	console.log(commentData.filter(item => item.sentimentAnalysis !== null).length)
