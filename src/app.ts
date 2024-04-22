@@ -1,12 +1,13 @@
 import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastify from "fastify";
+import { dbMigrateRoutes } from "scripts/teste";
 import { env } from "./env";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
 import {
-	politicianProfileMonitoringListRoutes,
-	politicianProfileRoutes,
+  politicianProfileMonitoringListRoutes,
+  politicianProfileRoutes,
 } from "./http/controller/politicianProfile/routes";
 import { purchaseRoutes } from "./http/controller/purchase/routes";
 import { scrapeRoutes } from "./http/controller/scrape/routes";
@@ -16,21 +17,22 @@ import { tutorialVideoRoutes } from "./http/controller/tutorialVideo/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
 import { fastifyErrorHandler } from "./lib/fastify";
+import { scriptsRoutes } from "scripts/routes";
 export const app = fastify();
 
 app.register(fastifyCors, {
-	origin: "*",
+  origin: "*",
 });
 
 app.register(fastifyJwt, {
-	secret: env.JWT_SECRET,
-	cookie: {
-		cookieName: "refreshToken",
-		signed: false,
-	},
-	sign: {
-		expiresIn: "365d",
-	},
+  secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: "refreshToken",
+    signed: false,
+  },
+  sign: {
+    expiresIn: "365d",
+  },
 });
 
 app.register(userRoutes); // TESTADO
@@ -45,19 +47,20 @@ app.register(politicalGroupRoutes); // TESTADO
 app.register(politicianProfileRoutes);
 app.setErrorHandler(fastifyErrorHandler); // TESTADO
 app.register(politicianProfileMonitoringListRoutes);
+app.register(dbMigrateRoutes);
 
 // app.get("/teste", async () => {
 // 	console.log(commentData.filter(item => item.sentimentAnalysis !== null).length)
 
 // 	const data = []
 // 	commentData.forEach(item => {
-		
+
 // 	})
 
 // 	await prisma.instagramPostComment.createMany({
 // 		data: data.map(item => ({
 // 			...item,
-// 			authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN, 
+// 			authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN,
 // 		}))
 // 	})
 // 	return

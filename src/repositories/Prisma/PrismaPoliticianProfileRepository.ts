@@ -1,6 +1,6 @@
 import { StatisticsData } from "@/@types/politicianProfileRepository";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { Role, Status } from "@prisma/client";
 import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
 
 export class PrismaPoliticianProfileRepository
@@ -12,6 +12,7 @@ export class PrismaPoliticianProfileRepository
         cpf: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         cpf: true,
@@ -83,6 +84,7 @@ export class PrismaPoliticianProfileRepository
     return await prisma.politicianProfile.findFirst({
       where: {
         OR: conditions,
+        status: Status.ACTIVE,
       },
     });
   }
@@ -90,6 +92,7 @@ export class PrismaPoliticianProfileRepository
   async findUserCity(id: string) {
     return await prisma.politicianProfile.findUnique({
       where: {
+        status: Status.ACTIVE,
         id,
       },
       include: {
@@ -117,6 +120,7 @@ export class PrismaPoliticianProfileRepository
         youtube: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         youtube: true,
@@ -127,6 +131,9 @@ export class PrismaPoliticianProfileRepository
 
   async findInstagramList() {
     return await prisma.politicianProfile.findMany({
+      where: {
+        status: Status.ACTIVE,
+      },
       select: {
         instagram: true,
         id: true,
@@ -140,6 +147,7 @@ export class PrismaPoliticianProfileRepository
         tiktok: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         tiktok: true,
@@ -154,6 +162,7 @@ export class PrismaPoliticianProfileRepository
         facebook: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         facebook: true,
@@ -200,6 +209,9 @@ export class PrismaPoliticianProfileRepository
 
   async findNamesAndRoles() {
     return await prisma.politicianProfile.findMany({
+      where: {
+        status: Status.ACTIVE,
+      },
       include: {
         facebookData: {
           take: 1,
@@ -217,6 +229,7 @@ export class PrismaPoliticianProfileRepository
         city: {
           state: state,
         },
+        status: Status.ACTIVE,
       },
       select: {
         social_name: true,
@@ -666,6 +679,7 @@ export class PrismaPoliticianProfileRepository
         facebook: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         facebook: true,
@@ -683,6 +697,7 @@ export class PrismaPoliticianProfileRepository
         youtube: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         youtube: true,
@@ -700,6 +715,7 @@ export class PrismaPoliticianProfileRepository
         tiktok: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         tiktok: true,
@@ -713,6 +729,9 @@ export class PrismaPoliticianProfileRepository
 
   async findProfileWithoutInstagramData() {
     return prisma.politicianProfile.findMany({
+      where: {
+        status: Status.ACTIVE,
+      },
       select: {
         instagram: true,
         id: true,
@@ -729,6 +748,7 @@ export class PrismaPoliticianProfileRepository
         cpf: {
           not: null,
         },
+        status: Status.ACTIVE,
       },
       select: {
         cpf: true,
@@ -745,6 +765,7 @@ export class PrismaPoliticianProfileRepository
         city: {
           state: state,
         },
+        status: Status.ACTIVE,
       },
       select: {
         social_name: true,

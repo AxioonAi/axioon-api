@@ -63,7 +63,6 @@ export class FindPoliticianProfileMentionsDetailsUseCase {
       lte: moment().toDate(),
     });
 
-    console.log(data?.news);
 
     if (!data) throw new ProfileNotFoundError();
 

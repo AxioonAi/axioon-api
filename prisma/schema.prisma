@@ -43,645 +43,642 @@ enum Role {
 }
 
 model User {
-  id String @unique @default(uuid())
-  name String
-  email String @unique
-  social_name String
-  password_hash String
-  cpfCnpj String @unique
-  birth_date DateTime
-  paymentId String
-  mobilePhone String
-  sex SexType @default(MALE)
-  subUser SubUser[]
-  signature UserPlan[]
+  id              String                        @unique @default(uuid())
+  name            String
+  email           String                        @unique
+  social_name     String
+  password_hash   String
+  cpfCnpj         String                        @unique
+  birth_date      DateTime
+  paymentId       String
+  mobilePhone     String
+  sex             SexType                       @default(MALE)
+  subUser         SubUser[]
+  signature       UserPlan[]
   recoverPassword UserRecoverPasswordCode[]
-  notification Notification[]
-  user PoliticianProfileMonitoring[]
+  notification    Notification[]
+  user            PoliticianProfileMonitoring[]
 }
 
 model SignaturePlan {
-  id String @unique @default(uuid())
-  name String 
-  description String @default("")
-  pixValue Float
-  creditValue Float
-  amount_of_monitoring Int @default(1)
-  amount_of_users Int @default(1)
-  facebook_ads_monitoring Boolean @default(false)
-  electoral_history Boolean @default(false)
-  population_data Boolean @default(false)
-  legal_data Boolean @default(false)
-  ai_access Boolean @default(true)
-  political_accessory Boolean @default(false)
-  duration Int @default(12)
-  userPlan UserPlan[]
+  id                      String     @unique @default(uuid())
+  name                    String
+  description             String     @default("")
+  pixValue                Float
+  creditValue             Float
+  amount_of_monitoring    Int        @default(1)
+  amount_of_users         Int        @default(1)
+  facebook_ads_monitoring Boolean    @default(false)
+  electoral_history       Boolean    @default(false)
+  population_data         Boolean    @default(false)
+  legal_data              Boolean    @default(false)
+  ai_access               Boolean    @default(true)
+  political_accessory     Boolean    @default(false)
+  duration                Int        @default(12)
+  userPlan                UserPlan[]
 }
 
 model UserPlan {
-  id String @unique @default(uuid())
-  user_id String
-  plan_id String
-  paymentId String @unique
+  id         String        @unique @default(uuid())
+  user_id    String
+  plan_id    String
+  paymentId  String        @unique
   expires_in DateTime
-  status Status @default(INACTIVE)
-  plan SignaturePlan @relation(references: [id], fields: [plan_id])
-  user User @relation(references: [id], fields: [user_id])
+  status     Status        @default(INACTIVE)
+  plan       SignaturePlan @relation(references: [id], fields: [plan_id])
+  user       User          @relation(references: [id], fields: [user_id])
 }
 
 model PoliticianProfile {
-  id String @unique @default(uuid())
-  social_name String
-  full_name String
-  cpf String?
-  role Role @default(MAYOR)
-  instagram String
-  youtube String?
-  tiktok String?
-  facebook String?
-  campaign_number String?
-  city_id String
-  political_group_id String
-  city City  @relation(references: [id], fields: [city_id])
-  politicalGroup PoliticalGroup @relation(references: [id], fields: [political_group_id])
-  news NewsUsers[]
-  legalData LegalData[]
-  address PersonalAddress[]
-  personalData PersonalData[]
-  notification Notification[]
-  tiktokData TiktokBaseData[]
-  twitterData TwitterBaseData[]
-  instagramPosts InstagramPost[]
-  facebookData FacebookBaseData[]
-  advertising MetaAdvertisingLib[]
-  instagramData InstagramBaseData[]
-  youtubeBaseData YoutubeBaseData[]
-  tiktokVideoData TiktokVideoData[]
-  tiktokComments TiktokCommentData[]
-  user PoliticianProfileMonitoring[]
-  instagramMention InstagramMention[]
-  youtubeVideoData YoutubeVideoData[]
-  facebookPosts FacebookPostBaseData[]
-  incomeTax personalIncomeTaxReturns[]
-  youtubeCommentData YoutubeCommentData[]
-  facebookPostComments FacebookPostComments[]
-  instagramPostComments InstagramPostComment[]
+  id                       String                         @unique @default(uuid())
+  social_name              String
+  full_name                String
+  cpf                      String?
+  role                     Role                           @default(MAYOR)
+  instagram                String
+  youtube                  String?
+  tiktok                   String?
+  facebook                 String?
+  campaign_number          String?
+  city_id                  String
+  status                   Status                         @default(ACTIVE)
+  political_group_id       String
+  city                     City                           @relation(references: [id], fields: [city_id])
+  politicalGroup           PoliticalGroup                 @relation(references: [id], fields: [political_group_id])
+  news                     NewsUsers[]
+  legalData                LegalData[]
+  address                  PersonalAddress[]
+  personalData             PersonalData[]
+  notification             Notification[]
+  tiktokData               TiktokBaseData[]
+  twitterData              TwitterBaseData[]
+  instagramPosts           InstagramPost[]
+  facebookData             FacebookBaseData[]
+  advertising              MetaAdvertisingLib[]
+  instagramData            InstagramBaseData[]
+  youtubeBaseData          YoutubeBaseData[]
+  tiktokVideoData          TiktokVideoData[]
+  tiktokComments           TiktokCommentData[]
+  user                     PoliticianProfileMonitoring[]
+  instagramMention         InstagramMention[]
+  youtubeVideoData         YoutubeVideoData[]
+  facebookPosts            FacebookPostBaseData[]
+  incomeTax                personalIncomeTaxReturns[]
+  youtubeCommentData       YoutubeCommentData[]
+  facebookPostComments     FacebookPostComments[]
+  instagramPostComments    InstagramPostComment[]
   instagramMentionComments InstagramMentionComment[]
-  economicRelationship PersonalEconomicRelationship[]
+  economicRelationship     PersonalEconomicRelationship[]
 }
 
 model PoliticianProfileMonitoring {
-  id String @unique @default(uuid())
-  user_id String
+  id                    String            @unique @default(uuid())
+  user_id               String
   politician_profile_id String
-  primary Boolean @default(true)
-  user User @relation(references: [id], fields: [user_id])
-  politicianProfile PoliticianProfile @relation(fields: [politician_profile_id], references: [id])
-
+  primary               Boolean           @default(true)
+  user                  User              @relation(references: [id], fields: [user_id])
+  politicianProfile     PoliticianProfile @relation(fields: [politician_profile_id], references: [id])
 }
 
 model InstagramBaseData {
-  id String @unique @default(uuid())
-  followers Int
-  follows Int
-  posts_count Int
+  id             String            @unique @default(uuid())
+  followers      Int
+  follows        Int
+  posts_count    Int
   profilePicture String
-  reels_count Int
-  business Boolean
-  fullName String
-  verified Boolean
-  biography String
-  url String
-  date DateTime @default(now())
-  created_at DateTime @default(now())
-  politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  reels_count    Int
+  business       Boolean
+  fullName       String
+  verified       Boolean
+  biography      String
+  url            String
+  date           DateTime          @default(now())
+  created_at     DateTime          @default(now())
+  politician_id  String
+  politician     PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model TiktokBaseData {
-  id String @unique @default(uuid())
-  fans Float
-  videos Float
-  verified Boolean
-  avatar String
-  heart Float
-  date DateTime @default(now())
-  created_at DateTime @default(now())
+  id            String            @unique @default(uuid())
+  fans          Float
+  videos        Float
+  verified      Boolean
+  avatar        String
+  heart         Float
+  date          DateTime          @default(now())
+  created_at    DateTime          @default(now())
   politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  politician    PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model FacebookPostComments {
-  id String @unique @default(uuid())
-  postUrl String
-  text String
-  likeCount Int
-  date DateTime
-  username String
-  post_id String
-  authorGender SexType @default(MALE)
-  politician_id String
+  id                String               @unique @default(uuid())
+  postUrl           String
+  text              String
+  likeCount         Int
+  date              DateTime
+  username          String
+  post_id           String
+  authorGender      SexType              @default(MALE)
+  politician_id     String
   sentimentAnalysis Float
-  post FacebookPostBaseData @relation(references: [id], fields: [post_id])
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  post              FacebookPostBaseData @relation(references: [id], fields: [post_id])
+  politician        PoliticianProfile    @relation(references: [id], fields: [politician_id])
 }
 
 model TiktokVideoData {
-  id String @unique @default(uuid())
-  text String
-  diggCount Int
-  shareCount Int
-  playCount Int
-  commentCount Int
-  date DateTime
-  url String
+  id            String              @unique @default(uuid())
+  text          String
+  diggCount     Int
+  shareCount    Int
+  playCount     Int
+  commentCount  Int
+  date          DateTime
+  url           String
   politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  comments TiktokCommentData[]
+  politician    PoliticianProfile   @relation(references: [id], fields: [politician_id])
+  comments      TiktokCommentData[]
 }
 
 model TiktokCommentData {
-  id String @unique @default(uuid())
-  diggCount Int
-  date DateTime
-  replyCount Int
-  text String @default("")
-  author String
-  video_id String
-  politician_id String
-  authorGender SexType @default(MALE)
+  id                String            @unique @default(uuid())
+  diggCount         Int
+  date              DateTime
+  replyCount        Int
+  text              String            @default("")
+  author            String
+  video_id          String
+  politician_id     String
+  authorGender      SexType           @default(MALE)
   sentimentAnalysis Int
-  video TiktokVideoData @relation(references: [id], fields: [video_id])
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  video             TiktokVideoData   @relation(references: [id], fields: [video_id])
+  politician        PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model TwitterBaseData {
-  id String @unique @default(uuid())
-  followers Int
-  posts_count Int
+  id                   String            @unique @default(uuid())
+  followers            Int
+  posts_count          Int
   posts_comments_count Int
-  posts_likes_count Int
-  retweet_count Int
-  favorite_count Int
-  date DateTime @default(now())
-  created_at DateTime @default(now())
-  politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  posts_likes_count    Int
+  retweet_count        Int
+  favorite_count       Int
+  date                 DateTime          @default(now())
+  created_at           DateTime          @default(now())
+  politician_id        String
+  politician           PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model YoutubeBaseData {
-  id String @unique @default(uuid())
-  channel_name String
+  id                   String            @unique @default(uuid())
+  channel_name         String
   channel_total_videos Int
-  channel_total_subs Int
-  channel_total_views Int @default(0)
-  date DateTime
-  politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  channel_total_subs   Int
+  channel_total_views  Int               @default(0)
+  date                 DateTime
+  politician_id        String
+  politician           PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model YoutubeVideoData {
-  id String @unique @default(uuid())
-  title String 
-  url String
-  duration String
-  viewCount Int
+  id            String               @unique @default(uuid())
+  title         String
+  url           String
+  duration      String
+  viewCount     Int
   commentsCount Int
-  likes Int
-  date DateTime
-  description String
-  imgUrl String
+  likes         Int
+  date          DateTime
+  description   String
+  imgUrl        String
   politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  created_at DateTime @default(now())
-  comment YoutubeCommentData[]
+  politician    PoliticianProfile    @relation(references: [id], fields: [politician_id])
+  created_at    DateTime             @default(now())
+  comment       YoutubeCommentData[]
 }
 
 model YoutubeCommentData {
-  id String @unique @default(uuid())
-  text String
-  likeCount Int
-  replyCount Int
-  author String
-  video_id String
-  politician_id String
-  authorGender SexType @default(MALE)
+  id                String            @unique @default(uuid())
+  text              String
+  likeCount         Int
+  replyCount        Int
+  author            String
+  video_id          String
+  politician_id     String
+  authorGender      SexType           @default(MALE)
   sentimentAnalysis Int
-  created_at DateTime @default(now())
-  video YoutubeVideoData @relation(references: [id], fields: [video_id])
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  created_at        DateTime          @default(now())
+  video             YoutubeVideoData  @relation(references: [id], fields: [video_id])
+  politician        PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model FacebookBaseData {
-  id String @unique @default(uuid())
-  title String
-  likes_count Int
+  id              String            @unique @default(uuid())
+  title           String
+  likes_count     Int
   followers_count Int
-  date DateTime @default(now())
-  created_at DateTime @default(now())
-  politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  date            DateTime          @default(now())
+  created_at      DateTime          @default(now())
+  politician_id   String
+  politician      PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model FacebookPostBaseData {
-  id String @unique @default(uuid())
-  url String
-  text String
-  date DateTime
-  like Int
-  comments Int
-  shares Int
-  thumbnail String
+  id            String                 @unique @default(uuid())
+  url           String
+  text          String
+  date          DateTime
+  like          Int
+  comments      Int
+  shares        Int
+  thumbnail     String
   politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  comment_list FacebookPostComments[]
+  politician    PoliticianProfile      @relation(references: [id], fields: [politician_id])
+  comment_list  FacebookPostComments[]
 }
 
 model PoliticalGroup {
-  id String @unique @default(uuid())
-  name String
-  acronym String
-  number Int
-  instagram String?
-  ticktok String?
-  youtube String?
-  facebook String?
-  twitter String?
-  president String
+  id          String              @unique @default(uuid())
+  name        String
+  acronym     String
+  number      Int
+  instagram   String?
+  ticktok     String?
+  youtube     String?
+  facebook    String?
+  twitter     String?
+  president   String
   politicians PoliticianProfile[]
 }
 
 model PolicalPosition {
-  id String @unique @default(uuid())
-  name String
+  id       String        @unique @default(uuid())
+  name     String
   coverage CoverageTypes @default(CITY)
 }
 
 model InstagramPost {
-  id String @unique @default(uuid())
-  postUrl String
-  description String
-  commentCount Int
-  likeCount Int
-  pubDate DateTime
-  viewCount Int
-  playCount Int
-  username String
-  imgUrl String
-  postId String
+  id            String                 @unique @default(uuid())
+  postUrl       String
+  description   String
+  commentCount  Int
+  likeCount     Int
+  pubDate       DateTime
+  viewCount     Int
+  playCount     Int
+  username      String
+  imgUrl        String
+  postId        String
   politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  created_at DateTime @default(now())
-  comments InstagramPostComment[]
+  politician    PoliticianProfile      @relation(references: [id], fields: [politician_id])
+  created_at    DateTime               @default(now())
+  comments      InstagramPostComment[]
 }
 
 model InstagramPostComment {
-  id String @unique @default(uuid())
-  text String
-  ownerUsername String
+  id                 String            @unique @default(uuid())
+  text               String
+  ownerUsername      String
   ownerProfilePicUrl String
-  timestamp DateTime
-  likeCount Int
-  post_id String
-  authorGender SexType @default(MALE)
-  politician_id String
-  sentimentAnalysis Float
-  post InstagramPost @relation(references: [id], fields: [post_id])
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  timestamp          DateTime
+  likeCount          Int
+  post_id            String
+  authorGender       SexType           @default(MALE)
+  politician_id      String
+  sentimentAnalysis  Float
+  post               InstagramPost     @relation(references: [id], fields: [post_id])
+  politician         PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model InstagramMention {
-  id String @unique @default(uuid())
-  postUrl String
-  description String
-  commentCount Int
-  likeCount Int
-  pubDate DateTime
-  viewCount Int
-  playCount Int
-  username String
-  imgUrl String
-  postId String
-  ownerFullName String
-  ownerUsername String
-  politician_id String
+  id                String                    @unique @default(uuid())
+  postUrl           String
+  description       String
+  commentCount      Int
+  likeCount         Int
+  pubDate           DateTime
+  viewCount         Int
+  playCount         Int
+  username          String
+  imgUrl            String
+  postId            String
+  ownerFullName     String
+  ownerUsername     String
+  politician_id     String
   sentimentAnalysis Float
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  comments InstagramMentionComment[]
+  politician        PoliticianProfile         @relation(references: [id], fields: [politician_id])
+  comments          InstagramMentionComment[]
 }
 
 model InstagramMentionComment {
-  id String @unique @default(uuid())
-  text String
-  ownerUsername String
+  id                 String            @unique @default(uuid())
+  text               String
+  ownerUsername      String
   ownerProfilePicUrl String
-  timestamp DateTime
-  authorGender SexType @default(MALE)
-  likeCount Int
-  post_id String
-  sentimentAnalysis Float
-  politician_id String
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  post InstagramMention @relation(references: [id], fields: [post_id])
+  timestamp          DateTime
+  authorGender       SexType           @default(MALE)
+  likeCount          Int
+  post_id            String
+  sentimentAnalysis  Float
+  politician_id      String
+  politician         PoliticianProfile @relation(references: [id], fields: [politician_id])
+  post               InstagramMention  @relation(references: [id], fields: [post_id])
 }
 
-
-
 model CityIBGEData {
-  id String @unique @default(uuid())
-  city_id String
-  total Int @default(0)
-  total_zero_to_four Int @default(0)
-  total_five_to_nine Int @default(0)
-  total_ten_to_fourteen Int @default(0)
-  total_fifteen_to_nineteen Int @default(0)
-  total_twenty_to_twenty_four Int @default(0)
-  total_twenty_five_to_twenty_nine Int @default(0)
-  total_thirty_to_thirty_four Int @default(0)
-  total_thirty_five_to_thirty_nine Int @default(0)
-  total_forty_to_forty_four Int @default(0)
-  total_forty_five_to_forty_nine Int @default(0)
-  total_fifty_to_fifty_four Int @default(0)
-  total_fifty_five_to_fifty_nine Int @default(0)
-  total_sixty_to_sixty_four Int @default(0)
-  total_sixty_five_to_sixty_nine Int @default(0)
-  total_seventy_to_seventy_four Int @default(0)
-  total_seventy_five_to_seventy_nine Int @default(0)
-  total_eighty_to_eighty_four Int @default(0)
-  total_eighty_five_to_eighty_nine Int @default(0)
-  total_ninety_to_ninety_four Int @default(0)
-  total_ninety_five_to_ninety_nine Int @default(0)
-  total_hundred_and_up Int @default(0)
-  male_total Int @default(0)
-  male_zero_to_four Int @default(0)
-  male_five_to_nine Int @default(0)
-  male_ten_to_fourteen Int @default(0)
-  male_fifteen_to_nineteen Int @default(0)
-  male_twenty_to_twenty_four Int @default(0)
-  male_twenty_five_to_twenty_nine Int @default(0)
-  male_thirty_to_thirty_four Int @default(0)
-  male_thirty_five_to_thirty_nine Int @default(0)
-  male_forty_to_forty_four Int @default(0)
-  male_forty_five_to_forty_nine Int @default(0)
-  male_fifty_to_fifty_four Int @default(0)
-  male_fifty_five_to_fifty_nine Int @default(0)
-  male_sixty_to_sixty_four Int @default(0)
-  male_sixty_five_to_sixty_nine Int @default(0)
-  male_seventy_to_seventy_four Int @default(0)
-  male_seventy_five_to_seventy_nine Int @default(0)
-  male_eighty_to_eighty_four Int @default(0)
-  male_eighty_five_to_eighty_nine Int @default(0)
-  male_ninety_to_ninety_four Int @default(0)
-  male_ninety_five_to_ninety_nine Int @default(0)
-  male_hundred_and_up Int @default(0)
-  female_total Int @default(0)
-  female_zero_to_four Int @default(0)
-  female_five_to_nine Int @default(0)
-  female_ten_to_fourteen Int @default(0)
-  female_fifteen_to_nineteen Int @default(0)
-  female_twenty_to_twenty_four Int @default(0)
-  female_twenty_five_to_twenty_nine Int @default(0)
-  female_thirty_to_thirty_four Int @default(0)
-  female_thirty_five_to_thirty_nine Int @default(0)
-  female_forty_to_forty_four Int @default(0)
-  female_forty_five_to_forty_nine Int @default(0)
-  female_fifty_to_fifty_four Int @default(0)
-  female_fifty_five_to_fifty_nine Int @default(0)
-  female_sixty_to_sixty_four Int @default(0)
-  female_sixty_five_to_sixty_nine Int @default(0)
-  female_seventy_to_seventy_four Int @default(0)
-  female_seventy_five_to_seventy_nine Int @default(0)
-  female_eighty_to_eighty_four Int @default(0)
-  female_eighty_five_to_eighty_nine Int @default(0)
-  female_ninety_to_ninety_four Int @default(0)
-  female_ninety_five_to_ninety_nine Int @default(0)
-  female_hundred_and_up Int @default(0)
-  city City @relation(references: [id], fields: [city_id])
+  id                                  String @unique @default(uuid())
+  city_id                             String
+  total                               Int    @default(0)
+  total_zero_to_four                  Int    @default(0)
+  total_five_to_nine                  Int    @default(0)
+  total_ten_to_fourteen               Int    @default(0)
+  total_fifteen_to_nineteen           Int    @default(0)
+  total_twenty_to_twenty_four         Int    @default(0)
+  total_twenty_five_to_twenty_nine    Int    @default(0)
+  total_thirty_to_thirty_four         Int    @default(0)
+  total_thirty_five_to_thirty_nine    Int    @default(0)
+  total_forty_to_forty_four           Int    @default(0)
+  total_forty_five_to_forty_nine      Int    @default(0)
+  total_fifty_to_fifty_four           Int    @default(0)
+  total_fifty_five_to_fifty_nine      Int    @default(0)
+  total_sixty_to_sixty_four           Int    @default(0)
+  total_sixty_five_to_sixty_nine      Int    @default(0)
+  total_seventy_to_seventy_four       Int    @default(0)
+  total_seventy_five_to_seventy_nine  Int    @default(0)
+  total_eighty_to_eighty_four         Int    @default(0)
+  total_eighty_five_to_eighty_nine    Int    @default(0)
+  total_ninety_to_ninety_four         Int    @default(0)
+  total_ninety_five_to_ninety_nine    Int    @default(0)
+  total_hundred_and_up                Int    @default(0)
+  male_total                          Int    @default(0)
+  male_zero_to_four                   Int    @default(0)
+  male_five_to_nine                   Int    @default(0)
+  male_ten_to_fourteen                Int    @default(0)
+  male_fifteen_to_nineteen            Int    @default(0)
+  male_twenty_to_twenty_four          Int    @default(0)
+  male_twenty_five_to_twenty_nine     Int    @default(0)
+  male_thirty_to_thirty_four          Int    @default(0)
+  male_thirty_five_to_thirty_nine     Int    @default(0)
+  male_forty_to_forty_four            Int    @default(0)
+  male_forty_five_to_forty_nine       Int    @default(0)
+  male_fifty_to_fifty_four            Int    @default(0)
+  male_fifty_five_to_fifty_nine       Int    @default(0)
+  male_sixty_to_sixty_four            Int    @default(0)
+  male_sixty_five_to_sixty_nine       Int    @default(0)
+  male_seventy_to_seventy_four        Int    @default(0)
+  male_seventy_five_to_seventy_nine   Int    @default(0)
+  male_eighty_to_eighty_four          Int    @default(0)
+  male_eighty_five_to_eighty_nine     Int    @default(0)
+  male_ninety_to_ninety_four          Int    @default(0)
+  male_ninety_five_to_ninety_nine     Int    @default(0)
+  male_hundred_and_up                 Int    @default(0)
+  female_total                        Int    @default(0)
+  female_zero_to_four                 Int    @default(0)
+  female_five_to_nine                 Int    @default(0)
+  female_ten_to_fourteen              Int    @default(0)
+  female_fifteen_to_nineteen          Int    @default(0)
+  female_twenty_to_twenty_four        Int    @default(0)
+  female_twenty_five_to_twenty_nine   Int    @default(0)
+  female_thirty_to_thirty_four        Int    @default(0)
+  female_thirty_five_to_thirty_nine   Int    @default(0)
+  female_forty_to_forty_four          Int    @default(0)
+  female_forty_five_to_forty_nine     Int    @default(0)
+  female_fifty_to_fifty_four          Int    @default(0)
+  female_fifty_five_to_fifty_nine     Int    @default(0)
+  female_sixty_to_sixty_four          Int    @default(0)
+  female_sixty_five_to_sixty_nine     Int    @default(0)
+  female_seventy_to_seventy_four      Int    @default(0)
+  female_seventy_five_to_seventy_nine Int    @default(0)
+  female_eighty_to_eighty_four        Int    @default(0)
+  female_eighty_five_to_eighty_nine   Int    @default(0)
+  female_ninety_to_ninety_four        Int    @default(0)
+  female_ninety_five_to_ninety_nine   Int    @default(0)
+  female_hundred_and_up               Int    @default(0)
+  city                                City   @relation(references: [id], fields: [city_id])
 }
 
 model CityPollingPlace {
-  id String @unique @default(uuid())
-  number String
-  name String
+  id       String @unique @default(uuid())
+  number   String
+  name     String
   quantity Int
-  city_id String
-  city City @relation(references: [id], fields: [city_id])
+  city_id  String
+  city     City   @relation(references: [id], fields: [city_id])
 }
 
 model CityElectorateData {
-  id String @unique @default(uuid())
-  illiterate Int @default(0)
-  complete_primary_education Int @default(0) 
-  incomplete_primary_education Int @default(0) 
-  complete_high_school Int @default(0) 
-  incomplete_high_school Int @default(0) 
-  reads_and_writes Int @default(0) 
-  not_informed Int @default(0) 
-  complete_higher_education Int @default(0) 
-  incomplete_higher_education Int @default(0) 
-  hundred_years_or_more Int @default(0) 
-  sixteen_years Int @default(0) 
-  seventeen_years Int @default(0)
-  eighteen_years Int @default(0)
-  nineteen_years Int @default(0)
-  twenty_years Int @default(0)
-  twenty_one_to_twenty_four_years Int @default(0)
-  twenty_five_to_twenty_nine_years Int @default(0)
-  thirty_to_thirty_four_years Int @default(0)
-  thirty_five_to_thirty_nine_years Int @default(0)
-  forty_to_forty_four_years Int @default(0)
-  forty_five_to_forty_nine_years Int @default(0)
-  fifty_to_fifty_four_years Int @default(0)
-  fifty_five_to_fifty_nine_years Int @default(0)
-  sixty_to_sixty_four_years Int @default(0)
-  sixty_five_to_sixty_nine_years Int @default(0)
-  seventy_to_seventy_four_years Int @default(0)
-  seventy_five_to_seventy_nine_years Int @default(0)
-  eighty_to_eighty_four_years Int @default(0)
-  eighty_five_to_eighty_nine_years Int @default(0)
-  ninety_to_ninety_four_years Int @default(0)
-  ninety_five_to_ninety_nine_years Int @default(0) 
-  invalid Int @default(0) 
-  female Int @default(0)
-  male Int @default(0)
-  electorate Int @default(0)
-  with_biometry Int @default(0)
-  with_disability Int @default(0)
-  city_id String 
-  city City @relation(references: [id], fields: [city_id])
+  id                                 String @unique @default(uuid())
+  illiterate                         Int    @default(0)
+  complete_primary_education         Int    @default(0)
+  incomplete_primary_education       Int    @default(0)
+  complete_high_school               Int    @default(0)
+  incomplete_high_school             Int    @default(0)
+  reads_and_writes                   Int    @default(0)
+  not_informed                       Int    @default(0)
+  complete_higher_education          Int    @default(0)
+  incomplete_higher_education        Int    @default(0)
+  hundred_years_or_more              Int    @default(0)
+  sixteen_years                      Int    @default(0)
+  seventeen_years                    Int    @default(0)
+  eighteen_years                     Int    @default(0)
+  nineteen_years                     Int    @default(0)
+  twenty_years                       Int    @default(0)
+  twenty_one_to_twenty_four_years    Int    @default(0)
+  twenty_five_to_twenty_nine_years   Int    @default(0)
+  thirty_to_thirty_four_years        Int    @default(0)
+  thirty_five_to_thirty_nine_years   Int    @default(0)
+  forty_to_forty_four_years          Int    @default(0)
+  forty_five_to_forty_nine_years     Int    @default(0)
+  fifty_to_fifty_four_years          Int    @default(0)
+  fifty_five_to_fifty_nine_years     Int    @default(0)
+  sixty_to_sixty_four_years          Int    @default(0)
+  sixty_five_to_sixty_nine_years     Int    @default(0)
+  seventy_to_seventy_four_years      Int    @default(0)
+  seventy_five_to_seventy_nine_years Int    @default(0)
+  eighty_to_eighty_four_years        Int    @default(0)
+  eighty_five_to_eighty_nine_years   Int    @default(0)
+  ninety_to_ninety_four_years        Int    @default(0)
+  ninety_five_to_ninety_nine_years   Int    @default(0)
+  invalid                            Int    @default(0)
+  female                             Int    @default(0)
+  male                               Int    @default(0)
+  electorate                         Int    @default(0)
+  with_biometry                      Int    @default(0)
+  with_disability                    Int    @default(0)
+  city_id                            String
+  city                               City   @relation(references: [id], fields: [city_id])
 }
 
 model News {
-  id String @unique @default(uuid())
+  id          String      @unique @default(uuid())
   last_update DateTime
-  title String
-  url String
-  users NewsUsers[]
-  website_id String?
-  website Website? @relation(references: [id],fields: [website_id]) 
+  title       String
+  url         String
+  users       NewsUsers[]
+  website_id  String?
+  website     Website?    @relation(references: [id], fields: [website_id])
 }
 
 model NewsUsers {
-  id String @unique @default(uuid())
-  news_id String
-  politician_id String
+  id                String            @unique @default(uuid())
+  news_id           String
+  politician_id     String
   sentimentAnalysis Int
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  news News @relation(references: [id], fields: [news_id])
+  politician        PoliticianProfile @relation(references: [id], fields: [politician_id])
+  news              News              @relation(references: [id], fields: [news_id])
 }
 
 model MetaAdvertisingLib {
-  id String @unique @default(uuid())
-  politician_id String
+  id                      String                                      @unique @default(uuid())
+  politician_id           String
   impressions_lower_bound String
   impressions_upper_bound String
-  spend_lower_bound String
-  spend_upper_bound String
-  currency String
-  page_name String
-  bylines String
-  ad_snapshot_url String
-  ad_delivery_start_time DateTime
-  ad_delivery_stop_time DateTime?
-  ad_creation_time DateTime
-  status Status @default(INACTIVE)
-  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
-  deliveryByRegion MetaAdvertisingLibDeliveryByRegion[]
+  spend_lower_bound       String
+  spend_upper_bound       String
+  currency                String
+  page_name               String
+  bylines                 String
+  ad_snapshot_url         String
+  ad_delivery_start_time  DateTime
+  ad_delivery_stop_time   DateTime?
+  ad_creation_time        DateTime
+  status                  Status                                      @default(INACTIVE)
+  politician              PoliticianProfile                           @relation(references: [id], fields: [politician_id])
+  deliveryByRegion        MetaAdvertisingLibDeliveryByRegion[]
   demographicDistribution MetaAdvertisingLibDemographicDistribution[]
 }
 
 model MetaAdvertisingLibDemographicDistribution {
-  id String @unique @default(uuid())
-  percentage String
-  age String
-  gender String
+  id             String             @unique @default(uuid())
+  percentage     String
+  age            String
+  gender         String
   advertising_id String
-  advertising MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
+  advertising    MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
 }
 
 model MetaAdvertisingLibDeliveryByRegion {
-  id String @unique @default(uuid())
-  percentage String
-  region String
+  id             String             @unique @default(uuid())
+  percentage     String
+  region         String
   advertising_id String
-  advertising MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
+  advertising    MetaAdvertisingLib @relation(references: [id], fields: [advertising_id])
 }
 
 model Website {
-  id String @unique @default(uuid())
-  name String
-  url String
+  id               String @unique @default(uuid())
+  name             String
+  url              String
   state_capital_id String
-  city City @relation(references: [id], fields: [state_capital_id])
-  news News[]
+  city             City   @relation(references: [id], fields: [state_capital_id])
+  news             News[]
 }
 
 model City {
-  id String @unique @default(uuid())
-  name String
-  state String
-  politician PoliticianProfile[]
-  IBGEData CityIBGEData[]
-  website Website[]
-  electorate CityElectorateData[]
+  id           String               @unique @default(uuid())
+  name         String
+  state        String
+  politician   PoliticianProfile[]
+  IBGEData     CityIBGEData[]
+  website      Website[]
+  electorate   CityElectorateData[]
   pollingPlace CityPollingPlace[]
 }
 
 model tutorialVideo {
-  id String @unique @default(uuid())
-  title String
-  url String
+  id          String @unique @default(uuid())
+  title       String
+  url         String
   description String
 }
 
 model Notification {
-  id String @unique @default(uuid())
-  description String
-  date DateTime @default(now())
-  user_id String
-  opened Boolean @default(false)
-  type NotificationType
+  id                    String            @unique @default(uuid())
+  description           String
+  date                  DateTime          @default(now())
+  user_id               String
+  opened                Boolean           @default(false)
+  type                  NotificationType
   politician_profile_id String
-  user User @relation(references: [id], fields: [user_id])
-  politician PoliticianProfile @relation(references: [id], fields: [politician_profile_id])
+  user                  User              @relation(references: [id], fields: [user_id])
+  politician            PoliticianProfile @relation(references: [id], fields: [politician_profile_id])
 }
 
 model SubUser {
-  id String @unique @default(uuid())
-  name String
-  email String
+  id            String  @unique @default(uuid())
+  name          String
+  email         String
   password_hash String
-  user_id String
-  active Boolean
-  user User @relation(references: [id], fields: [user_id])
+  user_id       String
+  active        Boolean
+  user          User    @relation(references: [id], fields: [user_id])
 }
 
 model UserRecoverPasswordCode {
-  id String @unique @default(uuid())
-  code String @unique
-  user_id String
+  id         String   @unique @default(uuid())
+  code       String   @unique
+  user_id    String
   expires_in DateTime
-  user User @relation(references: [id], fields: [user_id])
+  user       User     @relation(references: [id], fields: [user_id])
 }
-
 
 model LegalData {
-  id String @unique @default(uuid())
-  activePole String?   
-  passivePole String?  
-  startDate DateTime? 
-  lastUpdate DateTime? 
-  subject String?
-  judgingBy String?   
-  causeValue String?   
-  court String?
-  url String?   
-  status String?
-  politician_id String 
-  politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id]) 
-}
-
-model PersonalData {
-  id String @unique @default(uuid())
-  federalStatus String
-  fatherName String
-  federalCrime String
-  federalCrimeCertificate String
-  estimated_recipe String @default("")
-  estimated_patrimony String @default("")
-  politician_id String
+  id                String            @unique @default(uuid())
+  activePole        String?
+  passivePole       String?
+  startDate         DateTime?
+  lastUpdate        DateTime?
+  subject           String?
+  judgingBy         String?
+  causeValue        String?
+  court             String?
+  url               String?
+  status            String?
+  politician_id     String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
+model PersonalData {
+  id                      String            @unique @default(uuid())
+  federalStatus           String
+  fatherName              String
+  federalCrime            String
+  federalCrimeCertificate String
+  estimated_recipe        String            @default("")
+  estimated_patrimony     String            @default("")
+  politician_id           String
+  politicianProfile       PoliticianProfile @relation(references: [id], fields: [politician_id])
+}
+
 model PersonalAddress {
-  id String @unique @default(uuid())
-  zipcode String
-  country String
-  address String
-  city String
-  addressType String
-  neighborhood String
-  state String
-  politician_id String
+  id                String            @unique @default(uuid())
+  zipcode           String
+  country           String
+  address           String
+  city              String
+  addressType       String
+  neighborhood      String
+  state             String
+  politician_id     String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model PersonalEconomicRelationship {
-  id String @unique @default(uuid())
-  country String
-  relationshipType String
-  name String
-  cnpj String
+  id                String            @unique @default(uuid())
+  country           String
+  relationshipType  String
+  name              String
+  cnpj              String
   relationshipLevel String
-  politician_id String
+  politician_id     String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model personalIncomeTaxReturns {
-  id String @unique @default(uuid())
-  year String
-  bankAgency String?
-  situation String
-  politician_id String
+  id                String            @unique @default(uuid())
+  year              String
+  bankAgency        String?
+  situation         String
+  politician_id     String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
 }

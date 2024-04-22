@@ -3,18 +3,17 @@ import { makeFindPoliticianProfileCityDetails } from "@/useCase/@factories/polit
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findPoliticianProfileCityDetailsController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { id } = ZodIdParamsSchema.parse(request.params);
+  const { id } = ZodIdParamsSchema.parse(request.params);
+  const findPoliticianProfileCityDetailsUseCase =
+    makeFindPoliticianProfileCityDetails();
 
-	const findPoliticianProfileCityDetailsUseCase =
-		makeFindPoliticianProfileCityDetails();
+  const { city } = await findPoliticianProfileCityDetailsUseCase.execute({
+    id,
+    userId: request.user.sub,
+  });
 
-	const { city } = await findPoliticianProfileCityDetailsUseCase.execute({
-		id,
-		userId: request.user.sub,
-	});
-
-	return reply.status(200).send({ city });
+  return reply.status(200).send({ city });
 };
