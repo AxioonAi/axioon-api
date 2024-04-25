@@ -495,7 +495,7 @@ export class AwsNotificationProductionRepository
           date: item.time,
           like: item.likes,
           shares: item.shares,
-          comments: item.comments,
+          comments: item.comments ?? 0,
           thumbnail: item.media?.[0]
             ? item.media[0].thumbnail
             : "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
