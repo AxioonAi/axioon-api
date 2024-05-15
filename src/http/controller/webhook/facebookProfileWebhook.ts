@@ -3,15 +3,16 @@ import { makeFacebookProfileWebhook } from "@/useCase/@factories/webhook/makeFac
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const facebookProfileWebhookController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { records } = ZodWebhookBodySchema.parse(request.body);
+  const { records } = ZodWebhookBodySchema.parse(request.body);
+  console.log("entrou facebook perfil");
+  const facebookWebhookUseCase = makeFacebookProfileWebhook();
+  const data = await facebookWebhookUseCase.execute({
+    records,
+  });
+  console.log("saiu facebook perfil");
 
-	const facebookWebhookUseCase = makeFacebookProfileWebhook();
-	const data = await facebookWebhookUseCase.execute({
-		records,
-	});
-
-	return reply.status(200).send(data);
+  return reply.status(200).send(data);
 };

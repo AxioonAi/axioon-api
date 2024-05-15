@@ -3,19 +3,20 @@ import { makeInstagramMentionsCommentsWebhook } from "@/useCase/@factories/webho
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const instagramMentionCommentsWebhookController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { records } = ZodWebhookBodySchema.parse(request.body);
+  const { records } = ZodWebhookBodySchema.parse(request.body);
 
-	console.log(records);
+  console.log("entrou mention comments");
 
-	const instagramMentionCommentsWebhookUseCase =
-		makeInstagramMentionsCommentsWebhook();
+  const instagramMentionCommentsWebhookUseCase =
+    makeInstagramMentionsCommentsWebhook();
 
-	const data = await instagramMentionCommentsWebhookUseCase.execute({
-		records,
-	});
+  const data = await instagramMentionCommentsWebhookUseCase.execute({
+    records,
+  });
+  console.log("saiu mention comments");
 
-	return reply.status(200).send(data);
+  return reply.status(200).send(data);
 };

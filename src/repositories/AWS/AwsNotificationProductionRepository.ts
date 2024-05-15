@@ -271,21 +271,27 @@ export class AwsNotificationProductionRepository
       });
 
     const formattedData: AwsNotificationYoutubeVideoResponseInterface[] =
-      awsData.map((item) => {
-        return {
-          id: item.id,
-          title: item.title,
-          url: item.url,
-          duration: item.duration,
-          viewCount: item.viewCount,
-          commentsCount: item.commentsCount,
-          likes: item.likes ? item.likes : 0,
-          date: moment(item.date.replace("~", "")).toDate(),
-          description: item.text,
-          imgUrl: item.thumbnailUrl,
-          politician_id: item.channel_id,
-        };
-      });
+      awsData
+        .map((item) => {
+          if (item.channel_id) {
+            return {
+              id: item.id,
+              title: item.title,
+              url: item.url,
+              duration: item.duration,
+              viewCount: item.viewCount,
+              commentsCount: item.commentsCount,
+              likes: item.likes ? item.likes : 0,
+              date: moment(item.date.replace("~", "")).toDate(),
+              description: item.text,
+              imgUrl: item.thumbnailUrl,
+              politician_id: item.channel_id,
+            };
+          }
+        })
+        .filter(
+          (item) => item !== undefined
+        ) as AwsNotificationYoutubeVideoResponseInterface[];
 
     return formattedData;
   }
@@ -429,8 +435,9 @@ export class AwsNotificationProductionRepository
     const formattedData: AwsNotificationTiktokProfileFormattedDataInterface =
       {};
 
+    console.log(awsData);
     for (const item of awsData) {
-      if (!formattedData[item.tiktok_id]) {
+      if (!formattedData[item.tiktok_id] && item.authorMeta) {
         formattedData[item.tiktok_id] = {
           videos: [],
           profile: {
@@ -444,20 +451,22 @@ export class AwsNotificationProductionRepository
         };
       }
 
-      formattedData[item.tiktok_id].videos = [
-        ...formattedData[item.tiktok_id].videos,
-        {
-          id: item.id,
-          text: item.text,
-          diggCount: item.diggCount,
-          shareCount: item.shareCount,
-          playCount: item.playCount,
-          commentCount: item.commentCount,
-          date: item.createTimeISO,
-          url: item.webVideoUrl,
-          politician_id: item.tiktok_id,
-        },
-      ];
+      if (formattedData[item.tiktok_id]) {
+        formattedData[item.tiktok_id].videos = [
+          ...formattedData[item.tiktok_id].videos,
+          {
+            id: item.id,
+            text: item.text,
+            diggCount: item.diggCount,
+            shareCount: item.shareCount,
+            playCount: item.playCount,
+            commentCount: item.commentCount,
+            date: item.createTimeISO,
+            url: item.webVideoUrl,
+            politician_id: item.tiktok_id,
+          },
+        ];
+      }
     }
 
     const finalData: AwsNotificationTiktokProfileResponseInterface = {
@@ -611,7 +620,9 @@ export class AwsNotificationProductionRepository
           id: item.id,
           channel_name: item.channelName,
           channel_total_views: parseFloat(
-            item.channelTotalViews.replace(",", "")
+            typeof item.channelTotalViews === "string"
+              ? item.channelTotalViews.replace(",", "")
+              : item.channelTotalViews
           ),
           channel_total_subs: item.numberOfSubscribers
             ? item.numberOfSubscribers

@@ -3,15 +3,17 @@ import { makeYoutubeChannelWebhook } from "@/useCase/@factories/webhook/makeYout
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const youtubeChannelWebhookController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { records } = ZodWebhookBodySchema.parse(request.body);
-	const youtubeChannelWebhookUseCase = makeYoutubeChannelWebhook();
+  const { records } = ZodWebhookBodySchema.parse(request.body);
+  const youtubeChannelWebhookUseCase = makeYoutubeChannelWebhook();
 
-	const data = await youtubeChannelWebhookUseCase.execute({
-		records,
-	});
+  console.log("entrou youtube channel");
+  const data = await youtubeChannelWebhookUseCase.execute({
+    records,
+  });
 
-	reply.status(200).send(data);
+  console.log("saiu youtube channel");
+  reply.status(200).send(data);
 };

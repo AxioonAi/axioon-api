@@ -8,12 +8,14 @@ export const facebookPostsWebhookController = async (
 ) => {
   const { records } = ZodWebhookBodySchema.parse(request.body);
 
-  console.log(records);
+  console.log("entrou facebook posts");
+
   const facebookPostsWebhookUseCase = makeFacebookPostsWebhook();
 
   const data = await facebookPostsWebhookUseCase.execute({
     records,
   });
+  console.log("saiu facebook posts");
 
   reply.status(200).send(data);
 };

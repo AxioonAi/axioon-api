@@ -3,18 +3,21 @@ import { makeTiktokCommentsWebhook } from "@/useCase/@factories/webhook/makeTikt
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const tiktokCommentsWebhookController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { records } = ZodWebhookBodySchema.parse(request.body);
+  const { records } = ZodWebhookBodySchema.parse(request.body);
 
-	try {
-		const tiktokCommentsWebhookUseCase = makeTiktokCommentsWebhook();
+  try {
+    const tiktokCommentsWebhookUseCase = makeTiktokCommentsWebhook();
 
-		const data = await tiktokCommentsWebhookUseCase.execute({
-			records,
-		});
+    console.log("entrou tiktok comment");
 
-		return reply.status(200).send(data);
-	} catch (error) {}
+    const data = await tiktokCommentsWebhookUseCase.execute({
+      records,
+    });
+
+    console.log("saiu tiktok comment");
+    return reply.status(200).send(data);
+  } catch (error) {}
 };

@@ -3,18 +3,20 @@ import { makeInstagramPostWebhook } from "@/useCase/@factories/webhook/makeInsta
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const instagramPostWebhookController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { records } = ZodWebhookBodySchema.parse(request.body);
+  const { records } = ZodWebhookBodySchema.parse(request.body);
 
-	try {
-		const instagramPostWebhookUseCase = makeInstagramPostWebhook();
+  console.log("entrou insta post");
+  try {
+    const instagramPostWebhookUseCase = makeInstagramPostWebhook();
 
-		const data = await instagramPostWebhookUseCase.execute({
-			records,
-		});
+    const data = await instagramPostWebhookUseCase.execute({
+      records,
+    });
+    console.log("saiu insta post");
 
-		reply.status(200).send(data);
-	} catch (error) {}
+    reply.status(200).send(data);
+  } catch (error) {}
 };
