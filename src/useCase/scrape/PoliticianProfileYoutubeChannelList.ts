@@ -15,16 +15,9 @@ export class PoliticianProfileYoutubeChannelListUseCase {
       await this.politicianProfileRepository.findYoutubeChannelList();
 
     return {
-      youtube: youtube
-        .map((item) => {
-          if (item.youtube !== null && item.youtube !== "") {
-            return {
-              id: item.id,
-              youtube: item.youtube,
-            };
-          }
-        })
-        .filter((item) => item !== undefined) as UserYoutubeChannelInterface[],
+      youtube: youtube.filter(
+        (item) => item.youtube !== ""
+      ) as UserYoutubeChannelInterface[],
     };
   }
 }

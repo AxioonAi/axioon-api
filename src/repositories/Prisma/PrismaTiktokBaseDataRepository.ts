@@ -3,13 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { TiktokBaseDataRepository } from "../TiktokBaseDataRepository";
 
 export class PrismaTiktokBaseDataRepository
-	implements TiktokBaseDataRepository
+  implements TiktokBaseDataRepository
 {
-	async createMany(data: TiktokBaseDataCreateInterface[]) {
-		await prisma.tiktokBaseData.createMany({
-			data,
-		});
+  async createMany(data: TiktokBaseDataCreateInterface[]) {
+    console.log("criar", data);
+    try {
+      await prisma.tiktokBaseData.createMany({
+        data,
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
 
-		return;
-	}
+    return;
+  }
 }

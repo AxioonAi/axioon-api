@@ -242,8 +242,6 @@ export class AwsNotificationProductionRepository
       finalData.push({ ...item, users });
     }
 
-    console.log(finalData);
-
     return finalData;
   }
 
@@ -435,7 +433,6 @@ export class AwsNotificationProductionRepository
     const formattedData: AwsNotificationTiktokProfileFormattedDataInterface =
       {};
 
-    console.log(awsData);
     for (const item of awsData) {
       if (!formattedData[item.tiktok_id] && item.authorMeta) {
         formattedData[item.tiktok_id] = {
@@ -505,9 +502,10 @@ export class AwsNotificationProductionRepository
           like: item.likes,
           shares: item.shares,
           comments: item.comments ?? 0,
-          thumbnail: item.media?.[0]
-            ? item.media[0].thumbnail
-            : "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
+          thumbnail:
+            item.media && item.media?.[0]
+              ? item.media[0].thumbnail
+              : "https://tm.ibxk.com.br/2023/09/21/21105542136038.jpg",
           politician_id: item.facebook_id,
         };
       });
