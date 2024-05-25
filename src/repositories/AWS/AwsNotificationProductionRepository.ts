@@ -177,7 +177,11 @@ export class AwsNotificationProductionRepository
           username: item.ownerUsername,
           imgUrl: item.displayUrl,
           postId: item.id,
-          politician_id: item.instagram_id,
+          politician_id: item.instagram_id
+            ? item.instagram_id
+            : item.inputUrl === "https://www.instagram.com/genildocarvalhopr/"
+            ? "afde78f7-fb65-4aeb-97fc-5d241f14abf3"
+            : null,
         };
       });
 
