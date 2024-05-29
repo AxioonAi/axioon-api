@@ -19,19 +19,7 @@ export class InstagramPostsWebhookUseCase {
         records,
       });
 
-    console.log(
-      data.filter(
-        (item) => item.politician_id === "afde78f7-fb65-4aeb-97fc-5d241f14abf3"
-      ).length
-    );
-    // const customPost = data.forEach((item) => {
-    // 	if(item.i)
-    // })
-    await this.instagramPostRepository.createMany(
-      data.filter(
-        (item) => item.politician_id === "afde78f7-fb65-4aeb-97fc-5d241f14abf3"
-      )
-    );
+    await this.instagramPostRepository.createMany(data);
 
     return;
   }
