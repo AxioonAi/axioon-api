@@ -2,12 +2,12 @@ import { makePoliticianProfileTiktokList } from "@/useCase/@factories/scrape/mak
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userTikTokController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const userTikTokUseCase = makePoliticianProfileTiktokList();
+  const userTikTokUseCase = makePoliticianProfileTiktokList();
 
-	const tiktok = await userTikTokUseCase.execute({});
+  const tiktok = await userTikTokUseCase.execute();
 
-	return reply.status(200).send(tiktok);
+  return reply.status(200).send(tiktok);
 };

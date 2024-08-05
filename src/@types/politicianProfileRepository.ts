@@ -7,6 +7,7 @@ import {
   FacebookPostBaseData,
   FacebookPostComments,
   InstagramBaseData,
+  InstagramEngager,
   InstagramMention,
   InstagramMentionComment,
   InstagramPost,
@@ -23,10 +24,12 @@ import {
   PoliticianProfile,
   TiktokBaseData,
   TiktokCommentData,
+  TiktokEngager,
   TiktokVideoData,
   YoutubeBaseData,
   YoutubeCommentData,
   YoutubeVideoData,
+  legalDataInvolved,
   personalIncomeTaxReturns,
 } from "@prisma/client";
 
@@ -85,7 +88,11 @@ export interface facebookData {
 export interface tiktokData {
   tiktokData: TiktokBaseData[];
   tiktokVideoData: TiktokVideoData[];
-  tiktokComments: TiktokCommentData[];
+  tiktokComments: CustomTiktokCommentData[];
+}
+
+interface CustomTiktokCommentData extends TiktokCommentData {
+  engager?: TiktokEngager | null;
 }
 
 export interface instagramData {
@@ -141,8 +148,12 @@ export interface findNamesAndRolesData extends PoliticianProfile {
   }[];
 }
 
+interface LegalDataDetails extends LegalData {
+  involved: legalDataInvolved[];
+}
+
 export interface LegalDetailsData extends PoliticianProfile {
-  legalData: LegalData[];
+  legalData: LegalDataDetails[];
   personalData: PersonalData[];
   address: PersonalAddress[];
   economicRelationship: PersonalEconomicRelationship[];
@@ -161,6 +172,7 @@ interface metaAds extends MetaAdvertisingLib {
 export interface MentionsData {
   news: newsUser[];
   instagramMention: instagramMention[];
+  instagramMentionComments: instagramMentionComment[];
 }
 
 interface newsUser extends NewsUsers {
@@ -168,13 +180,18 @@ interface newsUser extends NewsUsers {
 }
 
 interface NewsWithName extends News {
-  website: {
+  website?: {
     name: string;
-  };
+    website_logo?: string | null;
+  } | null;
 }
 
 interface instagramMention extends InstagramMention {
-  comments: InstagramMentionComment[];
+  engager?: InstagramEngager | null;
+}
+
+interface instagramMentionComment extends InstagramMentionComment {
+  engager?: InstagramEngager | null;
 }
 
 export interface findProfileWithoutFacebookDataInterface {

@@ -1,6 +1,6 @@
 import { StatisticsData } from "@/@types/politicianProfileRepository";
 import { prisma } from "@/lib/prisma";
-import { Role, Status } from "@prisma/client";
+import { $Enums, Role, Status } from "@prisma/client";
 import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
 
 export class PrismaPoliticianProfileRepository
@@ -18,6 +18,30 @@ export class PrismaPoliticianProfileRepository
         cpf: true,
         id: true,
       },
+    });
+  }
+  async findById(id: string) {
+    return await prisma.politicianProfile.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async update(
+    id: string,
+    data: {
+      instagram?: string | undefined;
+      youtube?: string | undefined;
+      tiktok?: string | undefined;
+      facebook?: string | undefined;
+    }
+  ) {
+    return await prisma.politicianProfile.update({
+      where: {
+        id,
+      },
+      data,
     });
   }
 
@@ -261,6 +285,9 @@ export class PrismaPoliticianProfileRepository
               },
             },
           },
+          include: {
+            engager: true,
+          },
         },
         facebookPosts: {
           where: {
@@ -305,6 +332,9 @@ export class PrismaPoliticianProfileRepository
               },
             },
           },
+          include: {
+            engager: true,
+          },
         },
       },
     });
@@ -338,6 +368,9 @@ export class PrismaPoliticianProfileRepository
               gte: data.gte,
               lte: data.lte,
             },
+          },
+          include: {
+            engager: true,
           },
         },
       },
@@ -600,13 +633,19 @@ export class PrismaPoliticianProfileRepository
     });
   }
 
-  async findMetaAdsStatistics(id: string) {
+  async findMetaAdsStatistics(data: StatisticsData) {
     return await prisma.politicianProfile.findUnique({
       where: {
-        id: id,
+        id: data.id,
       },
       select: {
         advertising: {
+          where: {
+            ad_creation_time: {
+              gte: data.gte,
+              lte: data.lte,
+            },
+          },
           include: {
             deliveryByRegion: true,
             demographicDistribution: true,
@@ -637,6 +676,7 @@ export class PrismaPoliticianProfileRepository
                 website: {
                   select: {
                     name: true,
+                    website_logo: true,
                   },
                 },
               },
@@ -651,7 +691,18 @@ export class PrismaPoliticianProfileRepository
             },
           },
           include: {
-            comments: true,
+            engager: true,
+          },
+        },
+        instagramMentionComments: {
+          where: {
+            timestamp: {
+              gte: data.gte,
+              lte: data.lte,
+            },
+          },
+          include: {
+            engager: true,
           },
         },
       },
@@ -664,7 +715,11 @@ export class PrismaPoliticianProfileRepository
         id: id,
       },
       include: {
-        legalData: true,
+        legalData: {
+          include: {
+            involved: true,
+          },
+        },
         personalData: true,
         address: true,
         economicRelationship: true,

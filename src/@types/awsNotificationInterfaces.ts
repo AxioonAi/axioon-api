@@ -148,6 +148,20 @@ export interface AwsNotificationInstagramProfileAwsDataInterface {
   profilePicUrlHD: string;
 }
 
+export interface AwsNotificationInstagramEngagerAwsDataInterface {
+  engager_id: string;
+  followersCount: number;
+  followsCount: number;
+  postsCount: number;
+  igtvVideoCount: number;
+  isBusinessAccount: boolean;
+  verified: boolean;
+  biography: string;
+  url: string;
+  fullName: string;
+  profilePicUrlHD: string;
+}
+
 export interface AwsNotificationInstagramProfileResponseInterface {
   politician_id: string;
   followers: number;
@@ -162,6 +176,28 @@ export interface AwsNotificationInstagramProfileResponseInterface {
   profilePicture: string;
 }
 
+export interface AwsNotificationInstagramEngagerResponseInterface {
+  engagerId: string;
+  followers: number;
+  follows: number;
+  posts_count: number;
+  reels_count: number;
+  business: boolean;
+  verified: boolean;
+  biography: string;
+  url: string;
+  fullName: string;
+  profilePicture: string;
+}
+
+export interface AwsNotificationTiktokEngagerResponseInterface {
+  fans: number;
+  verified: boolean;
+  avatar: string;
+  heart: number;
+  engagerId: string;
+}
+
 export interface AwsNotificationTiktokProfileAwsDataInterface {
   tiktok_id: string;
   authorMeta: {
@@ -172,6 +208,19 @@ export interface AwsNotificationTiktokProfileAwsDataInterface {
     heart: number;
   };
   id: string;
+  text: string;
+  diggCount: number;
+  createTimeISO: Date;
+  shareCount: number;
+  commentCount: number;
+  playCount: number;
+  webVideoUrl: string;
+}
+
+export interface AwsNotificationTiktokHashtagMentionAwsDataInterface {
+  "authorMeta.avatar": string;
+  "authorMeta.name": string;
+  hashtagId: string;
   text: string;
   diggCount: number;
   createTimeISO: Date;
@@ -201,6 +250,20 @@ export interface AwsNotificationTiktokProfileResponseInterface {
     playCount: number;
     url: string;
   }[];
+}
+
+export interface AwsNotificationTiktokHashtagMentionResponseInterface {
+  hashtagId: string;
+  id: string;
+  description: string;
+  diggCount: number;
+  date: Date;
+  shareCount: number;
+  commentCount: number;
+  playCount: number;
+  authorAvatar: string;
+  authorName: string;
+  url: string;
 }
 
 export interface AwsNotificationTiktokProfileFormattedDataInterface {
@@ -306,6 +369,24 @@ export interface AwsNotificationInstagramMentionAwsDataInterface {
   ownerUsername: string;
   displayUrl: string;
   ownerFullName: string;
+  hashtags: string[];
+}
+
+export interface AwsNotificationInstagramHashtagMentionAwsDataInterface {
+  hashtag_id: string;
+  id: string;
+  url: string;
+  caption: string;
+  commentsCount: number;
+  likesCount: number;
+  timestamp: Date;
+  type: string;
+  videoViewCount: number;
+  videoPlayCount: number;
+  ownerUsername: string;
+  displayUrl: string;
+  ownerFullName: string;
+  hashtags: string[];
 }
 
 export interface AwsNotificationInstagramMentionResponseInterface {
@@ -323,6 +404,25 @@ export interface AwsNotificationInstagramMentionResponseInterface {
   politician_id: string;
   ownerFullName: string;
   ownerUsername: string;
+  hashtags: string;
+}
+
+export interface AwsNotificationInstagramHashtagMentionResponseInterface {
+  id: string;
+  postUrl: string;
+  description: string;
+  commentCount: number;
+  likeCount: number;
+  pubDate: Date;
+  viewCount: number;
+  playCount: number;
+  username: string;
+  imgUrl: string;
+  postId: string;
+  hashtagId: string;
+  ownerFullName: string;
+  ownerUsername: string;
+  hashtags: string;
 }
 
 export interface AwsNotificationFacebookAdsAwsDataInterface {
@@ -441,6 +541,9 @@ export interface AwsNotificationLegalDataInterface {
       capa: Capa | null;
       url: string | null;
       tribunal: Tribunal;
+      sistema: string;
+      segredo_justica: boolean;
+      grau_formatado: string;
       quantidade_envolvidos: number;
       quantidade_movimentacoes: number;
       data_ultima_verificacao: string;
@@ -464,6 +567,7 @@ interface MatchFontes {
 interface Capa {
   classe: string;
   assunto: string;
+  area: string;
   assunto_principal_normalizado: {
     nome: string;
   };

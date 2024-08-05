@@ -9,6 +9,9 @@ import {
   AwsNotificationFacebookProfileResponseInterface,
   AwsNotificationInstagramCommentsAwsDataInterface,
   AwsNotificationInstagramCommentsResponseInterface,
+  AwsNotificationInstagramEngagerResponseInterface,
+  AwsNotificationInstagramHashtagMentionAwsDataInterface,
+  AwsNotificationInstagramHashtagMentionResponseInterface,
   AwsNotificationInstagramMentionAwsDataInterface,
   AwsNotificationInstagramMentionResponseInterface,
   AwsNotificationInstagramPostAwsDataInterface,
@@ -21,6 +24,9 @@ import {
   AwsNotificationNewsResponseInterface,
   AwsNotificationTiktokCommentsAwsDataInterface,
   AwsNotificationTiktokCommentsResponseInterface,
+  AwsNotificationTiktokEngagerResponseInterface,
+  AwsNotificationTiktokHashtagMentionAwsDataInterface,
+  AwsNotificationTiktokHashtagMentionResponseInterface,
   AwsNotificationTiktokProfileAwsDataInterface,
   AwsNotificationTiktokProfileFormattedDataInterface,
   AwsNotificationTiktokProfileResponseInterface,
@@ -95,12 +101,22 @@ export class AwsNotificationProductionRepository
         causeValue: string | null;
         court: string | null;
         url: string | null;
+        class: string | null;
+        area: string | null;
+        system: string | null;
+        justiceSecret: boolean;
+        degree: string | null;
       } = {
         subject: null,
         judgingBy: null,
         causeValue: null,
         court: null,
         url: null,
+        class: null,
+        area: null,
+        system: null,
+        justiceSecret: false,
+        degree: null,
       };
 
       for (const fount of item.fontes) {
@@ -111,6 +127,12 @@ export class AwsNotificationProductionRepository
           relevantData.causeValue = fount.capa?.valor_causa.valor_formatado;
         if (fount.tribunal?.nome) relevantData.court = fount.tribunal.nome;
         if (fount.url) relevantData.url = fount.url;
+        if (fount.capa?.classe) relevantData.class = fount.capa.classe;
+        if (fount.capa?.area) relevantData.area = fount.capa.area;
+        if (fount.sistema) relevantData.system = fount.sistema;
+        if (fount.segredo_justica)
+          relevantData.justiceSecret = fount.segredo_justica;
+        if (fount.grau_formatado) relevantData.degree = fount.grau_formatado;
       }
 
       formattedData.push({
@@ -177,11 +199,7 @@ export class AwsNotificationProductionRepository
           username: item.ownerUsername,
           imgUrl: item.displayUrl,
           postId: item.id,
-          politician_id: item.instagram_id
-            ? item.instagram_id
-            : item.inputUrl === "https://www.instagram.com/genildocarvalhopr/"
-            ? "afde78f7-fb65-4aeb-97fc-5d241f14abf3"
-            : null,
+          politician_id: item.instagram_id,
         };
       });
 
@@ -386,6 +404,46 @@ export class AwsNotificationProductionRepository
           politician_id: item.instagram_id,
           ownerFullName: item.ownerFullName,
           ownerUsername: item.ownerUsername,
+          hashtags: item.hashtags.join(" "),
+        });
+      }
+    }
+
+    return mentionData;
+  }
+
+  async S3InstagramHashtagMentionsNotification(data: S3NotificationInterface) {
+    const awsData: AwsNotificationInstagramHashtagMentionAwsDataInterface[] =
+      await axios
+        .get(`${env.AWS_URL}${data.records}`)
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          throw new AwsError();
+        });
+
+    const mentionData: AwsNotificationInstagramHashtagMentionResponseInterface[] =
+      [];
+
+    for (const item of awsData) {
+      if (item.hashtag_id) {
+        mentionData.push({
+          id: item.id,
+          postUrl: item.url,
+          description: item.caption,
+          commentCount: item.commentsCount,
+          likeCount: item.likesCount,
+          pubDate: item.timestamp,
+          viewCount: item.type === "video" ? item.videoViewCount : 0,
+          playCount: item.type === "video" ? item.videoPlayCount : 0,
+          username: item.ownerUsername,
+          imgUrl: item.displayUrl,
+          postId: item.id,
+          hashtagId: item.hashtag_id,
+          ownerFullName: item.ownerFullName,
+          ownerUsername: item.ownerUsername,
+          hashtags: item.hashtags.join(" "),
         });
       }
     }
@@ -408,6 +466,37 @@ export class AwsNotificationProductionRepository
       awsData.map((item) => {
         return {
           politician_id: item.instagram_id,
+          followers: item.followersCount,
+          follows: item.followsCount,
+          posts_count: item.postsCount,
+          reels_count: item.igtvVideoCount,
+          business: item.isBusinessAccount,
+          verified: item.verified,
+          biography: item.biography,
+          url: item.url,
+          fullName: item.fullName,
+          profilePicture: item.profilePicUrlHD,
+        };
+      });
+
+    return formattedData;
+  }
+
+  async S3InstagramEngagerNotification(data: S3NotificationInterface) {
+    const awsData: AwsNotificationInstagramProfileAwsDataInterface[] =
+      await axios
+        .get(`${env.AWS_URL}${data.records}`)
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          throw new AwsError();
+        });
+
+    const formattedData: AwsNotificationInstagramEngagerResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          engagerId: item.instagram_id,
           followers: item.followersCount,
           follows: item.followsCount,
           posts_count: item.postsCount,
@@ -484,6 +573,62 @@ export class AwsNotificationProductionRepository
     }
 
     return finalData;
+  }
+
+  async S3TiktokEngagerNotification(data: S3NotificationInterface) {
+    const awsData: AwsNotificationTiktokProfileAwsDataInterface[] = await axios
+      .get(`${env.AWS_URL}${data.records}`)
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => {
+        throw new AwsError();
+      });
+
+    const formattedData: AwsNotificationTiktokEngagerResponseInterface[] =
+      awsData.map((item) => {
+        return {
+          engagerId: item.tiktok_id,
+          fans: item.authorMeta.fans,
+          verified: item.authorMeta.verified,
+          avatar: item.authorMeta.avatar,
+          heart: item.authorMeta.heart,
+        };
+      });
+
+    return formattedData;
+  }
+
+  async S3TiktokHashtagMentionsNotification(data: S3NotificationInterface) {
+    const awsData: AwsNotificationTiktokHashtagMentionAwsDataInterface[] =
+      await axios
+        .get(`${env.AWS_URL}${data.records}`)
+        .then(({ data }) => {
+          return data;
+        })
+        .catch((err) => {
+          throw new AwsError();
+        });
+
+    const formattedData: AwsNotificationTiktokHashtagMentionResponseInterface[] =
+      awsData.map((item) => {
+        const url = item.webVideoUrl.split("/");
+        return {
+          authorAvatar: item["authorMeta.avatar"],
+          authorName: item["authorMeta.name"],
+          commentCount: item.commentCount,
+          date: item.createTimeISO,
+          description: item.text,
+          diggCount: item.diggCount,
+          hashtagId: item.hashtagId,
+          playCount: item.playCount,
+          shareCount: item.shareCount,
+          url: item.webVideoUrl,
+          id: url[url.length - 1],
+        };
+      });
+
+    return formattedData;
   }
 
   async S3FacebookPostNotification(data: S3NotificationInterface) {

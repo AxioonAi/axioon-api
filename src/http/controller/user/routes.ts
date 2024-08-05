@@ -9,27 +9,29 @@ import { userProfileController } from "./userProfile";
 import { userRecoverPasswordController } from "./userRecoverPassword";
 import { userRecoverPasswordCodeController } from "./userRecoverPasswordCode";
 import { userSignatureValidationController } from "./userSignatureValidation";
+import { planUsageController } from "./planUsage";
 
 export async function userRoutes(app: FastifyInstance) {
-	app.post("/login", authenticateUserController);
-	app.post("/register", registerUserController);
-	app.patch("/user/token", { onRequest: [verifyJwt] }, refreshTokenController);
-	app.put(
-		"/user/profile",
-		{ onRequest: [verifyJwt] },
-		updateUserAccountController,
-	);
-	app.get("/user/profile", { onRequest: [verifyJwt] }, userProfileController);
-	app.put(
-		"/user/password",
-		{ onRequest: [verifyJwt] },
-		updateUserPasswordController,
-	);
-	app.post("/user/recover-password/code", userRecoverPasswordCodeController);
-	app.put("/user/recover-password", userRecoverPasswordController);
-	app.get(
-		"/user/signature/:id",
-		{ onRequest: [verifyJwt] },
-		userSignatureValidationController,
-	);
+  app.post("/login", authenticateUserController);
+  app.post("/register", registerUserController);
+  app.patch("/user/token", { onRequest: [verifyJwt] }, refreshTokenController);
+  app.put(
+    "/user/profile",
+    { onRequest: [verifyJwt] },
+    updateUserAccountController
+  );
+  app.get("/user/profile", { onRequest: [verifyJwt] }, userProfileController);
+  app.put(
+    "/user/password",
+    { onRequest: [verifyJwt] },
+    updateUserPasswordController
+  );
+  app.post("/user/recover-password/code", userRecoverPasswordCodeController);
+  app.put("/user/recover-password", userRecoverPasswordController);
+  app.get(
+    "/user/signature/:id",
+    { onRequest: [verifyJwt] },
+    userSignatureValidationController
+  );
+  app.get("/user/usage", { onRequest: [verifyJwt] }, planUsageController);
 }

@@ -2,12 +2,12 @@ import { makeFindPoliticianNames } from "@/useCase/@factories/scrape/makeFindPol
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const userNameController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const userNameUseCase = makeFindPoliticianNames();
+  const userNameUseCase = makeFindPoliticianNames();
 
-	const data = await userNameUseCase.execute({});
+  const data = await userNameUseCase.execute();
 
-	return reply.status(200).send(data);
+  return reply.status(200).send(data);
 };

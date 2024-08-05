@@ -1,7 +1,6 @@
 import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastify from "fastify";
-import { dbMigrateRoutes } from "scripts/teste";
 import { env } from "./env";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
@@ -17,6 +16,18 @@ import { tutorialVideoRoutes } from "./http/controller/tutorialVideo/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
 import { fastifyErrorHandler } from "./lib/fastify";
+import { WebsiteRoutes } from "./http/controller/website/routes";
+import { hashtagRoutes } from "./http/controller/hashtag/routes";
+import { ElectoralHistoryRoutes } from "./http/controller/electoralHistory/routes";
+import { prisma } from "./lib/prisma";
+import {
+  InstagramEngager,
+  InstagramPostComment,
+  TiktokCommentData,
+  TiktokEngager,
+} from "@prisma/client";
+import { randomUUID } from "crypto";
+import { aiChatRoutes } from "./http/controller/aiChat/routes";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -34,32 +45,95 @@ app.register(fastifyJwt, {
   },
 });
 
-app.register(userRoutes); // TESTADO
-app.register(scrapeRoutes); // TESTADO
+app.register(hashtagRoutes);
+app.register(userRoutes);
+app.register(scrapeRoutes);
 app.register(subUserRoutes);
 app.register(webhookRoutes);
 app.register(purchaseRoutes);
-app.register(notificationRoutes); // TESTADO
-app.register(tutorialVideoRoutes); // TESTADO
-app.register(signaturePlanRoutes); // TESTADO
-app.register(politicalGroupRoutes); // TESTADO
+app.register(aiChatRoutes);
+app.register(notificationRoutes);
+app.register(tutorialVideoRoutes);
+app.register(signaturePlanRoutes);
+app.register(politicalGroupRoutes);
 app.register(politicianProfileRoutes);
-app.setErrorHandler(fastifyErrorHandler); // TESTADO
+app.register(ElectoralHistoryRoutes);
+app.setErrorHandler(fastifyErrorHandler);
+app.register(WebsiteRoutes);
 app.register(politicianProfileMonitoringListRoutes);
 
-// app.get("/teste", async () => {
-// 	console.log(commentData.filter(item => item.sentimentAnalysis !== null).length)
+// app.get("/create-engagers", async (request, reply) => {
+//   const comments = await prisma.instagramPostComment.findMany({
+//     where: {
+//       instagramEngagerId: null,
+//     },
+//     take: 500,
+//   });
 
-// 	const data = []
-// 	commentData.forEach(item => {
+//   // console.log(comments.length);
 
-// 	})
+//   // return;
 
-// 	await prisma.instagramPostComment.createMany({
-// 		data: data.map(item => ({
-// 			...item,
-// 			authorGender: item.authorGender === "MALE" ? SexType.MALE : item.authorGender === "FEMALE" ? SexType.FEMALE : SexType.UNKNOWN,
-// 		}))
-// 	})
-// 	return
-// })
+//   const engagers: InstagramEngager[] = [];
+//   const commentsToUpdate: InstagramPostComment[] = [];
+//   for (const comment of comments) {
+//     const engagerExists = engagers.find(
+//       (engager) => engager.username === comment.ownerUsername
+//     );
+
+//     if (!engagerExists) {
+//       const engagerDatabase = await prisma.instagramEngager.findFirst({
+//         where: {
+//           username: comment.ownerUsername,
+//         },
+//       });
+
+//       if (engagerDatabase) {
+//         engagers.push({
+//           ...engagerDatabase,
+//           id: randomUUID(),
+//         });
+
+//         commentsToUpdate.push({
+//           ...comment,
+//           instagramEngagerId: engagerDatabase.id,
+//         });
+//       } else {
+//         const id = randomUUID();
+//         engagers.push({
+//           username: comment.ownerUsername,
+//           followers: 0,
+//           id,
+//           name: comment.ownerUsername,
+//         });
+
+//         commentsToUpdate.push({
+//           ...comment,
+//           instagramEngagerId: id,
+//         });
+//       }
+//     } else {
+//       commentsToUpdate.push({
+//         ...comment,
+//         instagramEngagerId: engagerExists.id,
+//       });
+//     }
+//   }
+
+//   await prisma.instagramEngager.createMany({
+//     data: engagers,
+//   });
+
+//   commentsToUpdate.forEach(async (comment) => {
+//     await prisma.instagramPostComment.update({
+//       where: {
+//         id: comment.id,
+//       },
+//       data: {
+//         instagramEngagerId: comment.instagramEngagerId,
+//       },
+//     });
+//   });
+
+//   return;
+// });

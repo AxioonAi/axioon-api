@@ -4,20 +4,20 @@ import { makeFindPoliticianProfileMentionsDetails } from "@/useCase/@factories/p
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findPoliticianProfileMentionDetailsController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const { id } = ZodIdParamsSchema.parse(request.params);
-	const { period } = ZodFindPoliticianProfileDetailsQuerySchema.parse(
-		request.query,
-	);
-	const findPoliticianProfileMentionDetailsUseCase =
-		makeFindPoliticianProfileMentionsDetails();
+  const { id } = ZodIdParamsSchema.parse(request.params);
+  const { endDate, startDate } =
+    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
+  const findPoliticianProfileMentionDetailsUseCase =
+    makeFindPoliticianProfileMentionsDetails();
 
-	const data = await findPoliticianProfileMentionDetailsUseCase.execute({
-		id,
-		period: Number(period),
-	});
+  const data = await findPoliticianProfileMentionDetailsUseCase.execute({
+    id,
+    endDate,
+    startDate,
+  });
 
-	return reply.status(200).send(data);
+  return reply.status(200).send(data);
 };

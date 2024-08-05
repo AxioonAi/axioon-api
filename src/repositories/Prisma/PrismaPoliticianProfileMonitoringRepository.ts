@@ -33,6 +33,7 @@ export class PrismaPoliticianProfileMonitoringRepository
         politicianProfile: {
           include: {
             politicalGroup: true,
+            city: true,
             instagramData: {
               select: {
                 profilePicture: true,
@@ -58,7 +59,7 @@ export class PrismaPoliticianProfileMonitoringRepository
         politicianProfile: {
           include: {
             politicalGroup: true,
-
+            city: true,
             instagramData: {
               select: {
                 profilePicture: true,
@@ -117,5 +118,16 @@ export class PrismaPoliticianProfileMonitoringRepository
         },
       },
     });
+  }
+
+  async remove(data: { profileId: string; userId: string }) {
+    await prisma.politicianProfileMonitoring.deleteMany({
+      where: {
+        user_id: data.userId,
+        politician_profile_id: data.profileId,
+      },
+    });
+
+    return;
   }
 }

@@ -2,12 +2,12 @@ import { makeFindManyPoliticalGroup } from "@/useCase/@factories/politicalGroup/
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const findManyPoliticalGroupController = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+  request: FastifyRequest,
+  reply: FastifyReply
 ) => {
-	const findManyPoliticalGroupUseCase = makeFindManyPoliticalGroup();
+  const findManyPoliticalGroupUseCase = makeFindManyPoliticalGroup();
 
-	const politicalGroup = await findManyPoliticalGroupUseCase.execute({});
+  const politicalGroup = await findManyPoliticalGroupUseCase.execute();
 
-	return reply.status(200).send(politicalGroup);
+  return reply.status(200).send(politicalGroup);
 };

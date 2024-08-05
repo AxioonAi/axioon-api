@@ -1,4 +1,5 @@
 import {
+  City,
   FacebookPostBaseData,
   InstagramPost,
   PoliticalGroup,
@@ -10,6 +11,7 @@ import {
 
 interface PoliticianProfileWithPoliticalGroup extends PoliticianProfile {
   politicalGroup: PoliticalGroup;
+  city: City;
   instagramData: {
     profilePicture: string;
   }[];
@@ -44,4 +46,5 @@ export interface PoliticianProfileMonitoringRepository {
     userId: string
   ): Promise<findUsersByProfileIdWithPosts[]>;
   findUsersByProfileId(ids: string[]): Promise<findUsersByProfileId[]>;
+  remove(data: { profileId: string; userId: string }): Promise<void>;
 }

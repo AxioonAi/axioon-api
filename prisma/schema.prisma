@@ -16,6 +16,11 @@ enum CoverageTypes {
   COUNTRY
 }
 
+enum ChatType {
+  USER
+  AI
+}
+
 enum NotificationType {
   FACEBOOK
   INSTAGRAM
@@ -58,6 +63,8 @@ model User {
   recoverPassword UserRecoverPasswordCode[]
   notification    Notification[]
   user            PoliticianProfileMonitoring[]
+  hashtags        HashtagMonitoring[]
+  chats           AiChat[]
 }
 
 model SignaturePlan {
@@ -68,6 +75,7 @@ model SignaturePlan {
   creditValue             Float
   amount_of_monitoring    Int        @default(1)
   amount_of_users         Int        @default(1)
+  amount_of_hashtags      Int        @default(1)
   facebook_ads_monitoring Boolean    @default(false)
   electoral_history       Boolean    @default(false)
   population_data         Boolean    @default(false)
@@ -129,6 +137,8 @@ model PoliticianProfile {
   instagramPostComments    InstagramPostComment[]
   instagramMentionComments InstagramMentionComment[]
   economicRelationship     PersonalEconomicRelationship[]
+  electoralHistory         ElectoralHistory[]
+  activeDebts              ActiveDebt[]
 }
 
 model PoliticianProfileMonitoring {
@@ -172,18 +182,21 @@ model TiktokBaseData {
 }
 
 model FacebookPostComments {
-  id                String               @unique @default(uuid())
+  id                String   @unique @default(uuid())
   postUrl           String
   text              String
   likeCount         Int
   date              DateTime
   username          String
   post_id           String
-  authorGender      SexType              @default(MALE)
+  authorGender      SexType  @default(MALE)
   politician_id     String
   sentimentAnalysis Float
+
+  engager           FacebookEngager?     @relation(fields: [facebookEngagerId], references: [id])
   post              FacebookPostBaseData @relation(references: [id], fields: [post_id])
   politician        PoliticianProfile    @relation(references: [id], fields: [politician_id])
+  facebookEngagerId String?
 }
 
 model TiktokVideoData {
@@ -201,18 +214,59 @@ model TiktokVideoData {
 }
 
 model TiktokCommentData {
-  id                String            @unique @default(uuid())
+  id                String   @unique @default(uuid())
   diggCount         Int
   date              DateTime
   replyCount        Int
-  text              String            @default("")
+  text              String   @default("")
   author            String
   video_id          String
   politician_id     String
-  authorGender      SexType           @default(MALE)
+  authorGender      SexType  @default(MALE)
   sentimentAnalysis Int
-  video             TiktokVideoData   @relation(references: [id], fields: [video_id])
-  politician        PoliticianProfile @relation(references: [id], fields: [politician_id])
+
+  engager         TiktokEngager?    @relation(fields: [tiktokEngagerId], references: [id])
+  video           TiktokVideoData   @relation(references: [id], fields: [video_id])
+  politician      PoliticianProfile @relation(references: [id], fields: [politician_id])
+  tiktokEngagerId String?
+}
+
+model TiktokHashtagMention {
+  id              String   @unique @default(uuid())
+  text            String
+  diggCount       Int
+  shareCount      Int
+  playCount       Int
+  commentCount    Int
+  authorAvatar    String
+  authorName      String
+  date            DateTime
+  url             String
+  hashtags        String?
+  tiktokEngagerId String?
+  hashtagId       String
+
+  engager  TiktokEngager?             @relation(fields: [tiktokEngagerId], references: [id])
+  hashtag  Hashtag                    @relation(fields: [hashtagId], references: [id])
+  comments TiktokHashtagCommentData[]
+}
+
+model TiktokHashtagCommentData {
+  id                String   @unique @default(uuid())
+  diggCount         Int
+  date              DateTime
+  replyCount        Int
+  text              String   @default("")
+  author            String
+  video_id          String
+  authorGender      SexType  @default(MALE)
+  sentimentAnalysis Int
+  tiktokEngagerId   String?
+  hashtagId         String
+
+  engager TiktokEngager?       @relation(fields: [tiktokEngagerId], references: [id])
+  video   TiktokHashtagMention @relation(references: [id], fields: [video_id])
+  hashtag Hashtag              @relation(fields: [hashtagId], references: [id])
 }
 
 model TwitterBaseData {
@@ -336,53 +390,105 @@ model InstagramPost {
 }
 
 model InstagramPostComment {
-  id                 String            @unique @default(uuid())
+  id                 String   @unique @default(uuid())
   text               String
   ownerUsername      String
   ownerProfilePicUrl String
   timestamp          DateTime
   likeCount          Int
   post_id            String
-  authorGender       SexType           @default(MALE)
+  authorGender       SexType  @default(MALE)
   politician_id      String
   sentimentAnalysis  Float
-  post               InstagramPost     @relation(references: [id], fields: [post_id])
-  politician         PoliticianProfile @relation(references: [id], fields: [politician_id])
+  instagramEngagerId String?
+
+  engager    InstagramEngager? @relation(fields: [instagramEngagerId], references: [id])
+  post       InstagramPost     @relation(references: [id], fields: [post_id])
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
 }
 
 model InstagramMention {
-  id                String                    @unique @default(uuid())
-  postUrl           String
-  description       String
-  commentCount      Int
-  likeCount         Int
-  pubDate           DateTime
-  viewCount         Int
-  playCount         Int
-  username          String
-  imgUrl            String
-  postId            String
-  ownerFullName     String
-  ownerUsername     String
-  politician_id     String
-  sentimentAnalysis Float
-  politician        PoliticianProfile         @relation(references: [id], fields: [politician_id])
-  comments          InstagramMentionComment[]
+  id                 String   @unique @default(uuid())
+  postUrl            String
+  description        String
+  commentCount       Int
+  likeCount          Int
+  pubDate            DateTime
+  viewCount          Int
+  playCount          Int
+  username           String
+  imgUrl             String
+  postId             String
+  ownerFullName      String
+  ownerUsername      String
+  politician_id      String
+  hashtags           String?
+  sentimentAnalysis  Float
+  instagramEngagerId String?
+
+  engager    InstagramEngager?         @relation(fields: [instagramEngagerId], references: [id])
+  politician PoliticianProfile         @relation(references: [id], fields: [politician_id])
+  comments   InstagramMentionComment[]
 }
 
 model InstagramMentionComment {
-  id                 String            @unique @default(uuid())
+  id                 String   @unique @default(uuid())
   text               String
   ownerUsername      String
   ownerProfilePicUrl String
   timestamp          DateTime
-  authorGender       SexType           @default(MALE)
+  authorGender       SexType  @default(MALE)
   likeCount          Int
   post_id            String
   sentimentAnalysis  Float
   politician_id      String
-  politician         PoliticianProfile @relation(references: [id], fields: [politician_id])
-  post               InstagramMention  @relation(references: [id], fields: [post_id])
+  instagramEngagerId String?
+
+  engager    InstagramEngager? @relation(fields: [instagramEngagerId], references: [id])
+  politician PoliticianProfile @relation(references: [id], fields: [politician_id])
+  post       InstagramMention  @relation(references: [id], fields: [post_id])
+}
+
+model InstagramHashtagMention {
+  id                 String   @unique @default(uuid())
+  postUrl            String
+  description        String
+  commentCount       Int
+  likeCount          Int
+  pubDate            DateTime
+  viewCount          Int
+  playCount          Int
+  username           String
+  imgUrl             String
+  postId             String
+  ownerFullName      String
+  ownerUsername      String
+  sentimentAnalysis  Float
+  hashtags           String?
+  instagramEngagerId String?
+  hashtagId          String
+
+  engager  InstagramEngager?                @relation(fields: [instagramEngagerId], references: [id])
+  hashtag  Hashtag                          @relation(fields: [hashtagId], references: [id])
+  comments InstagramHashtagMentionComment[]
+}
+
+model InstagramHashtagMentionComment {
+  id                 String   @unique @default(uuid())
+  text               String
+  ownerUsername      String
+  ownerProfilePicUrl String
+  timestamp          DateTime
+  authorGender       SexType  @default(MALE)
+  likeCount          Int
+  post_id            String
+  sentimentAnalysis  Float
+  instagramEngagerId String?
+  hashtagId          String
+
+  engager InstagramEngager?       @relation(fields: [instagramEngagerId], references: [id])
+  hashtag Hashtag                 @relation(fields: [hashtagId], references: [id])
+  post    InstagramHashtagMention @relation(references: [id], fields: [post_id])
 }
 
 model CityIBGEData {
@@ -566,11 +672,12 @@ model MetaAdvertisingLibDeliveryByRegion {
 }
 
 model Website {
-  id               String @unique @default(uuid())
+  id               String  @unique @default(uuid())
   name             String
   url              String
   state_capital_id String
-  city             City   @relation(references: [id], fields: [state_capital_id])
+  website_logo     String?
+  city             City    @relation(references: [id], fields: [state_capital_id])
   news             News[]
 }
 
@@ -623,19 +730,39 @@ model UserRecoverPasswordCode {
 }
 
 model LegalData {
-  id                String            @unique @default(uuid())
-  activePole        String?
-  passivePole       String?
-  startDate         DateTime?
-  lastUpdate        DateTime?
-  subject           String?
-  judgingBy         String?
-  causeValue        String?
-  court             String?
-  url               String?
-  status            String?
-  politician_id     String
+  id            String    @unique @default(uuid())
+  activePole    String?
+  passivePole   String?
+  startDate     DateTime?
+  lastUpdate    DateTime?
+  subject       String?
+  judgingBy     String?
+  causeValue    String?
+  court         String?
+  url           String?
+  status        String?
+  class         String?
+  area          String?
+  system        String?
+  justiceSecret String?
+  degree        String?
+  politician_id String
+
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
+
+  involved legalDataInvolved[]
+}
+
+model legalDataInvolved {
+  id                 String @unique @default(uuid())
+  name               String
+  law_suits_quantity Int
+  type               String
+  pole               String
+  person             String
+  legalDataId        String
+
+  LegalData LegalData @relation(fields: [legalDataId], references: [id])
 }
 
 model PersonalData {
@@ -681,4 +808,253 @@ model personalIncomeTaxReturns {
   situation         String
   politician_id     String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
+}
+
+model Hashtag {
+  id                        String                           @unique @default(uuid())
+  hashtag                   String
+  users                     HashtagMonitoring[]
+  instagramMentions         InstagramHashtagMention[]
+  instagramMentionsComments InstagramHashtagMentionComment[]
+  tiktokMentions            TiktokHashtagMention[]
+  tiktokMentionsComments    TiktokHashtagCommentData[]
+}
+
+model HashtagMonitoring {
+  id         String  @unique @default(uuid())
+  user_id    String
+  hashtag_id String
+  user       User    @relation(fields: [user_id], references: [id])
+  hashtag    Hashtag @relation(fields: [hashtag_id], references: [id])
+}
+
+model ElectoralHistory {
+  id                       String  @unique @default(uuid())
+  full_name                String
+  gender                   String
+  marital_status           String
+  email                    String
+  school_level             String
+  ocupation                String
+  birth_date               String
+  nationality              String
+  color_race               String
+  ballot_name              String
+  ballot_number            String
+  election_type            String
+  role                     String
+  has_elected              Boolean
+  coalition                String
+  coalition_composition    String
+  details_url              String
+  photo_url                String
+  ballot_local             String
+  ballot_state             String
+  political_group          String
+  political_group_number   String
+  campagn_total_spend      Float
+  first_round_total_spend  Float
+  second_round_total_spend Float
+  toal_declared_assets     Float
+  politician_profile_id    String
+  election_year            String
+
+  profile PoliticianProfile @relation(fields: [politician_profile_id], references: [id])
+
+  assets               ElectoralHistoryAsset[]
+  revenueValues        ElectoralHistoryConsolidatedRevenueValues[]
+  expensesValues       ElectoralHistoryConsolidatedExpensesValues[]
+  expensesList         ElectoralHistoryAggregatedExpensesList[]
+  providersRanking     ElectoralHistoryProvidersRanking[]
+  donorsRanking        ElectoralHistoryDonorsRanking[]
+  representatives      ElectoralHistoryRepresentatives[]
+  detailedExpensesList ElectoralHistoryDetailedExpensesList[]
+  detailedRevenuesList ElectoralHistoryDetailedRevenuesList[]
+}
+
+model ElectoralHistoryAsset {
+  id                   String @unique @default(uuid())
+  description          String
+  type                 String
+  value                Float
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryConsolidatedRevenueValues {
+  id                          String @unique @default(uuid())
+  total_received_resources    Float
+  total_financial_resources   Float
+  total_estimated_resources   Float
+  total_donation_by_people    Float
+  total_donation_by_companies Float
+  total_donation_by_parties   Float
+  total_donation_by_internet  Float
+  total_donation_ronis        Float
+  total_own_resources         Float
+  total_crowdfunding          Float
+  electoral_History_id        String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryConsolidatedExpensesValues {
+  id                            String @unique @default(uuid())
+  expenses_threshold            Float
+  total_expenses_contracted     Float
+  total_expenses_paid           Float
+  donations_to_other_candidates Float
+  party_funds_expenses          Float
+  special_funds_expenses        Float
+  other_resources_expenses      Float
+  financial_expenses            Float
+  estimated_expenses            Float
+  electoral_History_id          String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryAggregatedExpensesList {
+  id                   String @unique @default(uuid())
+  description          String
+  number_of_times      String
+  total_value          Float
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryProvidersRanking {
+  id                   String @unique @default(uuid())
+  doc_number           String
+  name                 String
+  number_of_donations  String
+  total_value          Float
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryDonorsRanking {
+  id                   String @unique @default(uuid())
+  doc_number           String
+  name                 String
+  number_of_donations  String
+  total_value          Float
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryRepresentatives {
+  id                   String   @unique @default(uuid())
+  name                 String
+  role                 String
+  registration_number  String
+  begin_date           DateTime
+  end_date             DateTime
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryDetailedExpensesList {
+  id                   String   @unique @default(uuid())
+  provider_name        String
+  date                 DateTime
+  resource_type        String
+  expense_type         String
+  description          String
+  value                Float
+  document_number      String
+  contractor_benefited String
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model ElectoralHistoryDetailedRevenuesList {
+  id                   String   @unique @default(uuid())
+  donator_doc_number   String
+  donator_name         String
+  date                 DateTime
+  resource_type        String
+  value                Float
+  document_number      String
+  electoral_History_id String
+
+  electoralHistory ElectoralHistory @relation(fields: [electoral_History_id], references: [id])
+}
+
+model InstagramEngager {
+  id        String   @unique @default(uuid())
+  username  String
+  followers Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  mentionComments         InstagramMentionComment[]
+  mentions                InstagramMention[]
+  comments                InstagramPostComment[]
+  hashtagMentions         InstagramHashtagMention[]
+  hashtagMentionsComments InstagramHashtagMentionComment[]
+}
+
+model FacebookEngager {
+  id        String                 @unique @default(uuid())
+  username  String
+  followers Int
+  name      String
+  comments  FacebookPostComments[]
+}
+
+model TiktokEngager {
+  id        String   @unique @default(uuid())
+  username  String
+  fans      Int
+  heart     Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  comments                TiktokCommentData[]
+  hashtagMentions         TiktokHashtagMention[]
+  hashtagMentionsComments TiktokHashtagCommentData[]
+}
+
+model ActiveDebt {
+  id                        String @unique @default(uuid())
+  source                    String
+  debtOrigin                String
+  consolidatedValue         String
+  responsibleUnity          String
+  responsibleUnityUF        String
+  registrationNumber        String
+  registrationSituationType String
+  registrationSituation     String
+  politicianProfileId       String
+
+  profile PoliticianProfile @relation(fields: [politicianProfileId], references: [id])
+}
+
+model AiChat {
+  id        String      @unique @default(uuid())
+  name      String
+  createdAt DateTime    @default(now())
+  messages  AiMessage[]
+  userId    String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model AiMessage {
+  id        String   @unique @default(uuid())
+  message   String
+  type      ChatType @default(USER)
+  createdAt DateTime @default(now())
+  chatId    String
+
+  chat AiChat @relation(fields: [chatId], references: [id])
 }
