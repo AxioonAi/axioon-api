@@ -7,7 +7,7 @@ export const findHashtagMentionsController = async (
   reply: FastifyReply
 ) => {
   const { startDate, endDate } =
-    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.params);
+    ZodFindPoliticianProfileDetailsQuerySchema.parse(request.query);
 
   const findHashtagMentionsUseCase = makeFindHashtagMentions();
 
