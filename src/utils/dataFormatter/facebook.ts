@@ -189,30 +189,34 @@ export const FacebookDataFormatter = (data: {
       trendingUp:
         facebookData[0].followers_count >
         facebookData[facebookData.length - 1].followers_count,
-      trendingValue: (
-        ((facebookData[facebookData.length - 1].followers_count -
-          facebookData[0].followers_count) /
-          facebookData[0].followers_count) *
-        100
-      ).toFixed(0),
+      trendingValue: Number(
+        (
+          ((facebookData[facebookData.length - 1].followers_count -
+            facebookData[0].followers_count) /
+            facebookData[0].followers_count) *
+          100
+        ).toFixed(0)
+      ),
       evolution: finalFollowersEvolution.map((item) => item.followers_count),
     },
     {
       name: "Sentimento",
-      value: commentStatisticsData.commentBySentiment,
+      value: commentStatisticsData.currentSentiment,
       trendingUp:
         commentStatisticsData.sentimentEvolution[0].value >
         commentStatisticsFinalData.sentimentEvolution[
           commentStatisticsFinalData.sentimentEvolution.length - 1
         ].value,
-      trendingValue: (
-        ((commentStatisticsFinalData.sentimentEvolution[
-          commentStatisticsFinalData.sentimentEvolution.length - 1
-        ].value -
-          commentStatisticsData.sentimentEvolution[0].value) /
-          commentStatisticsData.sentimentEvolution[0].value) *
-        100
-      ).toFixed(0),
+      trendingValue: Number(
+        (
+          ((commentStatisticsFinalData.sentimentEvolution[
+            commentStatisticsFinalData.sentimentEvolution.length - 1
+          ].value -
+            commentStatisticsData.sentimentEvolution[0].value) /
+            commentStatisticsData.sentimentEvolution[0].value) *
+          100
+        ).toFixed(0)
+      ),
       evolution: commentStatisticsFinalData.sentimentEvolution.map(
         (item) => item.value
       ),
