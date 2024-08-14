@@ -533,6 +533,8 @@ export class AwsNotificationProductionRepository
           profile: {
             fans: item.authorMeta.fans,
             videos: item.authorMeta.video,
+            name: item.authorMeta.name,
+            nickname: item.authorMeta.nickName,
             verified: item.authorMeta.verified,
             politician_id: item.tiktok_id,
             avatar: item.authorMeta.avatar,

@@ -206,6 +206,8 @@ export interface AwsNotificationTiktokProfileAwsDataInterface {
     verified: boolean;
     avatar: string;
     heart: number;
+    name: string;
+    nickName: string;
   };
   id: string;
   text: string;
@@ -281,6 +283,8 @@ export interface AwsNotificationTiktokProfileFormattedDataInterface {
     }[];
     profile: {
       fans: number;
+      name: string;
+      nickname: string;
       videos: number;
       verified: boolean;
       politician_id: string;
