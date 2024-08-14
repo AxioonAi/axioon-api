@@ -97,17 +97,6 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
     };
   });
 
-  const profileEvolution = {
-    start: {
-      ...followersEvolution[0],
-      sentiment: null,
-    },
-    end: {
-      ...followersEvolution[followersEvolution.length - 1],
-      sentiment: null,
-    },
-  };
-
   const uniqueFollowersEvolution = data.youtubeBaseData.filter(
     (item, index, self) => {
       return (
@@ -137,6 +126,46 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
 
     finalFollowersEvolution.push(lastItem);
   }
+
+  const profileEvolution = [
+    {
+      name: "Seguidores",
+      value: youtubeBaseData[0].channel_total_subs,
+      trendingUp:
+        youtubeBaseData[0].channel_total_subs >
+        youtubeBaseData[youtubeBaseData.length - 1].channel_total_subs,
+      trendingValue: `${(
+        ((youtubeBaseData[youtubeBaseData.length - 1].channel_total_subs -
+          youtubeBaseData[0].channel_total_subs) /
+          youtubeBaseData[0].channel_total_subs) *
+        100
+      ).toFixed(0)}%`,
+      evolution: finalFollowersEvolution.map((item) => item.channel_total_subs),
+    },
+    {
+      name: "Sentimento",
+      value: commentStatisticsData.commentBySentiment,
+      trendingUp: true,
+      trendingValue: 0,
+      evolution: [],
+    },
+    {
+      name: "Publicações",
+      value: youtubeBaseData[0].channel_total_videos,
+      trendingUp:
+        youtubeBaseData[0].channel_total_videos >
+        youtubeBaseData[youtubeBaseData.length - 1].channel_total_videos,
+      trendingValue: `${(
+        ((youtubeBaseData[youtubeBaseData.length - 1].channel_total_videos -
+          youtubeBaseData[0].channel_total_videos) /
+          youtubeBaseData[0].channel_total_videos) *
+        100
+      ).toFixed(0)}%`,
+      evolution: finalFollowersEvolution.map(
+        (item) => item.channel_total_videos
+      ),
+    },
+  ];
 
   const staticData = {
     name: youtubeBaseData[0].channel_name,

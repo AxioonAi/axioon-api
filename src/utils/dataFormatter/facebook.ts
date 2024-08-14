@@ -145,20 +145,6 @@ export const FacebookDataFormatter = (data: {
     };
   });
 
-  const profileEvolution = {
-    start: {
-      ...followersEvolution[0],
-      sentiment: commentStatisticsData.sentimentEvolution[0],
-    },
-    end: {
-      ...followersEvolution[followersEvolution.length - 1],
-      sentiment:
-        commentStatisticsData.sentimentEvolution[
-          commentStatisticsData.sentimentEvolution.length - 1
-        ],
-    },
-  };
-
   const uniqueFollowersEvolution = data.facebookData.filter(
     (item, index, self) => {
       return (
@@ -195,6 +181,50 @@ export const FacebookDataFormatter = (data: {
     following: facebookData[0].likes_count,
     posts: 0,
   };
+
+  const profileEvolution = [
+    {
+      name: "Seguidores",
+      value: facebookData[0].followers_count,
+      trendingUp:
+        facebookData[0].followers_count >
+        facebookData[facebookData.length - 1].followers_count,
+      trendingValue: (
+        ((facebookData[facebookData.length - 1].followers_count -
+          facebookData[0].followers_count) /
+          facebookData[0].followers_count) *
+        100
+      ).toFixed(0),
+      evolution: finalFollowersEvolution.map((item) => item.followers_count),
+    },
+    {
+      name: "Sentimento",
+      value: commentStatisticsData.commentBySentiment,
+      trendingUp:
+        commentStatisticsData.sentimentEvolution[0].value >
+        commentStatisticsFinalData.sentimentEvolution[
+          commentStatisticsFinalData.sentimentEvolution.length - 1
+        ].value,
+      trendingValue: (
+        ((commentStatisticsFinalData.sentimentEvolution[
+          commentStatisticsFinalData.sentimentEvolution.length - 1
+        ].value -
+          commentStatisticsData.sentimentEvolution[0].value) /
+          commentStatisticsData.sentimentEvolution[0].value) *
+        100
+      ).toFixed(0),
+      evolution: commentStatisticsFinalData.sentimentEvolution.map(
+        (item) => item.value
+      ),
+    },
+    {
+      name: "Publicações",
+      value: 0,
+      trendingUp: true,
+      trendingValue: 0,
+      evolution: [],
+    },
+  ];
 
   return {
     commentsStatistics: commentStatisticsFinalData,

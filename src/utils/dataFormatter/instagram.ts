@@ -155,20 +155,6 @@ export const instagramDataFormatter = (data: {
     };
   });
 
-  const profileEvolution = {
-    start: {
-      ...followersEvolution[0],
-      sentiment: commentStatisticsData.sentimentEvolution[0],
-    },
-    end: {
-      ...followersEvolution[followersEvolution.length - 1],
-      sentiment:
-        commentStatisticsData.sentimentEvolution[
-          commentStatisticsData.sentimentEvolution.length - 1
-        ],
-    },
-  };
-
   const uniqueFollowersEvolution = data.instagramData.filter(
     (item, index, self) => {
       return (
@@ -206,6 +192,57 @@ export const instagramDataFormatter = (data: {
     following: instagramData[0].follows,
     posts: instagramData[0].posts_count,
   };
+
+  const profileEvolution = [
+    {
+      name: "Seguidores",
+      value: instagramData[0].followers,
+      trendingUp:
+        instagramData[0].followers >
+        instagramData[instagramData.length - 1].followers,
+      trendingValue: `${(
+        ((instagramData[instagramData.length - 1].followers -
+          instagramData[0].followers) /
+          instagramData[0].followers) *
+        100
+      ).toFixed(0)}%`,
+      evolution: finalFollowersEvolution.map((item) => item.followers),
+    },
+    {
+      name: "Sentimento",
+      value: commentStatisticsData.commentBySentiment,
+      trendingUp:
+        commentStatisticsData.sentimentEvolution[0].value >
+        commentStatisticsFinalData.sentimentEvolution[
+          commentStatisticsFinalData.sentimentEvolution.length - 1
+        ].value,
+      trendingValue: `${(
+        ((commentStatisticsFinalData.sentimentEvolution[
+          commentStatisticsFinalData.sentimentEvolution.length - 1
+        ].value -
+          commentStatisticsData.sentimentEvolution[0].value) /
+          commentStatisticsData.sentimentEvolution[0].value) *
+        100
+      ).toFixed(0)}%`,
+      evolution: commentStatisticsFinalData.sentimentEvolution.map(
+        (item) => item.value
+      ),
+    },
+    {
+      name: "Publicações",
+      value: instagramData[0].posts_count,
+      trendingUp:
+        instagramData[0].posts_count >
+        instagramData[instagramData.length - 1].posts_count,
+      trendingValue: `${(
+        ((instagramData[instagramData.length - 1].posts_count -
+          instagramData[0].posts_count) /
+          instagramData[0].posts_count) *
+        100
+      ).toFixed(0)}%`,
+      evolution: finalFollowersEvolution.map((item) => item.posts_count),
+    },
+  ];
 
   return {
     commentsStatistics: commentStatisticsFinalData,

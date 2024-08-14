@@ -121,17 +121,6 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
     };
   });
 
-  const profileEvolution = {
-    name: "Seguidores",
-    value: tiktokData[0].fans,
-    trendingUp: tiktokData[0].fans > tiktokData[tiktokData.length - 1].fans,
-    trendingValue: `${
-      ((tiktokData[tiktokData.length - 1].fans - tiktokData[0].fans) /
-        tiktokData[0].fans) *
-      100
-    }%`,
-  };
-
   const uniqueFollowersEvolution = data.tiktokData.filter(
     (item, index, self) => {
       return (
@@ -161,6 +150,52 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
 
     finalFollowersEvolution.push(lastItem);
   }
+
+  const profileEvolution = [
+    {
+      name: "Seguidores",
+      value: tiktokData[0].fans,
+      trendingUp: tiktokData[0].fans > tiktokData[tiktokData.length - 1].fans,
+      trendingValue: (
+        ((tiktokData[tiktokData.length - 1].fans - tiktokData[0].fans) /
+          tiktokData[0].fans) *
+        100
+      ).toFixed(0),
+      evolution: finalFollowersEvolution.map((item) => item.fans),
+    },
+    {
+      name: "Sentimento",
+      value: commentStatisticsData.commentBySentiment,
+      trendingUp:
+        commentStatisticsData.sentimentEvolution[0].value >
+        commentStatisticsFinalData.sentimentEvolution[
+          commentStatisticsFinalData.sentimentEvolution.length - 1
+        ].value,
+      trendingValue: (
+        ((commentStatisticsFinalData.sentimentEvolution[
+          commentStatisticsFinalData.sentimentEvolution.length - 1
+        ].value -
+          commentStatisticsData.sentimentEvolution[0].value) /
+          commentStatisticsData.sentimentEvolution[0].value) *
+        100
+      ).toFixed(0),
+      evolution: commentStatisticsFinalData.sentimentEvolution.map(
+        (item) => item.value
+      ),
+    },
+    {
+      name: "Publicações",
+      value: tiktokData[0].videos,
+      trendingUp:
+        tiktokData[0].videos > tiktokData[tiktokData.length - 1].videos,
+      trendingValue: (
+        ((tiktokData[tiktokData.length - 1].videos - tiktokData[0].videos) /
+          tiktokData[0].videos) *
+        100
+      ).toFixed(0),
+      evolution: finalFollowersEvolution.map((item) => item.videos),
+    },
+  ];
 
   const staticData = {
     name: tiktokData[0].name,
