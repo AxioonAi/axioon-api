@@ -190,7 +190,10 @@ export const mentionsFormatter = (data: MentionsData) => {
     ],
     postsByDay: instagramPostsByDayArray,
     newsByDay: newsByDayArray,
-    authors: instagramData.authorData,
+    authors: instagramData.authorData.map((item) => ({
+      ...item,
+      sentiment: (item.sentiment / item.posts).toFixed(2),
+    })),
     posts: {
       news: news.news,
       instagram: instagramData.posts,
