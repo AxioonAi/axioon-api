@@ -38,10 +38,12 @@ export const mentionsFormatter = (data: MentionsData) => {
 
   const instagramData: {
     posts: any[];
+    authorData: any[];
     sentiment: number;
   } = {
     posts: [],
     sentiment: 0,
+    authorData: [],
   };
 
   for (const key in data.instagramMention) {
@@ -76,6 +78,26 @@ export const mentionsFormatter = (data: MentionsData) => {
       comments: formattedComments,
       sentiment: sentimentSum / comments.length,
     });
+
+    const engagerExists = instagramData.authorData.find(
+      (engager) => engager.id === data.instagramMention[key].engager?.id
+    );
+
+    if (engagerExists) {
+      instagramData.authorData[
+        instagramData.authorData.indexOf(engagerExists)
+      ] = {
+        sentiment: engagerExists.sentiment + sentimentSum / comments.length,
+        ...engagerExists,
+        posts: engagerExists.posts + 1,
+      };
+    } else {
+      instagramData.authorData.push({
+        ...data.instagramMention[key].engager,
+        posts: 1,
+        sentiment: sentimentSum / comments.length,
+      });
+    }
 
     instagramData.sentiment += sentimentSum / comments.length;
   }
@@ -168,6 +190,7 @@ export const mentionsFormatter = (data: MentionsData) => {
     ],
     postsByDay: instagramPostsByDayArray,
     newsByDay: newsByDayArray,
+    authors: instagramData.authorData,
     posts: {
       news: news.news,
       instagram: instagramData.posts,
