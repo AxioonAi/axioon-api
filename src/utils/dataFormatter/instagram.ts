@@ -63,8 +63,11 @@ export const instagramDataFormatter = (data: {
       (1000 * 60 * 60 * 24);
 
     const engagementSum =
-      instagramPosts[key].commentCount * 1 +
-      instagramPosts[key].likeCount * 0.5;
+      (instagramPosts[key].commentCount * 1 +
+        instagramPosts[key].likeCount * 0.5) *
+      10;
+
+    console.log("engagementSum", engagementSum);
 
     const dateDiffRelation = 1 - timeDiff / oldPostDateDiff;
 

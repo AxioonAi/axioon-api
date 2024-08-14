@@ -175,7 +175,6 @@ export const mentionsFormatter = (data: MentionsData) => {
     .map((item) => ({
       ...item,
       sentiment: Number((item.sentiment / item.posts).toFixed(2)),
-      engagement: Number((item.engagement / item.posts).toFixed(2)),
     }))
     .sort((a, b) => b.followers - a.followers)
     .slice(0, 15);
@@ -214,7 +213,6 @@ export const mentionsFormatter = (data: MentionsData) => {
     authors: instagramData.authorData.map((item) => ({
       ...item,
       sentiment: Number((item.sentiment / item.posts).toFixed(2)),
-      engagement: Number((item.engagement / item.posts).toFixed(2)),
     })),
     posts: {
       news: news.news,
