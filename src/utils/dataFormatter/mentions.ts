@@ -3,8 +3,6 @@ import { InstagramEngager, InstagramMention } from "@prisma/client";
 
 export const mentionsFormatter = (data: MentionsData) => {
   let totalSentimentNews = 0;
-  let totalSentimentMentions = 0;
-  let totalSentimentComments = 0;
 
   const formattedComments = commentFormatter(data.instagramMentionComments);
 
@@ -144,7 +142,14 @@ export const mentionsFormatter = (data: MentionsData) => {
     sentimentEvolution: {
       instagram: formattedComments.sentimentEvolution,
     },
-    engagers: formattedComments.engagers,
+    engagers: {
+      positive: formattedComments.engagers.filter(
+        (item) => item.sentiment > 550
+      ),
+      negative: formattedComments.engagers.filter(
+        (item) => item.sentiment < 350
+      ),
+    },
     commentsByGender: formattedComments.commentByGender,
     commentsBySentiment: formattedComments.commentBySentiment,
     mentionQuantity: {
