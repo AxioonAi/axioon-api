@@ -122,17 +122,14 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
   });
 
   const profileEvolution = {
-    start: {
-      ...followersEvolution[0],
-      sentiment: commentStatisticsData.sentimentEvolution[0],
-    },
-    end: {
-      ...followersEvolution[followersEvolution.length - 1],
-      sentiment:
-        commentStatisticsData.sentimentEvolution[
-          commentStatisticsData.sentimentEvolution.length - 1
-        ],
-    },
+    name: "Seguidores",
+    value: tiktokData[0].fans,
+    trendingUp: tiktokData[0].fans > tiktokData[tiktokData.length - 1].fans,
+    trendingValue: `${
+      ((tiktokData[tiktokData.length - 1].fans - tiktokData[0].fans) /
+        tiktokData[0].fans) *
+      100
+    }%`,
   };
 
   const uniqueFollowersEvolution = data.tiktokData.filter(
