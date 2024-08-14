@@ -138,11 +138,19 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
     finalFollowersEvolution.push(lastItem);
   }
 
+  const staticData = {
+    name: youtubeBaseData[0].channel_name,
+    followers: youtubeBaseData[0].channel_total_subs,
+    following: youtubeBaseData[0].channel_total_views,
+    posts: youtubeBaseData[0].channel_total_videos,
+  };
+
   return {
     commentsStatistics: commentStatisticsData,
     followersEvolution,
     videos: finalData,
     profileEvolution,
+    staticData,
   };
 };
 

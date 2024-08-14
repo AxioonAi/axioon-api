@@ -165,12 +165,21 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
     finalFollowersEvolution.push(lastItem);
   }
 
+  const staticData = {
+    name: tiktokData[0].name,
+    username: tiktokData[0].nickname,
+    followers: tiktokData[0].fans,
+    following: tiktokData[0].heart,
+    posts: tiktokData[0].videos,
+  };
+
   return {
     commentsStatistics: commentStatisticsFinalData,
     followersEvolution,
     videoEngagementData,
     videos: finalData,
     profileEvolution,
+    staticData,
   };
 };
 
@@ -358,6 +367,8 @@ export interface TiktokDataFormatterBaseDataInterface {
   avatar: string;
   heart: number;
   date: Date;
+  name: string;
+  nickname: string;
 }
 export interface TiktokDataFormatterVideoDataInterface {
   id: string;

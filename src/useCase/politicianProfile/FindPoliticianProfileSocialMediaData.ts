@@ -219,11 +219,12 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
         facebook: (formatFacebookData && formatFacebookData.posts) || null,
       },
       staticData: {
-        instagramData:
-          (instagramData && instagramData.instagramData[0]) || null,
-        tiktokData: (tiktokData && tiktokData.tiktokData[0]) || null,
-        youtubeData: (youtubeData && youtubeData.youtubeBaseData[0]) || null,
-        facebookData: (facebookData && facebookData.facebookData[0]) || null,
+        instagramData: formatInstagramData && formatInstagramData.staticData,
+        tiktokData: (formatTiktokData && formatTiktokData.staticData) || null,
+        youtubeData:
+          (formatYoutubeData && formatYoutubeData.staticData) || null,
+        facebookData:
+          (formatFacebookData && formatFacebookData.staticData) || null,
       },
       profileEvolution: {
         tiktok: formatTiktokData && formatTiktokData.profileEvolution,

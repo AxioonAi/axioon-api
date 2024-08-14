@@ -189,11 +189,19 @@ export const FacebookDataFormatter = (data: {
     finalFollowersEvolution.push(lastItem);
   }
 
+  const staticData = {
+    name: facebookData[0].title,
+    followers: facebookData[0].followers_count,
+    following: facebookData[0].likes_count,
+    posts: 0,
+  };
+
   return {
     commentsStatistics: commentStatisticsFinalData,
     followersEvolution,
     posts: finalData,
     profileEvolution,
+    staticData,
   };
 };
 

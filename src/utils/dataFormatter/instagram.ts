@@ -8,6 +8,8 @@ export const instagramDataFormatter = (data: {
     followers: number;
     follows: number;
     date: Date;
+    fullName: string;
+    url: string;
     posts_count: number;
     reels_count: number;
   }[];
@@ -197,11 +199,20 @@ export const instagramDataFormatter = (data: {
     finalFollowersEvolution.push(lastItem);
   }
 
+  const staticData = {
+    name: instagramData[0].fullName,
+    username: instagramData[0].url.split("/")[3],
+    followers: instagramData[0].followers,
+    following: instagramData[0].follows,
+    posts: instagramData[0].posts_count,
+  };
+
   return {
     commentsStatistics: commentStatisticsFinalData,
     followersEvolution: finalFollowersEvolution,
     posts: finalData,
     profileEvolution,
+    staticData,
   };
 };
 
