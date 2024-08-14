@@ -1,5 +1,6 @@
 import { TiktokDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
 import { TiktokEngager } from "@prisma/client";
+import moment from "moment";
 
 export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
   const { tiktokData, tiktokVideoData, tiktokComments } = data;
@@ -120,11 +121,56 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
     };
   });
 
+  const profileEvolution = {
+    start: {
+      ...followersEvolution[0],
+      sentiment: commentStatisticsData.sentimentEvolution[0],
+    },
+    end: {
+      ...followersEvolution[followersEvolution.length - 1],
+      sentiment:
+        commentStatisticsData.sentimentEvolution[
+          commentStatisticsData.sentimentEvolution.length - 1
+        ],
+    },
+  };
+
+  const uniqueFollowersEvolution = data.tiktokData.filter(
+    (item, index, self) => {
+      return (
+        self.findIndex((i) =>
+          moment(i.date).isSame(moment(item.date), "day")
+        ) === index
+      );
+    }
+  );
+
+  // Passo 2: Limitar a 10 objetos
+  let finalFollowersEvolution = uniqueFollowersEvolution;
+
+  if (uniqueFollowersEvolution.length > 10) {
+    const firstItem = uniqueFollowersEvolution[0];
+    const lastItem =
+      uniqueFollowersEvolution[uniqueFollowersEvolution.length - 1];
+
+    const step = Math.floor((uniqueFollowersEvolution.length - 2) / 8);
+    finalFollowersEvolution = [firstItem];
+
+    for (let i = 1; i < uniqueFollowersEvolution.length - 1; i += step) {
+      if (finalFollowersEvolution.length < 9) {
+        finalFollowersEvolution.push(uniqueFollowersEvolution[i]);
+      }
+    }
+
+    finalFollowersEvolution.push(lastItem);
+  }
+
   return {
     commentsStatistics: commentStatisticsFinalData,
     followersEvolution,
     videoEngagementData,
     videos: finalData,
+    profileEvolution,
   };
 };
 

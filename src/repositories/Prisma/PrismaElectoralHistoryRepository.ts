@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { ElectoralHistoryRepository } from "../electoralHistoryRepository";
+import {
+  CreateElectoralHistory,
+  ElectoralHistoryRepository,
+} from "../electoralHistoryRepository";
 
 export class PrismaElectoralHistoryRepository
   implements ElectoralHistoryRepository
@@ -33,5 +36,41 @@ export class PrismaElectoralHistoryRepository
         election_year: true,
       },
     });
+  }
+
+  async create(data: CreateElectoralHistory) {
+    await prisma.electoralHistory.createMany({
+      data: data.electoralHistoryData,
+    });
+
+    await Promise.all([
+      prisma.electoralHistoryDetailedExpensesList.createMany({
+        data: data.detailedExpensesListData,
+      }),
+      prisma.electoralHistoryDetailedRevenuesList.createMany({
+        data: data.detailedRevenuesListData,
+      }),
+      prisma.electoralHistoryAsset.createMany({
+        data: data.electoralAssetsData,
+      }),
+      prisma.electoralHistoryDonorsRanking.createMany({
+        data: data.donorsRankingData,
+      }),
+      prisma.electoralHistoryDetailedExpensesList.createMany({
+        data: data.detailedExpensesListData,
+      }),
+      prisma.electoralHistoryConsolidatedExpensesValues.createMany({
+        data: data.electoralExpensesValueData,
+      }),
+      prisma.electoralHistoryProvidersRanking.createMany({
+        data: data.providersRankingData,
+      }),
+      prisma.electoralHistoryRepresentatives.createMany({
+        data: data.representativesData,
+      }),
+      prisma.electoralHistoryConsolidatedRevenueValues.createMany({
+        data: data.electoralHistoryRevenueValueData,
+      }),
+    ]);
   }
 }

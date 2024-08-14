@@ -218,6 +218,19 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
         youtube: (formatYoutubeData && formatYoutubeData.videos) || null,
         facebook: (formatFacebookData && formatFacebookData.posts) || null,
       },
+      staticData: {
+        instagramData:
+          (instagramData && instagramData.instagramData[0]) || null,
+        tiktokData: (tiktokData && tiktokData.tiktokData[0]) || null,
+        youtubeData: (youtubeData && youtubeData.youtubeBaseData[0]) || null,
+        facebookData: (facebookData && facebookData.facebookData[0]) || null,
+      },
+      profileEvolution: {
+        tiktok: formatTiktokData && formatTiktokData.profileEvolution,
+        youtube: formatYoutubeData && formatYoutubeData.profileEvolution,
+        facebook: formatFacebookData && formatFacebookData.profileEvolution,
+        instagram: formatInstagramData && formatInstagramData.profileEvolution,
+      },
     };
 
     return {

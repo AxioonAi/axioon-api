@@ -5,6 +5,7 @@ import {
   YoutubeDataFormatterVideoDataInterface,
 } from "@/@types/formatData";
 import { YoutubeDataFormatterFinalDataInterface } from "@/@types/useCaseInterfaces";
+import moment from "moment";
 
 export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
   const { youtubeBaseData, youtubeVideoData, youtubeCommentData } = data;
@@ -96,10 +97,52 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
     };
   });
 
+  const profileEvolution = {
+    start: {
+      ...followersEvolution[0],
+      sentiment: null,
+    },
+    end: {
+      ...followersEvolution[followersEvolution.length - 1],
+      sentiment: null,
+    },
+  };
+
+  const uniqueFollowersEvolution = data.youtubeBaseData.filter(
+    (item, index, self) => {
+      return (
+        self.findIndex((i) =>
+          moment(i.date).isSame(moment(item.date), "day")
+        ) === index
+      );
+    }
+  );
+
+  // Passo 2: Limitar a 10 objetos
+  let finalFollowersEvolution = uniqueFollowersEvolution;
+
+  if (uniqueFollowersEvolution.length > 10) {
+    const firstItem = uniqueFollowersEvolution[0];
+    const lastItem =
+      uniqueFollowersEvolution[uniqueFollowersEvolution.length - 1];
+
+    const step = Math.floor((uniqueFollowersEvolution.length - 2) / 8);
+    finalFollowersEvolution = [firstItem];
+
+    for (let i = 1; i < uniqueFollowersEvolution.length - 1; i += step) {
+      if (finalFollowersEvolution.length < 9) {
+        finalFollowersEvolution.push(uniqueFollowersEvolution[i]);
+      }
+    }
+
+    finalFollowersEvolution.push(lastItem);
+  }
+
   return {
     commentsStatistics: commentStatisticsData,
     followersEvolution,
     videos: finalData,
+    profileEvolution,
   };
 };
 

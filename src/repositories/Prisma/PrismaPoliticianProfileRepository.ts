@@ -1,11 +1,84 @@
 import { StatisticsData } from "@/@types/politicianProfileRepository";
 import { prisma } from "@/lib/prisma";
-import { $Enums, Role, Status } from "@prisma/client";
+import { $Enums, Prisma, Role, Status } from "@prisma/client";
 import { PoliticianProfileRepository } from "../PoliticianProfileRepository";
 
 export class PrismaPoliticianProfileRepository
   implements PoliticianProfileRepository
 {
+  async createLegalDetails(data: {
+    addressData: Prisma.PersonalAddressUncheckedCreateInput[];
+    personalData: Prisma.PersonalDataUncheckedCreateInput[];
+    incomeTaxData: Prisma.personalIncomeTaxReturnsUncheckedCreateInput[];
+    economicRelationshipsData: Prisma.PersonalEconomicRelationshipUncheckedCreateInput[];
+    activeDebtData: Prisma.ActiveDebtUncheckedCreateInput[];
+    NotaryDat: Prisma.NotaryUncheckedCreateInput[];
+    ProtestsData: Prisma.ProtestsUncheckedCreateInput[];
+  }) {
+    await Promise.all([
+      prisma.personalAddress.createMany({
+        data: data.addressData,
+      }),
+
+      prisma.personalData.createMany({
+        data: data.personalData,
+      }),
+      prisma.personalIncomeTaxReturns.createMany({
+        data: data.incomeTaxData,
+      }),
+
+      prisma.personalEconomicRelationship.createMany({
+        data: data.economicRelationshipsData,
+      }),
+
+      prisma.activeDebt.createMany({
+        data: data.activeDebtData,
+      }),
+
+      prisma.notary.createMany({
+        data: data.NotaryDat,
+      }),
+    ]);
+
+    await prisma.protests.createMany({
+      data: data.ProtestsData,
+    });
+  }
+
+  async findProfileWithoutCerberusData() {
+    const profiles = await prisma.politicianProfile.findMany({
+      where: {
+        status: Status.ACTIVE,
+      },
+      select: {
+        id: true,
+        cpf: true,
+        address: {
+          take: 1,
+        },
+        economicRelationship: {
+          take: 1,
+        },
+        incomeTax: {
+          take: 1,
+        },
+        personalData: {
+          take: 1,
+        },
+      },
+    });
+
+    const profilesWithoutCerberusData = profiles.filter(
+      (profile) =>
+        profile.cpf !== null &&
+        profile.economicRelationship.length === 0 &&
+        profile.incomeTax.length === 0 &&
+        profile.personalData.length === 0
+    );
+
+    return profilesWithoutCerberusData as { id: string; cpf: string }[];
+  }
+
   async findCpfList() {
     return await prisma.politicianProfile.findMany({
       where: {
@@ -208,6 +281,9 @@ export class PrismaPoliticianProfileRepository
               lte: data.lte,
             },
           },
+          orderBy: {
+            date: "asc",
+          },
         },
         youtubeVideoData: {
           where: {
@@ -275,6 +351,9 @@ export class PrismaPoliticianProfileRepository
               lte: data.lte,
             },
           },
+          orderBy: {
+            date: "asc",
+          },
         },
         facebookPostComments: {
           where: {
@@ -314,6 +393,9 @@ export class PrismaPoliticianProfileRepository
               lte: data.lte,
             },
           },
+          orderBy: {
+            date: "asc",
+          },
         },
         tiktokVideoData: {
           where: {
@@ -352,6 +434,9 @@ export class PrismaPoliticianProfileRepository
               gte: data.gte,
               lte: data.lte,
             },
+          },
+          orderBy: {
+            date: "asc",
           },
         },
         instagramPosts: {

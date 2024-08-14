@@ -28,6 +28,7 @@ import {
 } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { aiChatRoutes } from "./http/controller/aiChat/routes";
+import { legalDataRoutes } from "./http/controller/legalData/routes";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -45,6 +46,7 @@ app.register(fastifyJwt, {
   },
 });
 
+app.register(legalDataRoutes);
 app.register(hashtagRoutes);
 app.register(userRoutes);
 app.register(scrapeRoutes);

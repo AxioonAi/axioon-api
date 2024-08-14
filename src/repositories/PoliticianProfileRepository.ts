@@ -26,7 +26,7 @@ import {
   tiktokData,
   youtubeData,
 } from "@/@types/politicianProfileRepository";
-import { PoliticianProfile, Role } from "@prisma/client";
+import { PoliticianProfile, Prisma, Role } from "@prisma/client";
 
 export interface PoliticianProfileRepository {
   create(data: {
@@ -42,6 +42,15 @@ export interface PoliticianProfileRepository {
     campaign_name?: string;
     political_group_id: string;
   }): Promise<PoliticianProfile>;
+  createLegalDetails(data: {
+    addressData: Prisma.PersonalAddressUncheckedCreateInput[];
+    personalData: Prisma.PersonalDataUncheckedCreateInput[];
+    incomeTaxData: Prisma.personalIncomeTaxReturnsUncheckedCreateInput[];
+    economicRelationshipsData: Prisma.PersonalEconomicRelationshipUncheckedCreateInput[];
+    activeDebtData: Prisma.ActiveDebtUncheckedCreateInput[];
+    NotaryDat: Prisma.NotaryUncheckedCreateInput[];
+    ProtestsData: Prisma.ProtestsUncheckedCreateInput[];
+  }): Promise<void>;
   update(
     id: string,
     data: {
@@ -101,4 +110,5 @@ export interface PoliticianProfileRepository {
   findProfileWithoutNews(
     state: string
   ): Promise<findProfileWithoutNewsDataInterface[]>;
+  findProfileWithoutCerberusData(): Promise<{ id: string; cpf: string }[]>;
 }

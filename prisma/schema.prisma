@@ -139,6 +139,7 @@ model PoliticianProfile {
   economicRelationship     PersonalEconomicRelationship[]
   electoralHistory         ElectoralHistory[]
   activeDebts              ActiveDebt[]
+  notaries                 Notary[]
 }
 
 model PoliticianProfileMonitoring {
@@ -796,6 +797,8 @@ model PersonalEconomicRelationship {
   relationshipType  String
   name              String
   cnpj              String
+  startDate         DateTime?
+  endDate           DateTime?
   relationshipLevel String
   politician_id     String
   politicianProfile PoliticianProfile @relation(references: [id], fields: [politician_id])
@@ -835,7 +838,7 @@ model ElectoralHistory {
   marital_status           String
   email                    String
   school_level             String
-  ocupation                String
+  occupation               String
   birth_date               String
   nationality              String
   color_race               String
@@ -852,10 +855,10 @@ model ElectoralHistory {
   ballot_state             String
   political_group          String
   political_group_number   String
-  campagn_total_spend      Float
+  campaign_total_spend     Float
   first_round_total_spend  Float
   second_round_total_spend Float
-  toal_declared_assets     Float
+  total_declared_assets    Float
   politician_profile_id    String
   election_year            String
 
@@ -1057,4 +1060,30 @@ model AiMessage {
   chatId    String
 
   chat AiChat @relation(fields: [chatId], references: [id])
+}
+
+model Notary {
+  id                  String @unique @default(uuid())
+  name                String
+  city                String
+  numberOfTitles      String
+  address             String
+  phone               String
+  politicianProfileId String
+
+  profile PoliticianProfile @relation(fields: [politicianProfileId], references: [id])
+
+  protests Protests[]
+}
+
+model Protests {
+  id          String   @unique @default(uuid())
+  cpfCnpj     String
+  date        DateTime
+  protestDate DateTime
+  dueDate     DateTime
+  value       String
+  notaryId    String
+
+  notary Notary @relation(fields: [notaryId], references: [id])
 }
