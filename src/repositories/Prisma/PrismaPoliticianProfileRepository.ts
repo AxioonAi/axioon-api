@@ -49,6 +49,11 @@ export class PrismaPoliticianProfileRepository
     const profiles = await prisma.politicianProfile.findMany({
       where: {
         status: Status.ACTIVE,
+        AND: {
+          cpf: {
+            not: null || "",
+          },
+        },
       },
       select: {
         id: true,
@@ -809,6 +814,12 @@ export class PrismaPoliticianProfileRepository
         address: true,
         economicRelationship: true,
         incomeTax: true,
+        activeDebts: true,
+        notaries: {
+          include: {
+            protests: true,
+          },
+        },
       },
     });
   }
