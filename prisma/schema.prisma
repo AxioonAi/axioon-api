@@ -172,6 +172,8 @@ model InstagramBaseData {
 model TiktokBaseData {
   id            String            @unique @default(uuid())
   fans          Float
+  name          String            @default("Tiktok")
+  nickname      String            @default("Tiktok")
   videos        Float
   verified      Boolean
   avatar        String
