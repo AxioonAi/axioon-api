@@ -83,6 +83,10 @@ export const mentionsFormatter = (data: MentionsData) => {
       (engager) => engager.id === data.instagramMention[key].engager?.id
     );
 
+    const engagementSum =
+      data.instagramMention[key].commentCount * 1 +
+      data.instagramMention[key].likeCount * 0.5;
+
     if (engagerExists) {
       instagramData.authorData[
         instagramData.authorData.indexOf(engagerExists)
@@ -90,12 +94,19 @@ export const mentionsFormatter = (data: MentionsData) => {
         sentiment: engagerExists.sentiment + sentimentSum / comments.length,
         ...engagerExists,
         posts: engagerExists.posts + 1,
+        lastPost:
+          data.instagramMention[key].pubDate > engagerExists.lastPost
+            ? data.instagramMention[key].pubDate
+            : engagerExists.lastPost,
+        engagement: engagerExists.engagement + engagementSum,
       };
     } else {
       instagramData.authorData.push({
         ...data.instagramMention[key].engager,
         posts: 1,
+        lastPost: data.instagramMention[key].pubDate,
         sentiment: sentimentSum / comments.length,
+        engagement: engagementSum,
       });
     }
 
@@ -160,6 +171,15 @@ export const mentionsFormatter = (data: MentionsData) => {
     quantity,
   }));
 
+  const influencers = instagramData.authorData
+    .map((item) => ({
+      ...item,
+      sentiment: Number((item.sentiment / item.posts).toFixed(2)),
+      engagement: Number((item.engagement / item.posts).toFixed(2)),
+    }))
+    .sort((a, b) => b.followers - a.followers)
+    .slice(0, 15);
+
   return {
     sentimentEvolution: {
       instagram: formattedComments.sentimentEvolution,
@@ -189,10 +209,12 @@ export const mentionsFormatter = (data: MentionsData) => {
       ...newsByWebsitesArray,
     ],
     postsByDay: instagramPostsByDayArray,
+    influencers,
     newsByDay: newsByDayArray,
     authors: instagramData.authorData.map((item) => ({
       ...item,
-      sentiment: (item.sentiment / item.posts).toFixed(2),
+      sentiment: Number((item.sentiment / item.posts).toFixed(2)),
+      engagement: Number((item.engagement / item.posts).toFixed(2)),
     })),
     posts: {
       news: news.news,
