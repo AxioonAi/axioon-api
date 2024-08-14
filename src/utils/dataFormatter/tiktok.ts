@@ -163,7 +163,6 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
           100
         ).toFixed(0)
       ),
-      evolution: finalFollowersEvolution.map((item) => item.fans),
     },
     {
       name: "Sentimento",
@@ -183,9 +182,6 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
           100
         ).toFixed(0)
       ),
-      evolution: commentStatisticsFinalData.sentimentEvolution.map(
-        (item) => item.value
-      ),
     },
     {
       name: "Publicações",
@@ -199,7 +195,6 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
           100
         ).toFixed(0)
       ),
-      evolution: finalFollowersEvolution.map((item) => item.videos),
     },
   ];
 

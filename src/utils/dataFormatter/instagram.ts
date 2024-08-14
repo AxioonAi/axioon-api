@@ -208,7 +208,6 @@ export const instagramDataFormatter = (data: {
           100
         ).toFixed(0)
       ),
-      evolution: finalFollowersEvolution.map((item) => item.followers),
     },
     {
       name: "Sentimento",
@@ -228,9 +227,6 @@ export const instagramDataFormatter = (data: {
           100
         ).toFixed(0)
       ),
-      evolution: commentStatisticsFinalData.sentimentEvolution.map(
-        (item) => item.value
-      ),
     },
     {
       name: "Publicações",
@@ -246,7 +242,6 @@ export const instagramDataFormatter = (data: {
           100
         ).toFixed(0)
       ),
-      evolution: finalFollowersEvolution.map((item) => item.posts_count),
     },
   ];
 

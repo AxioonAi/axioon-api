@@ -197,7 +197,6 @@ export const FacebookDataFormatter = (data: {
           100
         ).toFixed(0)
       ),
-      evolution: finalFollowersEvolution.map((item) => item.followers_count),
     },
     {
       name: "Sentimento",
@@ -217,16 +216,12 @@ export const FacebookDataFormatter = (data: {
           100
         ).toFixed(0)
       ),
-      evolution: commentStatisticsFinalData.sentimentEvolution.map(
-        (item) => item.value
-      ),
     },
     {
       name: "Publicações",
       value: 0,
       trendingUp: true,
       trendingValue: 0,
-      evolution: [],
     },
   ];
 

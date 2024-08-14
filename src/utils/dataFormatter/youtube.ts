@@ -142,14 +142,12 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
           100
         ).toFixed(0)
       ),
-      evolution: finalFollowersEvolution.map((item) => item.channel_total_subs),
     },
     {
       name: "Sentimento",
       value: commentStatisticsData.currentSentiment,
       trendingUp: true,
       trendingValue: 0,
-      evolution: [],
     },
     {
       name: "Publicações",
@@ -164,9 +162,6 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
             youtubeBaseData[0].channel_total_videos) *
           100
         ).toFixed(0)
-      ),
-      evolution: finalFollowersEvolution.map(
-        (item) => item.channel_total_videos
       ),
     },
   ];
