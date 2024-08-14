@@ -175,7 +175,7 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
 
   return {
     commentsStatistics: commentStatisticsData,
-    followersEvolution,
+    followersEvolution: finalFollowersEvolution,
     videos: finalData,
     profileEvolution,
     staticData,

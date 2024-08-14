@@ -227,7 +227,7 @@ export const FacebookDataFormatter = (data: {
 
   return {
     commentsStatistics: commentStatisticsFinalData,
-    followersEvolution,
+    followersEvolution: finalFollowersEvolution,
     posts: finalData,
     profileEvolution,
     staticData,

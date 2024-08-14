@@ -208,7 +208,7 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
 
   return {
     commentsStatistics: commentStatisticsFinalData,
-    followersEvolution,
+    followersEvolution: finalFollowersEvolution,
     videoEngagementData,
     videos: finalData,
     profileEvolution,
