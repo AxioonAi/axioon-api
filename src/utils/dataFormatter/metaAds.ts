@@ -100,5 +100,16 @@ export const metaAdsFormatter = (data: metaAds[]) => {
     });
   }
 
-  return formattedData;
+  return {
+    ...formattedData,
+    public_by_age_and_gender: Object.entries(
+      formattedData.public_by_age_and_gender
+    ).flatMap(([ageGroup, genders]) =>
+      Object.entries(genders).map(([gender, value]) => ({
+        age_group: ageGroup,
+        gender: gender,
+        value: value,
+      }))
+    ),
+  };
 };
