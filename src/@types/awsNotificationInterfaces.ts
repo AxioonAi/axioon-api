@@ -218,11 +218,31 @@ export interface AwsNotificationTiktokProfileAwsDataInterface {
   playCount: number;
   webVideoUrl: string;
 }
+export interface AwsNotificationTiktokEngagerAwsDataInterface {
+  tiktok_id: string;
+  authorMeta?: {
+    fans: number;
+    video: number;
+    verified: boolean;
+    avatar: string;
+    heart: number;
+    name: string;
+    nickName: string;
+  };
+  name: string;
+  nickName: string;
+  fans: number;
+  verified: boolean;
+  avatar: string;
+  heart: number;
+}
 
 export interface AwsNotificationTiktokHashtagMentionAwsDataInterface {
-  "authorMeta.avatar": string;
-  "authorMeta.name": string;
-  hashtagId: string;
+  authorMeta: {
+    avatar: string;
+    name: string;
+  };
+  hashtag_id: string;
   text: string;
   diggCount: number;
   createTimeISO: Date;

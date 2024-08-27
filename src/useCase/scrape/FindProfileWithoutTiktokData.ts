@@ -16,7 +16,6 @@ export class FindProfileWithoutTiktokDataUseCase {
     const profiles =
       await this.politicianProfileRepository.findProfileWithoutTiktokData();
 
-    console.log(profiles);
     return {
       profiles: profiles.filter(
         (profile) =>

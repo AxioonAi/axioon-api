@@ -22,7 +22,10 @@ import { ElectoralHistoryRoutes } from "./http/controller/electoralHistory/route
 import { prisma } from "./lib/prisma";
 import {
   InstagramEngager,
+  InstagramMention,
+  InstagramMentionComment,
   InstagramPostComment,
+  Prisma,
   TiktokCommentData,
   TiktokEngager,
 } from "@prisma/client";
@@ -64,78 +67,55 @@ app.setErrorHandler(fastifyErrorHandler);
 app.register(WebsiteRoutes);
 app.register(politicianProfileMonitoringListRoutes);
 
-// app.get("/create-engagers", async (request, reply) => {
-//   const comments = await prisma.instagramPostComment.findMany({
-//     where: {
-//       instagramEngagerId: null,
-//     },
-//     take: 500,
-//   });
+app.get("/create-engagers", async (request, reply) => {
+  const mentions = await prisma.instagramMention.findMany({
+    where: {
+      instagramEngagerId: null,
+    },
+  });
 
-//   // console.log(comments.length);
+  const engagers: Prisma.InstagramEngagerUncheckedCreateInput[] = [];
+  const mentionsToUpdate: InstagramMention[] = [];
+  for (const mention of mentions) {
+    const engagerExists = engagers.find(
+      (engager) => engager.username === mention.ownerUsername
+    );
 
-//   // return;
+    if (!engagerExists) {
+      const id = randomUUID();
+      engagers.push({
+        username: mention.ownerUsername,
+        followers: 0,
+        id,
+        name: mention.ownerUsername,
+      });
 
-//   const engagers: InstagramEngager[] = [];
-//   const commentsToUpdate: InstagramPostComment[] = [];
-//   for (const comment of comments) {
-//     const engagerExists = engagers.find(
-//       (engager) => engager.username === comment.ownerUsername
-//     );
+      mentionsToUpdate.push({
+        ...mention,
+        instagramEngagerId: id,
+      });
+    } else {
+      mentionsToUpdate.push({
+        ...mention,
+        instagramEngagerId: engagerExists.id || null,
+      });
+    }
+  }
 
-//     if (!engagerExists) {
-//       const engagerDatabase = await prisma.instagramEngager.findFirst({
-//         where: {
-//           username: comment.ownerUsername,
-//         },
-//       });
+  await prisma.instagramEngager.createMany({
+    data: engagers,
+  });
 
-//       if (engagerDatabase) {
-//         engagers.push({
-//           ...engagerDatabase,
-//           id: randomUUID(),
-//         });
+  mentionsToUpdate.forEach(async (mention) => {
+    await prisma.instagramMention.update({
+      where: {
+        id: mention.id,
+      },
+      data: {
+        instagramEngagerId: mention.instagramEngagerId,
+      },
+    });
+  });
 
-//         commentsToUpdate.push({
-//           ...comment,
-//           instagramEngagerId: engagerDatabase.id,
-//         });
-//       } else {
-//         const id = randomUUID();
-//         engagers.push({
-//           username: comment.ownerUsername,
-//           followers: 0,
-//           id,
-//           name: comment.ownerUsername,
-//         });
-
-//         commentsToUpdate.push({
-//           ...comment,
-//           instagramEngagerId: id,
-//         });
-//       }
-//     } else {
-//       commentsToUpdate.push({
-//         ...comment,
-//         instagramEngagerId: engagerExists.id,
-//       });
-//     }
-//   }
-
-//   await prisma.instagramEngager.createMany({
-//     data: engagers,
-//   });
-
-//   commentsToUpdate.forEach(async (comment) => {
-//     await prisma.instagramPostComment.update({
-//       where: {
-//         id: comment.id,
-//       },
-//       data: {
-//         instagramEngagerId: comment.instagramEngagerId,
-//       },
-//     });
-//   });
-
-//   return;
-// });
+  return;
+});

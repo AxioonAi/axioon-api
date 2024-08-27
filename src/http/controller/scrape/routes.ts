@@ -14,6 +14,7 @@ import { userTikTokController } from "./userTikTok";
 import { userYoutubeController } from "./userYoutube";
 import { findInstagramEngagerController } from "./findInstagramEngager";
 import { findTiktokEngagerController } from "./findTiktokEngager";
+import { findHashtagDataController } from "./findHashtagData";
 
 export async function scrapeRoutes(app: FastifyInstance) {
   app.get("/scrape/instagram", userInstagramController);
@@ -22,6 +23,7 @@ export async function scrapeRoutes(app: FastifyInstance) {
   app.get("/scrape/facebook", userFacebookController);
   app.get("/scrape/name", userNameController);
   app.get("/scrape/cpf", cpfListController);
+  app.get("/scrape/hashtag", findHashtagDataController);
   app.get("/scrape/news/:id", newsUserListController);
   app.get("/scrape/instagram/engagers", findInstagramEngagerController);
   app.get("/scrape/tiktok/engagers", findTiktokEngagerController);

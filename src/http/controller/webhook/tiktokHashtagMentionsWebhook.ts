@@ -8,12 +8,16 @@ export const tiktokHashtagMentionsWebhookController = async (
 ) => {
   const { records } = ZodWebhookBodySchema.parse(request.body);
 
+  console.log("entrou tiktok hashtag mentions");
+
   const tiktokHashtagMentionsWebhookUseCase =
     makeTiktokHashtagMentionsWebhook();
 
   const data = await tiktokHashtagMentionsWebhookUseCase.execute({
     records,
   });
+
+  console.log("saiu tiktok hashtag mentions");
 
   return reply.status(200).send(data);
 };

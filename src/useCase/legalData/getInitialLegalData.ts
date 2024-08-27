@@ -15,8 +15,9 @@ export class GetInitialLegalDataUseCase {
   ) {}
 
   async execute(): Promise<void> {
-    const profiles =
-      await this.politicianProfileRepository.findProfileWithoutCerberusData();
+    const profiles = (
+      await this.politicianProfileRepository.findProfileWithoutCerberusData()
+    ).slice(0, 1);
 
     const batchSize = 2;
     const batches = [];

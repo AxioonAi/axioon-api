@@ -5,45 +5,45 @@ import { PoliticianProfileMonitoringRepository } from "@/repositories/Politician
 import { NotificationType } from "@prisma/client";
 
 interface FacebookProfileWebhookUseCaseRequest {
-	records: string;
+  records: string;
 }
 
 export class FacebookProfileWebhookUseCase {
-	constructor(
-		private awsNotificationRepository: AwsNotificationRepository,
-		private facebookBaseDataRepository: FacebookBaseDataRepository,
-		private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository,
-		private notificationRepository: NotificationRepository,
-	) {}
+  constructor(
+    private awsNotificationRepository: AwsNotificationRepository,
+    private facebookBaseDataRepository: FacebookBaseDataRepository,
+    private politicianProfileMonitoringRepository: PoliticianProfileMonitoringRepository,
+    private notificationRepository: NotificationRepository
+  ) {}
 
-	async execute({
-		records,
-	}: FacebookProfileWebhookUseCaseRequest): Promise<void> {
-		const response =
-			await this.awsNotificationRepository.S3FacebookProfileNotification({
-				records,
-			});
+  async execute({
+    records,
+  }: FacebookProfileWebhookUseCaseRequest): Promise<void> {
+    const response =
+      await this.awsNotificationRepository.S3FacebookProfileNotification({
+        records,
+      });
 
-		const ids = response.map((item) => item.politician_id);
+    const ids = response.map((item) => item.politician_id);
 
-		const users =
-			await this.politicianProfileMonitoringRepository.findUsersByProfileId(
-				ids,
-			);
+    const users =
+      await this.politicianProfileMonitoringRepository.findUsersByProfileId(
+        ids
+      );
 
-		const notifications = users.map((user) => {
-			return {
-				user_id: user.user_id,
-				politician_profile_id: user.politician_profile_id,
-				type: NotificationType.INSTAGRAM,
-				description: `O(a) Candidato(a) ${user.politicianProfile.social_name} recebeu uma atualização nos dados do Facebook`,
-			};
-		});
+    const notifications = users.map((user) => {
+      return {
+        user_id: user.user_id,
+        politician_profile_id: user.politician_profile_id,
+        type: NotificationType.INSTAGRAM,
+        description: `O(a) Candidato(a) ${user.politicianProfile.social_name} recebeu uma atualização nos dados do Facebook`,
+      };
+    });
 
-		await this.notificationRepository.createMany(notifications);
+    await this.notificationRepository.createMany(notifications);
 
-		await this.facebookBaseDataRepository.createMany(response);
+    await this.facebookBaseDataRepository.createMany(response);
 
-		return;
-	}
+    return;
+  }
 }

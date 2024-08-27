@@ -12,6 +12,8 @@ export const instagramHashtagMentionsWebhookController = async (
   const instagramHashtagMentionsWebhookUseCase =
     makeInstagramHashtagMentionsWebhook();
 
+  console.log("entrou mention");
+
   const data = await instagramHashtagMentionsWebhookUseCase.execute({
     records,
   });

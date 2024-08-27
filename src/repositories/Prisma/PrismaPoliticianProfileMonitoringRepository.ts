@@ -75,7 +75,6 @@ export class PrismaPoliticianProfileMonitoringRepository
   }
 
   async findManyByUserIdWithPosts(userId: string) {
-    console.log("entrou");
     return await prisma.politicianProfileMonitoring.findMany({
       where: {
         user_id: userId,

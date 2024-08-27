@@ -28,7 +28,7 @@ export interface IdCerberusResponseInterface {
     bank: string;
     situation: string;
   }[];
-  electoralData: ElectoralData;
+  // electoralData: ElectoralData;
   activeDebt: {
     source: string;
     debtOrigin: string;
@@ -39,21 +39,21 @@ export interface IdCerberusResponseInterface {
     registrationSituationType: string;
     registrationSituation: string;
   }[];
-  protest: {
-    notary: string;
-    getDetails: string | null;
-    city: string;
-    numberOfTitles: string;
-    address: string;
-    phone: string;
-    protests: {
-      cpfCnpj: string;
-      date: string;
-      protestDate: string;
-      dueDate: string;
-      value: string;
-    }[];
-  }[];
+  // protest: {
+  //   notary: string;
+  //   getDetails: string | null;
+  //   city: string;
+  //   numberOfTitles: string;
+  //   address: string;
+  //   phone: string;
+  //   protests: {
+  //     cpfCnpj: string;
+  //     date: string;
+  //     protestDate: string;
+  //     dueDate: string;
+  //     value: string;
+  //   }[];
+  // }[];
 }
 
 interface ElectoralData {

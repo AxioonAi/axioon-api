@@ -106,7 +106,7 @@ export interface TiktokHashtagMentionCreateInterface {
   text: string;
   diggCount: number;
   date: Date;
-  sentimentAnalysis: number;
+  // sentimentAnalysis: number;
   shareCount: number;
   commentCount: number;
   playCount: number;

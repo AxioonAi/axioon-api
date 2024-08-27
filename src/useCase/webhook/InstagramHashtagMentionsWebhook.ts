@@ -22,6 +22,7 @@ export class InstagramHashtagMentionsWebhookUseCase {
   async execute({
     records,
   }: InstagramHashtagMentionsWebhookUseCaseRequest): Promise<void> {
+    console.log(records);
     const data =
       await this.awsNotificationRepository.S3InstagramHashtagMentionsNotification(
         {
@@ -46,24 +47,25 @@ export class InstagramHashtagMentionsWebhookUseCase {
       engagers
     );
 
-    const gptAnalysis = await this.gptRepository.mentionAnalysis(
-      analysisFilter
-    );
+    // const gptAnalysis = await this.gptRepository.mentionAnalysis(
+    //   analysisFilter
+    // );
 
     const createData: InstagramHashtagMentionCreateInterface[] = [];
 
     for (const item of data) {
-      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+      // const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
       const engager = createEngager.find(
         (engager) => engager.username === item.ownerUsername
       );
-      if (analysis) {
-        createData.push({
-          ...item,
-          ...analysis,
-          instagramEngagerId: engager && engager.id,
-        });
-      }
+      // if (analysis) {
+      createData.push({
+        ...item,
+        // ...analysis,
+        sentimentAnalysis: 500,
+        instagramEngagerId: engager && engager.id,
+      });
+      // }
     }
 
     await this.instagramHashtagMentionRepository.createMany(createData);

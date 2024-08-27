@@ -4,30 +4,32 @@ import { MetaAdvertisingLibDemographicDistributionRepository } from "@/repositor
 import { MetaAdvertisingLibRepository } from "@/repositories/MetaAdvertisingLibRepository";
 
 interface FacebookAdsWebhookUseCaseRequest {
-	records: string;
+  records: string;
 }
 
 export class FacebookAdsWebhookUseCase {
-	constructor(
-		private awsNotificationRepository: AwsNotificationRepository,
-		private metaAdvertisingLibRepository: MetaAdvertisingLibRepository,
-		private metaAdvertisingLibDeliveryByRegionRepository: MetaAdvertisingLibDeliveryByRegionRepository,
-		private metaAdvertisingLibDemographicDistributionRepository: MetaAdvertisingLibDemographicDistributionRepository,
-	) {}
+  constructor(
+    private awsNotificationRepository: AwsNotificationRepository,
+    private metaAdvertisingLibRepository: MetaAdvertisingLibRepository,
+    private metaAdvertisingLibDeliveryByRegionRepository: MetaAdvertisingLibDeliveryByRegionRepository,
+    private metaAdvertisingLibDemographicDistributionRepository: MetaAdvertisingLibDemographicDistributionRepository
+  ) {}
 
-	async execute({ records }: FacebookAdsWebhookUseCaseRequest): Promise<void> {
-		const { advertisingData, deliveryRegionData, demographicDistributionData } =
-			await this.awsNotificationRepository.S3FacebookAdsNotification({
-				records,
-			});
-
-		await this.metaAdvertisingLibRepository.createMany(advertisingData);
-		await this.metaAdvertisingLibDeliveryByRegionRepository.createMany(
-			deliveryRegionData,
-		);
-		await this.metaAdvertisingLibDemographicDistributionRepository.createMany(
-			demographicDistributionData,
-		);
-		return;
-	}
+  async execute({ records }: FacebookAdsWebhookUseCaseRequest): Promise<void> {
+    const { advertisingData, deliveryRegionData, demographicDistributionData } =
+      await this.awsNotificationRepository.S3FacebookAdsNotification({
+        records,
+      });
+    console.log(" advertisingData", advertisingData);
+    console.log(" deliveryRegionData", deliveryRegionData);
+    console.log(" demographicDistributionData", demographicDistributionData);
+    await this.metaAdvertisingLibRepository.createMany(advertisingData);
+    await this.metaAdvertisingLibDeliveryByRegionRepository.createMany(
+      deliveryRegionData
+    );
+    await this.metaAdvertisingLibDemographicDistributionRepository.createMany(
+      demographicDistributionData
+    );
+    return;
+  }
 }

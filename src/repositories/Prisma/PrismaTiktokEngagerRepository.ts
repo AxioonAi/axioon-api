@@ -51,15 +51,25 @@ export class PrismaTiktokEngagerRepository implements TiktokEngagerRepository {
   }
 
   async updateMany(data: AwsNotificationTiktokEngagerResponseInterface[]) {
-    const updateData = data.map((profile) => ({
-      id: profile.engagerId,
-      fans: profile.fans,
-      heart: profile.heart,
-    }));
+    const updateData = data
+      .map((profile) => ({
+        id: profile.engagerId,
+        fans: profile.fans,
+        heart: profile.heart,
+      }))
+      .filter((d) => d.id);
 
-    await prisma.tiktokEngager.updateMany({
-      data: updateData,
-    });
+    await prisma.$transaction([
+      ...updateData.map((d) =>
+        prisma.tiktokEngager.update({
+          where: { id: d.id },
+          data: {
+            fans: d.fans,
+            heart: d.heart,
+          },
+        })
+      ),
+    ]);
 
     return;
   }

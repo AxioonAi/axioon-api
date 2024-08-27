@@ -23,12 +23,12 @@ export class PrismaTiktokHashtagMentionRepository
       if (!mentionExists.find((mention) => mention.id === item.id)) {
         createData.push({
           ...item,
-          sentimentAnalysis: Number(item.sentimentAnalysis),
+          // sentimentAnalysis: Number(item.sentimentAnalysis),
         });
       } else {
         updateData.push({
           ...item,
-          sentimentAnalysis: Number(item.sentimentAnalysis),
+          // sentimentAnalysis: Number(item.sentimentAnalysis),
         });
       }
     }

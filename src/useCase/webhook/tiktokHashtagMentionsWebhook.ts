@@ -32,22 +32,24 @@ export class TiktokHashtagMentionsWebhookUseCase {
       (item) => !mentionExists.includes(item.id)
     );
 
-    const gptAnalysis = await this.gptRepository.mentionAnalysis(
-      analysisFilter
-    );
+    // const gptAnalysis = await this.gptRepository.mentionAnalysis(
+    //   analysisFilter
+    // );
 
     const createData: TiktokHashtagMentionCreateInterface[] = [];
 
     for (const item of data) {
-      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
-
-      if (analysis) {
-        createData.push({
-          ...item,
-          ...analysis,
-          text: analysis.description,
-        });
-      }
+      // const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+      const { description, ...rest } = item;
+      // if (analysis) {
+      createData.push({
+        ...rest,
+        // ...analysis,
+        // sentimentAnalysis: 500,
+        text: description,
+        // text: analysis.description,
+      });
+      // }
     }
 
     await this.tiktokHashtagMentionRepository.createMany(createData);

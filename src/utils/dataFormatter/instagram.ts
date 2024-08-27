@@ -67,8 +67,6 @@ export const instagramDataFormatter = (data: {
         instagramPosts[key].likeCount * 0.5) *
       10;
 
-    console.log("engagementSum", engagementSum);
-
     const dateDiffRelation = 1 - timeDiff / oldPostDateDiff;
 
     const comments = data.instagramPostComments.filter(

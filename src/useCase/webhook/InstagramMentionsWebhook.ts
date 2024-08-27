@@ -55,6 +55,7 @@ export class InstagramMentionsWebhookUseCase {
         createData.push({
           ...item,
           ...analysis,
+          sentimentAnalysis: 500,
           instagramEngagerId: engager && engager.id,
         });
       }

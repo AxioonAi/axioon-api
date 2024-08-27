@@ -181,8 +181,6 @@ export class PrismaPoliticianProfileRepository
       return null; // Ou qualquer outra ação desejada
     }
 
-    console.log(conditions);
-
     return await prisma.politicianProfile.findFirst({
       where: {
         OR: conditions,

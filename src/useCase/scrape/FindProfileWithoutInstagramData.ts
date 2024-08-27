@@ -16,7 +16,6 @@ export class FindProfileWithoutInstagramDataUseCase {
     const profiles =
       await this.politicianProfileRepository.findProfileWithoutInstagramData();
 
-    console.log(profiles);
     return {
       profiles: profiles.filter(
         (profile) =>

@@ -24,6 +24,7 @@ import {
   AwsNotificationNewsResponseInterface,
   AwsNotificationTiktokCommentsAwsDataInterface,
   AwsNotificationTiktokCommentsResponseInterface,
+  AwsNotificationTiktokEngagerAwsDataInterface,
   AwsNotificationTiktokEngagerResponseInterface,
   AwsNotificationTiktokHashtagMentionAwsDataInterface,
   AwsNotificationTiktokHashtagMentionResponseInterface,
@@ -46,6 +47,7 @@ import {
   AwsNotificationRepository,
   S3NotificationInterface,
 } from "../AwsNotificationRepository";
+import { randomUUID } from "crypto";
 
 export class AwsNotificationProductionRepository
   implements AwsNotificationRepository
@@ -298,7 +300,7 @@ export class AwsNotificationProductionRepository
               id: item.id,
               title: item.title,
               url: item.url,
-              duration: item.duration,
+              duration: item.duration || "0",
               viewCount: item.viewCount,
               commentsCount: item.commentsCount,
               likes: item.likes ? item.likes : 0,
@@ -351,7 +353,6 @@ export class AwsNotificationProductionRepository
           return data;
         })
         .catch((err) => {
-          console.log(err.message);
           throw new AwsError();
         });
 
@@ -578,7 +579,7 @@ export class AwsNotificationProductionRepository
   }
 
   async S3TiktokEngagerNotification(data: S3NotificationInterface) {
-    const awsData: AwsNotificationTiktokProfileAwsDataInterface[] = await axios
+    const awsData: AwsNotificationTiktokEngagerAwsDataInterface[] = await axios
       .get(`${env.AWS_URL}${data.records}`)
       .then(({ data }) => {
         return data;
@@ -589,12 +590,22 @@ export class AwsNotificationProductionRepository
 
     const formattedData: AwsNotificationTiktokEngagerResponseInterface[] =
       awsData.map((item) => {
+        if (item.authorMeta) {
+          return {
+            engagerId: item.tiktok_id,
+            fans: item.authorMeta.fans,
+            verified: item.authorMeta.verified,
+            avatar: item.authorMeta.avatar,
+            heart: item.authorMeta.heart,
+          };
+        }
+
         return {
           engagerId: item.tiktok_id,
-          fans: item.authorMeta.fans,
-          verified: item.authorMeta.verified,
-          avatar: item.authorMeta.avatar,
-          heart: item.authorMeta.heart,
+          fans: item.fans,
+          verified: item.verified,
+          avatar: item.avatar,
+          heart: item.heart,
         };
       });
 
@@ -616,13 +627,13 @@ export class AwsNotificationProductionRepository
       awsData.map((item) => {
         const url = item.webVideoUrl.split("/");
         return {
-          authorAvatar: item["authorMeta.avatar"],
-          authorName: item["authorMeta.name"],
+          authorAvatar: item.authorMeta.avatar,
+          authorName: item.authorMeta.name,
           commentCount: item.commentCount,
           date: item.createTimeISO,
           description: item.text,
           diggCount: item.diggCount,
-          hashtagId: item.hashtagId,
+          hashtagId: item.hashtag_id,
           playCount: item.playCount,
           shareCount: item.shareCount,
           url: item.webVideoUrl,
@@ -630,7 +641,7 @@ export class AwsNotificationProductionRepository
         };
       });
 
-    return formattedData;
+    return formattedData.filter((item) => item.hashtagId);
   }
 
   async S3FacebookPostNotification(data: S3NotificationInterface) {
@@ -671,6 +682,7 @@ export class AwsNotificationProductionRepository
         return data;
       })
       .catch((err) => {
+        console.log("error", err);
         throw new AwsError();
       });
 
@@ -679,6 +691,8 @@ export class AwsNotificationProductionRepository
       deliveryRegionData: [],
       demographicDistributionData: [],
     };
+
+    console.log(awsData.length);
 
     for (const element of awsData) {
       for (const item of element.data) {
@@ -701,21 +715,25 @@ export class AwsNotificationProductionRepository
           impressions_upper_bound: item.impressions.upper_bound,
         });
 
-        for (const data of item.demographic_distribution) {
-          formattedData.demographicDistributionData.push({
-            advertising_id: item.id,
-            age: data.age,
-            gender: data.gender,
-            percentage: data.percentage,
-          });
+        if (item.demographic_distribution) {
+          for (const data of item.demographic_distribution) {
+            formattedData.demographicDistributionData.push({
+              advertising_id: item.id,
+              age: data.age,
+              gender: data.gender,
+              percentage: data.percentage,
+            });
+          }
         }
 
-        for (const data of item.delivery_by_region) {
-          formattedData.deliveryRegionData.push({
-            advertising_id: item.id,
-            region: data.region,
-            percentage: data.percentage,
-          });
+        if (item.delivery_by_region) {
+          for (const data of item.delivery_by_region) {
+            formattedData.deliveryRegionData.push({
+              advertising_id: item.id,
+              region: data.region,
+              percentage: data.percentage,
+            });
+          }
         }
       }
     }
@@ -766,7 +784,7 @@ export class AwsNotificationProductionRepository
     const formattedData: AwsNotificationYoutubeChannelResponseInterface[] =
       awsData.map((item) => {
         return {
-          id: item.id,
+          id: randomUUID(),
           channel_name: item.channelName,
           channel_total_views: parseFloat(
             typeof item.channelTotalViews === "string"

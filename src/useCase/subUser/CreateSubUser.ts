@@ -5,43 +5,40 @@ import { UserRepository } from "@/repositories/userRepository";
 import { hash } from "bcryptjs";
 
 interface CreateSubUserUseCaseRequest {
-	data: {
-		name: string;
-		email: string;
-		password: string;
-		user_id: string;
-	};
+  data: {
+    name: string;
+    email: string;
+    password: string;
+    user_id: string;
+  };
 }
 
 export class CreateSubUserUseCase {
-	constructor(
-		private subUserRepository: SubUserRepository,
-		private userRepository: UserRepository,
-	) {}
+  constructor(
+    private subUserRepository: SubUserRepository,
+    private userRepository: UserRepository
+  ) {}
 
-	async execute({ data }: CreateSubUserUseCaseRequest): Promise<void> {
-		const { name, email, password, user_id } = data;
-		console.log(user_id);
+  async execute({ data }: CreateSubUserUseCaseRequest): Promise<void> {
+    const { name, email, password, user_id } = data;
 
-		const [userExists, subUserExists] = await Promise.all([
-			this.userRepository.findById(user_id),
-			this.subUserRepository.findByEmail(email),
-		]);
+    const [userExists, subUserExists] = await Promise.all([
+      this.userRepository.findById(user_id),
+      this.subUserRepository.findByEmail(email),
+    ]);
 
-		console.log(userExists);
+    if (!userExists) throw new UserNotFoundError();
+    if (subUserExists) throw new EmailAlreadyExistsError();
 
-		if (!userExists) throw new UserNotFoundError();
-		if (subUserExists) throw new EmailAlreadyExistsError();
+    const password_hash = await hash(password, 6);
 
-		const password_hash = await hash(password, 6);
+    const subUser = await this.subUserRepository.create({
+      name,
+      email,
+      password_hash,
+      user_id,
+    });
 
-		const subUser = await this.subUserRepository.create({
-			name,
-			email,
-			password_hash,
-			user_id,
-		});
-
-		return;
-	}
+    return;
+  }
 }

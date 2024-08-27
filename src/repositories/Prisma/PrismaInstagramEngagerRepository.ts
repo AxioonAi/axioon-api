@@ -31,7 +31,7 @@ export class PrismaInstagramEngagerRepository
       data: createData,
     });
 
-    return [...createData, ...engagerExists];
+    return [...engagerExists];
   }
 
   async findScrapeProfiles() {
@@ -39,12 +39,72 @@ export class PrismaInstagramEngagerRepository
       where: {
         OR: [
           {
-            followers: 0,
+            AND: [
+              {
+                followers: 0,
+              },
+              {
+                comments: {
+                  some: {
+                    politician: {
+                      status: "ACTIVE",
+                    },
+                  },
+                },
+              },
+            ],
           },
           {
-            updatedAt: {
-              lte: moment().subtract(30, "days").toDate(),
-            },
+            AND: [
+              {
+                followers: 0,
+              },
+              {
+                mentions: {
+                  some: {
+                    politician: {
+                      status: "ACTIVE",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                updatedAt: {
+                  lte: moment().subtract(30, "days").toDate(),
+                },
+              },
+              {
+                comments: {
+                  some: {
+                    politician: {
+                      status: "ACTIVE",
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                updatedAt: {
+                  lte: moment().subtract(30, "days").toDate(),
+                },
+              },
+              {
+                mentions: {
+                  some: {
+                    politician: {
+                      status: "ACTIVE",
+                    },
+                  },
+                },
+              },
+            ],
           },
         ],
       },
@@ -57,9 +117,14 @@ export class PrismaInstagramEngagerRepository
       followers: profile.followers,
     }));
 
-    await prisma.instagramEngager.updateMany({
-      data: updateData,
-    });
+    await prisma.$transaction([
+      ...updateData.map((d) =>
+        prisma.instagramEngager.update({
+          where: { id: d.id },
+          data: { followers: d.followers },
+        })
+      ),
+    ]);
 
     return;
   }

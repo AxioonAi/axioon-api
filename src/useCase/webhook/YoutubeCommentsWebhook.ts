@@ -5,54 +5,54 @@ import { YoutubeVideoDataRepository } from "@/repositories/YoutubeVideoDataRepos
 import { GptRepository } from "@/repositories/gptRepository";
 
 interface YoutubeCommentsWebhookUseCaseRequest {
-	records: string;
+  records: string;
 }
 
 export class YoutubeCommentsWebhookUseCase {
-	constructor(
-		private awsNotificationRepository: AwsNotificationRepository,
-		private youtubeCommentsRepository: YoutubeCommentsRepository,
-		private gptRepository: GptRepository,
-		private youtubeVideoRepository: YoutubeVideoDataRepository,
-	) {}
+  constructor(
+    private awsNotificationRepository: AwsNotificationRepository,
+    private youtubeCommentsRepository: YoutubeCommentsRepository,
+    private gptRepository: GptRepository,
+    private youtubeVideoRepository: YoutubeVideoDataRepository
+  ) {}
 
-	async execute({
-		records,
-	}: YoutubeCommentsWebhookUseCaseRequest): Promise<void> {
-		const data =
-			await this.awsNotificationRepository.S3YoutubeCommentsNotification({
-				records,
-			});
+  async execute({
+    records,
+  }: YoutubeCommentsWebhookUseCaseRequest): Promise<void> {
+    const data =
+      await this.awsNotificationRepository.S3YoutubeCommentsNotification({
+        records,
+      });
 
-		const commentExists = await this.youtubeCommentsRepository.commentExists(
-			data.map((item) => item.id),
-		);
+    const commentExists = await this.youtubeCommentsRepository.commentExists(
+      data.map((item) => item.id)
+    );
 
-		const analysisFilter = data.filter(
-			(item) => !commentExists.includes(item.id),
-		);
+    const analysisFilter = data.filter(
+      (item) => !commentExists.includes(item.id)
+    );
 
-		const videoExists = await this.youtubeVideoRepository.videoExists(
-			analysisFilter.map((item) => item.video_id),
-		);
+    const videoExists = await this.youtubeVideoRepository.videoExists(
+      analysisFilter.map((item) => item.video_id)
+    );
 
-		const gptAnalysis = await this.gptRepository.commentAnalysis(
-			analysisFilter.filter((item) => videoExists.includes(item.video_id)),
-		);
+    const gptAnalysis = await this.gptRepository.commentAnalysis(
+      analysisFilter.filter((item) => videoExists.includes(item.video_id))
+    );
 
-		const createData: YoutubeCommentCreateInterface[] = [];
+    const createData: YoutubeCommentCreateInterface[] = [];
 
-		for (const item of data) {
-			const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
-			if (analysis) {
-				createData.push({
-					...item,
-					...analysis,
-				});
-			}
-		}
+    for (const item of data) {
+      const analysis = gptAnalysis.find((analysis) => analysis.id === item.id);
+      if (analysis) {
+        createData.push({
+          ...item,
+          ...analysis,
+        });
+      }
+    }
 
-		await this.youtubeCommentsRepository.createMany(createData);
-		return;
-	}
+    await this.youtubeCommentsRepository.createMany(createData);
+    return;
+  }
 }
