@@ -63,9 +63,16 @@ export const metaAdsFormatter = (data: metaAds[]) => {
       const ageRange = mapAgeToRange(item.age);
       const gender = item.gender;
       const percentage = parseFloat(item.percentage);
-
       // Verifica se o gênero é masculino ou feminino para acumular a porcentagem
       if (gender === "male" || gender === "female" || gender === "unknown") {
+        if (!formattedData.public_by_age_and_gender[ageRange]) {
+          formattedData.public_by_age_and_gender[ageRange] = {};
+        }
+
+        if (!formattedData.public_by_age_and_gender[ageRange][gender]) {
+          formattedData.public_by_age_and_gender[ageRange][gender] = 0;
+        }
+
         formattedData.public_by_age_and_gender[ageRange][gender] += percentage;
       }
     });
