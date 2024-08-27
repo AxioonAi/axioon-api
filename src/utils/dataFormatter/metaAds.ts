@@ -37,13 +37,18 @@ export const metaAdsFormatter = (data: metaAds[]) => {
     total_ads: data.length,
   };
 
-  for (const item of data) {
-    item.demographicDistribution.forEach((item) => {
+  for (const advertising of data) {
+    const impressions =
+      (Number(advertising.impressions_lower_bound) +
+        Number(advertising.impressions_upper_bound)) /
+      2;
+
+    advertising.demographicDistribution.forEach((item) => {
       const percentage = parseFloat(item.percentage);
       if (!formattedData.public_by_gender[item.gender]) {
         formattedData.public_by_gender[item.gender] = 0;
       }
-      formattedData.public_by_gender[item.gender] += percentage;
+      formattedData.public_by_gender[item.gender] += percentage * impressions;
     });
 
     // Mapeando faixas etárias para os ranges especificados
@@ -59,7 +64,7 @@ export const metaAdsFormatter = (data: metaAds[]) => {
     };
 
     // Calculando a porcentagem total por faixa etária
-    item.demographicDistribution.forEach((item) => {
+    advertising.demographicDistribution.forEach((item) => {
       const ageRange = mapAgeToRange(item.age);
       const gender = item.gender;
       const percentage = parseFloat(item.percentage);
@@ -73,27 +78,25 @@ export const metaAdsFormatter = (data: metaAds[]) => {
           formattedData.public_by_age_and_gender[ageRange][gender] = 0;
         }
 
-        formattedData.public_by_age_and_gender[ageRange][gender] += percentage;
+        formattedData.public_by_age_and_gender[ageRange][gender] +=
+          percentage * impressions;
       }
     });
 
-    const impressions =
-      (Number(item.impressions_lower_bound) +
-        Number(item.impressions_upper_bound)) /
-      2;
-
     const spend =
-      (Number(item.spend_lower_bound) + Number(item.spend_upper_bound)) / 2;
+      (Number(advertising.spend_lower_bound) +
+        Number(advertising.spend_upper_bound)) /
+      2;
 
     formattedData.total_impressions += impressions;
     formattedData.total_spend += spend;
     formattedData.ads.push({
-      id: item.id,
+      id: advertising.id,
       average_impressions: impressions,
       average_spend: spend,
-      start_date: item.ad_delivery_start_time,
-      end_date: item.ad_delivery_start_time,
-      status: item.status,
+      start_date: advertising.ad_delivery_start_time,
+      end_date: advertising.ad_delivery_start_time,
+      status: advertising.status,
     });
   }
 
