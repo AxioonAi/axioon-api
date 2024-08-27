@@ -15,10 +15,16 @@ export class GetInitialLegalDataUseCase {
   ) {}
 
   async execute(): Promise<void> {
-    const profiles = (
-      await this.politicianProfileRepository.findProfileWithoutCerberusData()
-    ).slice(0, 1);
+    // const profiles =
+    //   await this.politicianProfileRepository.findProfileWithoutCerberusData();
+    // console.log(profiles);
 
+    const profiles = [
+      {
+        id: "d6390939-c041-480e-8d98-9c932ec99bda",
+        cpf: "251.944.881-49",
+      },
+    ];
     const batchSize = 2;
     const batches = [];
 

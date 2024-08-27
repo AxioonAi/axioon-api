@@ -179,6 +179,8 @@ export const mentionsFormatter = (data: MentionsData) => {
     .sort((a, b) => b.followers - a.followers)
     .slice(0, 15);
 
+  console.log(instagramData.authorData.reduce((a, b) => a + b.followers, 0));
+
   return {
     sentimentEvolution: {
       instagram: formattedComments.sentimentEvolution,
@@ -193,6 +195,14 @@ export const mentionsFormatter = (data: MentionsData) => {
     },
     commentsByGender: formattedComments.commentByGender,
     commentsBySentiment: formattedComments.commentBySentiment,
+    staticData: {
+      engagement: instagramData.authorData.reduce(
+        (a, b) => a + b.engagement,
+        0
+      ),
+      mentions: data.news.length + data.instagramMention.length,
+      userRange: instagramData.authorData.reduce((a, b) => a + b.followers, 0),
+    },
     mentionQuantity: {
       news: data.news.length,
       instagram: data.instagramMention.length,
