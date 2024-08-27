@@ -53,24 +53,22 @@ export class FindHashtagMentionsUseCase {
       sentimentAnalysis: number;
     }[] = [];
 
-    formattedHashtags.forEach((hashtag) => {
-      hashtag.data.posts.instagram.forEach((post) => {
-        if (post.hashtags) {
-          hashtagList.push({
-            text: post.hashtags,
-            sentimentAnalysis: post.sentimentAnalysis,
-          });
-        }
-      });
+    formattedHashtags.posts.instagram.forEach((post) => {
+      if (post.hashtags) {
+        hashtagList.push({
+          text: post.hashtags,
+          sentimentAnalysis: post.sentimentAnalysis,
+        });
+      }
+    });
 
-      hashtag.data.posts.tiktok.forEach((post) => {
-        if (post.hashtags) {
-          hashtagList.push({
-            text: post.hashtags,
-            sentimentAnalysis: post.sentiment,
-          });
-        }
-      });
+    formattedHashtags.posts.tiktok.forEach((post) => {
+      if (post.hashtags) {
+        hashtagList.push({
+          text: post.hashtags,
+          sentimentAnalysis: post.sentiment,
+        });
+      }
     });
 
     const hashtagCloud = HashtagWordCount({

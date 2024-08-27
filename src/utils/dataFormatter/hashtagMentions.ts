@@ -16,235 +16,316 @@ interface HashtagMentions extends Hashtag {
 
 export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
   const hashtagMentions = [];
+  const newData: {
+    instagramMentions: InstagramHashtagMention[];
+    instagramMentionsComments: InstagramHashtagMentionComment[];
+    tiktokMentions: TiktokHashtagMention[];
+    tiktokMentionsComments: TiktokHashtagCommentData[];
+  } = {
+    instagramMentions: [],
+    instagramMentionsComments: [],
+    tiktokMentions: [],
+    tiktokMentionsComments: [],
+  };
+
   for (const hashtag of data) {
-    let tiktokSentiment = 0;
-    let instagramSentiment = 0;
-    const {
-      tiktokMentions,
-      tiktokMentionsComments,
-      instagramMentions,
-      instagramMentionsComments,
-    } = hashtag;
-
-    const tiktokCommentFormatted = tiktokCommentFormatter(
-      tiktokMentionsComments
+    newData.instagramMentions.push(...hashtag.instagramMentions);
+    newData.instagramMentionsComments.push(
+      ...hashtag.instagramMentionsComments
     );
-    const instagramMentionsCommentsFormatted = instagramCommentFormatter(
-      instagramMentionsComments
-    );
-
-    const tiktokDataWithEngagement = [];
-
-    for (const key in tiktokMentions) {
-      const timeDiff =
-        Math.abs(Date.now() - new Date(tiktokMentions[key].date).getTime()) /
-        (1000 * 60 * 60 * 24);
-
-      const engagementSum =
-        tiktokMentions[key].diggCount * 0.5 +
-        tiktokMentions[key].commentCount * 1 +
-        tiktokMentions[key].shareCount * 1.5 +
-        tiktokMentions[key].playCount * 0.2;
-
-      const comments = tiktokMentionsComments.filter(
-        (comment) => comment.video_id === tiktokMentions[key].id
-      );
-
-      let sentimentSum = 0;
-
-      const formattedComments = [];
-
-      for (const comment of comments) {
-        const { author, sentimentAnalysis, diggCount, ...rest } = comment;
-        formattedComments.push({
-          ...rest,
-          likeCount: diggCount,
-          sentimentAnalysis,
-          username: author,
-        });
-        sentimentSum += comment.sentimentAnalysis;
-      }
-
-      tiktokDataWithEngagement.push({
-        ...tiktokMentions[key],
-        comments: formattedComments,
-        sentiment: sentimentSum / comments.length,
-      });
-
-      tiktokSentiment += sentimentSum / comments.length;
-    }
-
-    const instagramDataWithEngagement = [];
-
-    for (const key in instagramMentions) {
-      const timeDiff =
-        Math.abs(
-          Date.now() - new Date(instagramMentions[key].pubDate).getTime()
-        ) /
-        (1000 * 60 * 60 * 24);
-
-      const comments = instagramMentionsComments.filter(
-        (comment) => comment.post_id === instagramMentions[key].id
-      );
-
-      let sentimentSum = 0;
-
-      const formattedComments = [];
-
-      for (const comment of comments) {
-        const { ownerUsername, sentimentAnalysis, likeCount, ...rest } =
-          comment;
-        formattedComments.push({
-          ...rest,
-          likeCount,
-          sentimentAnalysis,
-          username: ownerUsername,
-        });
-        sentimentSum += comment.sentimentAnalysis;
-      }
-
-      instagramDataWithEngagement.push({
-        ...instagramMentions[key],
-        comments: formattedComments,
-        sentiment: sentimentSum / comments.length,
-      });
-
-      instagramSentiment += sentimentSum / comments.length;
-    }
-
-    const tiktokMentionsByDay = tiktokDataWithEngagement.reduce(
-      (acc, curr) => {
-        const date = new Date(curr.date).toLocaleDateString();
-        const sentiment = curr.sentiment;
-        if (!acc[date]) {
-          acc[date] = {
-            positive: 0,
-            negative: 0,
-            neutral: 0,
-            total: 0,
-          };
-        }
-
-        if (sentiment >= 0 && sentiment <= 350) {
-          acc[date].negative++;
-        } else if (sentiment > 350 && sentiment <= 650) {
-          acc[date].neutral++;
-        } else if (sentiment > 650 && sentiment <= 1000) {
-          acc[date].positive++;
-        }
-
-        acc[date].total++;
-
-        return acc;
-      },
-      {} as {
-        [key: string]: {
-          positive: number;
-          negative: number;
-          neutral: number;
-          total: number;
-        };
-      }
-    );
-
-    const instagramMentionsByDay = instagramDataWithEngagement.reduce(
-      (acc, curr) => {
-        const date = new Date(curr.pubDate).toLocaleDateString();
-        const sentiment = curr.sentiment;
-        if (!acc[date]) {
-          acc[date] = {
-            positive: 0,
-            negative: 0,
-            neutral: 0,
-            total: 0,
-          };
-        }
-
-        if (sentiment >= 0 && sentiment <= 350) {
-          acc[date].negative++;
-        } else if (sentiment > 350 && sentiment <= 650) {
-          acc[date].neutral++;
-        } else if (sentiment > 650 && sentiment <= 1000) {
-          acc[date].positive++;
-        }
-
-        acc[date].total++;
-
-        return acc;
-      },
-      {} as {
-        [key: string]: {
-          positive: number;
-          negative: number;
-          neutral: number;
-          total: number;
-        };
-      }
-    );
-
-    hashtagMentions.push({
-      hashtag: hashtag.hashtag,
-      id: hashtag.id,
-      data: {
-        commentData: {
-          sentimentEvolution: {
-            tiktok: tiktokCommentFormatted.sentimentEvolution,
-            instagram: instagramMentionsCommentsFormatted.sentimentEvolution,
-          },
-          currentSentiment: {
-            tiktok: tiktokCommentFormatted.currentSentiment,
-            instagram: instagramMentionsCommentsFormatted.currentSentiment,
-          },
-          engagementByHour: {
-            tiktok: tiktokCommentFormatted.engagementByHour,
-            instagram: instagramMentionsCommentsFormatted.engagementByHour,
-          },
-          commentByDays: {
-            tiktok: tiktokCommentFormatted.commentByDays,
-            instagram: instagramMentionsCommentsFormatted.commentByDays,
-          },
-          commentByGender: {
-            tiktok: tiktokCommentFormatted.commentByGender,
-            instagram: instagramMentionsCommentsFormatted.commentByGender,
-          },
-          commentBySentiment: {
-            tiktok: tiktokCommentFormatted.commentBySentiment,
-            instagram: instagramMentionsCommentsFormatted.commentBySentiment,
-          },
-          engagers: {
-            tiktok: tiktokCommentFormatted.engagers,
-            instagram: instagramMentionsCommentsFormatted.engagers,
-          },
-        },
-        mentionQuantity: {
-          tiktok: tiktokMentions.length,
-          instagram: instagramMentions.length,
-        },
-        mentionsByDay: {
-          tiktok: tiktokMentionsByDay,
-          instagram: instagramMentionsByDay,
-        },
-        posts: {
-          tiktok: tiktokDataWithEngagement,
-          instagram: instagramDataWithEngagement,
-        },
-        mentionsByFount: [
-          {
-            name: "Instagram",
-            quantity: instagramMentions.length,
-            sentiment: instagramSentiment / instagramMentions.length,
-          },
-          {
-            name: "Tiktok",
-            quantity: tiktokMentions.length,
-            sentiment: tiktokSentiment / tiktokMentions.length,
-          },
-        ],
-      },
-    });
+    newData.tiktokMentions.push(...hashtag.tiktokMentions);
+    newData.tiktokMentionsComments.push(...hashtag.tiktokMentionsComments);
   }
 
-  return hashtagMentions;
+  // for (const hashtag of data) {
+  let tiktokSentiment = 0;
+  let instagramSentiment = 0;
+  const {
+    tiktokMentions,
+    tiktokMentionsComments,
+    instagramMentions,
+    instagramMentionsComments,
+  } = newData;
+
+  const tiktokCommentFormatted = tiktokCommentFormatter(tiktokMentionsComments);
+  const instagramMentionsCommentsFormatted = instagramCommentFormatter(
+    instagramMentionsComments
+  );
+
+  const tiktokDataWithEngagement = [];
+
+  for (const key in tiktokMentions) {
+    const timeDiff =
+      Math.abs(Date.now() - new Date(tiktokMentions[key].date).getTime()) /
+      (1000 * 60 * 60 * 24);
+
+    const engagementSum =
+      tiktokMentions[key].diggCount * 0.5 +
+      tiktokMentions[key].commentCount * 1 +
+      tiktokMentions[key].shareCount * 1.5 +
+      tiktokMentions[key].playCount * 0.2;
+
+    const comments = tiktokMentionsComments.filter(
+      (comment) => comment.video_id === tiktokMentions[key].id
+    );
+
+    let sentimentSum = 0;
+
+    const formattedComments = [];
+
+    for (const comment of comments) {
+      const { author, sentimentAnalysis, diggCount, ...rest } = comment;
+      formattedComments.push({
+        ...rest,
+        likeCount: diggCount,
+        sentimentAnalysis,
+        username: author,
+      });
+      sentimentSum += comment.sentimentAnalysis;
+    }
+
+    tiktokDataWithEngagement.push({
+      ...tiktokMentions[key],
+      comments: formattedComments,
+      sentiment: sentimentSum / comments.length,
+    });
+
+    tiktokSentiment +=
+      sentimentSum !== 0 && comments.length !== 0
+        ? sentimentSum / comments.length
+        : 300;
+  }
+
+  const instagramDataWithEngagement = [];
+
+  for (const key in instagramMentions) {
+    const timeDiff =
+      Math.abs(
+        Date.now() - new Date(instagramMentions[key].pubDate).getTime()
+      ) /
+      (1000 * 60 * 60 * 24);
+
+    const comments = instagramMentionsComments.filter(
+      (comment) => comment.post_id === instagramMentions[key].id
+    );
+
+    let sentimentSum = 0;
+
+    const formattedComments = [];
+
+    for (const comment of comments) {
+      const { ownerUsername, sentimentAnalysis, likeCount, ...rest } = comment;
+      formattedComments.push({
+        ...rest,
+        likeCount,
+        sentimentAnalysis,
+        username: ownerUsername,
+      });
+      sentimentSum += comment.sentimentAnalysis;
+    }
+
+    instagramDataWithEngagement.push({
+      ...instagramMentions[key],
+      comments: formattedComments,
+      sentiment: sentimentSum / comments.length,
+    });
+
+    instagramSentiment +=
+      sentimentSum !== 0 && comments.length !== 0
+        ? sentimentSum / comments.length
+        : instagramMentions[key].sentimentAnalysis;
+  }
+
+  const tiktokMentionsByDay = tiktokDataWithEngagement.reduce(
+    (acc, curr) => {
+      const date = new Date(curr.date).toLocaleDateString();
+      const sentiment = curr.sentiment;
+      if (!acc[date]) {
+        acc[date] = {
+          positive: 0,
+          negative: 0,
+          neutral: 0,
+          total: 0,
+        };
+      }
+
+      if (sentiment >= 0 && sentiment <= 350) {
+        acc[date].negative++;
+      } else if (sentiment > 350 && sentiment <= 650) {
+        acc[date].neutral++;
+      } else if (sentiment > 650 && sentiment <= 1000) {
+        acc[date].positive++;
+      }
+
+      acc[date].total++;
+
+      return acc;
+    },
+    {} as {
+      [key: string]: {
+        positive: number;
+        negative: number;
+        neutral: number;
+        total: number;
+      };
+    }
+  );
+
+  const instagramMentionsByDay = instagramDataWithEngagement.reduce(
+    (acc, curr) => {
+      const date = new Date(curr.pubDate).toLocaleDateString();
+      const sentiment = curr.sentiment;
+      if (!acc[date]) {
+        acc[date] = {
+          positive: 0,
+          negative: 0,
+          neutral: 0,
+          total: 0,
+        };
+      }
+
+      if (sentiment >= 0 && sentiment <= 350) {
+        acc[date].negative++;
+      } else if (sentiment > 350 && sentiment <= 650) {
+        acc[date].neutral++;
+      } else if (sentiment > 650 && sentiment <= 1000) {
+        acc[date].positive++;
+      }
+
+      acc[date].total++;
+
+      return acc;
+    },
+    {} as {
+      [key: string]: {
+        positive: number;
+        negative: number;
+        neutral: number;
+        total: number;
+      };
+    }
+  );
+
+  //   hashtagMentions.push({
+  //     hashtag: hashtag.hashtag,
+  //     id: hashtag.id,
+  //     data: {
+  //       commentData: {
+  //         sentimentEvolution: {
+  //           tiktok: tiktokCommentFormatted.sentimentEvolution,
+  //           instagram: instagramMentionsCommentsFormatted.sentimentEvolution,
+  //         },
+  //         currentSentiment: {
+  //           tiktok: tiktokCommentFormatted.currentSentiment,
+  //           instagram: instagramMentionsCommentsFormatted.currentSentiment,
+  //         },
+  //         engagementByHour: {
+  //           tiktok: tiktokCommentFormatted.engagementByHour,
+  //           instagram: instagramMentionsCommentsFormatted.engagementByHour,
+  //         },
+  //         commentByDays: {
+  //           tiktok: tiktokCommentFormatted.commentByDays,
+  //           instagram: instagramMentionsCommentsFormatted.commentByDays,
+  //         },
+  //         commentByGender: {
+  //           tiktok: tiktokCommentFormatted.commentByGender,
+  //           instagram: instagramMentionsCommentsFormatted.commentByGender,
+  //         },
+  //         commentBySentiment: {
+  //           tiktok: tiktokCommentFormatted.commentBySentiment,
+  //           instagram: instagramMentionsCommentsFormatted.commentBySentiment,
+  //         },
+  //         engagers: {
+  //           tiktok: tiktokCommentFormatted.engagers,
+  //           instagram: instagramMentionsCommentsFormatted.engagers,
+  //         },
+  //       },
+  //       mentionQuantity: {
+  //         tiktok: tiktokMentions.length,
+  //         instagram: instagramMentions.length,
+  //       },
+  //       mentionsByDay: {
+  //         tiktok: tiktokMentionsByDay,
+  //         instagram: instagramMentionsByDay,
+  //       },
+  //       posts: {
+  //         tiktok: tiktokDataWithEngagement,
+  //         instagram: instagramDataWithEngagement,
+  //       },
+  //       mentionsByFount: [
+  //         {
+  //           name: "Instagram",
+  //           quantity: instagramMentions.length,
+  //           sentiment: instagramSentiment / instagramMentions.length,
+  //         },
+  //         {
+  //           name: "Tiktok",
+  //           quantity: tiktokMentions.length,
+  //           sentiment: tiktokSentiment / tiktokMentions.length,
+  //         },
+  //       ],
+  //     },
+  //   });
+  // }
+
+  const finalData = {
+    commentData: {
+      sentimentEvolution: {
+        tiktok: tiktokCommentFormatted.sentimentEvolution,
+        instagram: instagramMentionsCommentsFormatted.sentimentEvolution,
+      },
+      currentSentiment: {
+        tiktok: tiktokCommentFormatted.currentSentiment,
+        instagram: instagramMentionsCommentsFormatted.currentSentiment,
+      },
+      engagementByHour: {
+        tiktok: tiktokCommentFormatted.engagementByHour,
+        instagram: instagramMentionsCommentsFormatted.engagementByHour,
+      },
+      commentByDays: {
+        tiktok: tiktokCommentFormatted.commentByDays,
+        instagram: instagramMentionsCommentsFormatted.commentByDays,
+      },
+      commentByGender: {
+        tiktok: tiktokCommentFormatted.commentByGender,
+        instagram: instagramMentionsCommentsFormatted.commentByGender,
+      },
+      commentBySentiment: {
+        tiktok: tiktokCommentFormatted.commentBySentiment,
+        instagram: instagramMentionsCommentsFormatted.commentBySentiment,
+      },
+      engagers: {
+        tiktok: tiktokCommentFormatted.engagers,
+        instagram: instagramMentionsCommentsFormatted.engagers,
+      },
+    },
+    mentionQuantity: {
+      tiktok: tiktokMentions.length,
+      instagram: instagramMentions.length,
+    },
+    // mentionsByDay: {
+    //   tiktok: tiktokMentionsByDay,
+    //   instagram: instagramMentionsByDay,
+    // },
+    posts: {
+      tiktok: tiktokDataWithEngagement,
+      instagram: instagramDataWithEngagement,
+    },
+    mentionsByFount: [
+      {
+        name: "Instagram",
+        quantity: instagramMentions.length,
+        sentiment: instagramSentiment / instagramMentions.length,
+      },
+      {
+        name: "Tiktok",
+        quantity: tiktokMentions.length,
+        sentiment: tiktokSentiment / tiktokMentions.length,
+      },
+    ],
+  };
+
+  return finalData;
 };
 
 const instagramCommentFormatter = (
@@ -328,8 +409,8 @@ const instagramCommentFormatter = (
             positiveComments: 0,
             negativeComments: 0,
             neutralComments: 0,
-            userName: comment.engager?.userName,
-            followers: comment.engager?.followers,
+            userName: comment.engager?.userName || comment.ownerUsername,
+            followers: comment.engager?.followers || 0,
           };
         }
 
