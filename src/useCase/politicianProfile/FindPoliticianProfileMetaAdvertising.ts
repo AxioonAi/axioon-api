@@ -41,19 +41,17 @@ export class FindPoliticianProfileMetaAdvertisingUseCase {
     startDate,
     endDate,
   }: FindPoliticianProfileMetaAdvertisingUseCaseRequest): Promise<FindPoliticianProfileMetaAdvertisingUseCaseResponse> {
-    const userPlan = await this.userPlanRepository.findActivePlan(userId);
+    // const userPlan = await this.userPlanRepository.findActivePlan(userId);
 
-    if (!userPlan || !userPlan.plan.facebook_ads_monitoring) {
-      throw new UnauthorizedError();
-    }
+    // if (!userPlan || !userPlan.plan.facebook_ads_monitoring) {
+    //   throw new UnauthorizedError();
+    // }
 
     const ads = await this.politicianProfileRepository.findMetaAdsStatistics({
       id,
       gte: startDate,
       lte: endDate,
     });
-
-    console.log(ads);
 
     if (!ads) {
       return { advertising: {} };
