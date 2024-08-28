@@ -63,7 +63,6 @@ export const CommentWordCount = (data: CommentWordCountDataInterface) => {
       string,
       { quantity: number; sentimentSum: number }
     > = {};
-
     if (words) {
       words.forEach((word) => {
         if (!wordCount[word]) {
@@ -111,8 +110,7 @@ export const CommentWordCount = (data: CommentWordCountDataInterface) => {
         sentimentSum: data.sentimentSum,
         sentimentAvg: data.sentimentSum / data.quantity,
       }))
-      .filter((objeto) => objeto.quantity > 5 && objeto.word.length > 4);
-
+      .filter((objeto) => objeto.quantity > 1 && objeto.word.length > 4);
     const emojiArray: EmojiData[] = Object.entries(emojiCount).map(
       ([emoji, data]) => ({
         emoji,
