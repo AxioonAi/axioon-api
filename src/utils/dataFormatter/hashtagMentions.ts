@@ -29,7 +29,7 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
   const newData: {
     instagramMentions: instagramHashtagMentions[];
     instagramMentionsComments: InstagramHashtagMentionComment[];
-    tiktokMentions: TiktokHashtagMention[];
+    tiktokMentions: tiktokHashtagMentions[];
     tiktokMentionsComments: TiktokHashtagCommentData[];
   } = {
     instagramMentions: [],
@@ -64,6 +64,8 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
 
   const tiktokDataWithEngagement = [];
   const tiktokEngagers: any[] = [];
+
+  console.log(instagramMentions);
 
   for (const key in tiktokMentions) {
     const timeDiff =
@@ -106,29 +108,31 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
         ? sentimentSum / comments.length
         : 300;
 
-    const engagerExists = tiktokEngagers.find(
-      (engager) => engager !== null && engager.id === tiktokMentions[key].id
-    );
+    if (tiktokMentions[key].engager) {
+      const engagerExists = tiktokEngagers.find(
+        (engager) => engager !== null && engager.id === tiktokMentions[key].id
+      );
 
-    if (engagerExists) {
-      tiktokEngagers[tiktokEngagers.indexOf(engagerExists)] = {
-        sentiment: engagerExists.sentiment + sentimentSum / comments.length,
-        ...engagerExists,
-        posts: engagerExists.posts + 1,
-        lastPost:
-          instagramMentions[key].pubDate > engagerExists.lastPost
-            ? instagramMentions[key].pubDate
-            : engagerExists.lastPost,
-        engagement: engagerExists.engagement + engagementSum,
-      };
-    } else {
-      tiktokEngagers.push({
-        ...instagramMentions[key].engager,
-        posts: 1,
-        lastPost: instagramMentions[key].pubDate,
-        sentiment: sentimentSum / comments.length,
-        engagement: engagementSum,
-      });
+      if (engagerExists) {
+        tiktokEngagers[tiktokEngagers.indexOf(engagerExists)] = {
+          sentiment: engagerExists.sentiment + sentimentSum / comments.length,
+          ...engagerExists,
+          posts: engagerExists.posts + 1,
+          lastPost:
+            instagramMentions[key].pubDate > engagerExists.lastPost
+              ? instagramMentions[key].pubDate
+              : engagerExists.lastPost,
+          engagement: engagerExists.engagement + engagementSum,
+        };
+      } else {
+        tiktokEngagers.push({
+          ...instagramMentions[key].engager,
+          posts: 1,
+          lastPost: instagramMentions[key].pubDate,
+          sentiment: sentimentSum / comments.length,
+          engagement: engagementSum,
+        });
+      }
     }
   }
 
@@ -170,29 +174,34 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
       sentiment: sentimentSum / comments.length,
     });
 
-    const engagerExists = instagramEngagers.find(
-      (engager) => engager.username === instagramMentions[key].engager?.username
-    );
+    if (instagramMentions[key].engager) {
+      const engagerExists = instagramEngagers.find(
+        (engager) =>
+          engager.username === instagramMentions[key].engager?.username
+      );
 
-    if (engagerExists) {
-      instagramEngagers[instagramEngagers.indexOf(engagerExists)] = {
-        sentiment: engagerExists.sentiment + sentimentSum / comments.length,
-        ...engagerExists,
-        posts: engagerExists.posts + 1,
-        lastPost:
-          instagramMentions[key].pubDate > engagerExists.lastPost
-            ? instagramMentions[key].pubDate
-            : engagerExists.lastPost,
-        engagement: engagerExists.engagement + engagementSum,
-      };
-    } else {
-      instagramEngagers.push({
-        ...instagramMentions[key].engager,
-        posts: 1,
-        lastPost: instagramMentions[key].pubDate,
-        sentiment: sentimentSum / comments.length,
-        engagement: engagementSum,
-      });
+      console.log(engagerExists);
+
+      if (engagerExists) {
+        instagramEngagers[instagramEngagers.indexOf(engagerExists)] = {
+          sentiment: engagerExists.sentiment + sentimentSum / comments.length,
+          ...engagerExists,
+          posts: engagerExists.posts + 1,
+          lastPost:
+            instagramMentions[key].pubDate > engagerExists.lastPost
+              ? instagramMentions[key].pubDate
+              : engagerExists.lastPost,
+          engagement: engagerExists.engagement + engagementSum,
+        };
+      } else {
+        instagramEngagers.push({
+          ...instagramMentions[key].engager,
+          posts: 1,
+          lastPost: instagramMentions[key].pubDate,
+          sentiment: sentimentSum / comments.length,
+          engagement: engagementSum,
+        });
+      }
     }
 
     instagramSentiment +=

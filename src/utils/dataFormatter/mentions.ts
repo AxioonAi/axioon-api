@@ -179,8 +179,6 @@ export const mentionsFormatter = (data: MentionsData) => {
     .sort((a, b) => b.followers - a.followers)
     .slice(0, 15);
 
-  console.log(instagramData.authorData.reduce((a, b) => a + b.followers, 0));
-
   return {
     sentimentEvolution: {
       instagram: formattedComments.sentimentEvolution,
