@@ -18,8 +18,10 @@ export class CreateHashtagUseCase {
     userId,
   }: createHashtagUseCaseRequest): Promise<createHashtagUseCaseResponse> {
     for (const hashtag of hashtags) {
+      const cleanHashtag = hashtag.replace("#", "").replace(" ", "");
+
       const hashtagAlreadyExists = await this.hashtagRepository.findByHashtag(
-        hashtag
+        cleanHashtag
       );
 
       if (hashtagAlreadyExists) {
@@ -40,7 +42,7 @@ export class CreateHashtagUseCase {
       }
 
       const hashtagCreated = await this.hashtagRepository.create({
-        hashtag,
+        hashtag: cleanHashtag,
       });
 
       await this.hashtagMonitoringRepository.create({
