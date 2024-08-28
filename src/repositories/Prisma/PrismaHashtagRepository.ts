@@ -53,6 +53,9 @@ export class PrismaHashtagRepository implements HashtagRepository {
               lte: data.endDate,
             },
           },
+          include: {
+            engager: true,
+          },
         },
         tiktokMentionsComments: {
           where: {
@@ -60,6 +63,9 @@ export class PrismaHashtagRepository implements HashtagRepository {
               gte: data.startDate,
               lte: data.endDate,
             },
+          },
+          include: {
+            engager: true,
           },
         },
         instagramMentions: {
@@ -69,6 +75,9 @@ export class PrismaHashtagRepository implements HashtagRepository {
               lte: data.endDate,
             },
           },
+          include: {
+            engager: true,
+          },
         },
         tiktokMentions: {
           where: {
@@ -76,6 +85,9 @@ export class PrismaHashtagRepository implements HashtagRepository {
               gte: data.startDate,
               lte: data.endDate,
             },
+          },
+          include: {
+            engager: true,
           },
         },
       },
