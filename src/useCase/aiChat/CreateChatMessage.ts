@@ -19,6 +19,7 @@ export class CreateAiMessageUseCase {
     chatId,
     type,
   }: CreateAiMessageUseCaseRequest): Promise<CreateAiMessageUseCaseResponse> {
+    console.log("entrou");
     const createMessage = await this.aiMessageRepository.create({
       message,
       type,

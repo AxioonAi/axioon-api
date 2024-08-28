@@ -15,5 +15,6 @@ export const createChatController = async (
     userId: request.user.sub,
   });
 
+  console.log(chat);
   return reply.status(201).send({ chat });
 };

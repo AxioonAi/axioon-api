@@ -4,20 +4,30 @@ import {
   InstagramHashtagMentionComment,
   TiktokHashtagCommentData,
   TiktokHashtagMention,
+  TiktokEngager as PrismaTiktokEngager,
+  InstagramEngager as PrismaInstagramEngager,
 } from "@prisma/client";
 import { TiktokDataFormatterCommentDataInterface } from "./tiktok";
 
+interface instagramHashtagMentions extends InstagramHashtagMention {
+  engager?: PrismaInstagramEngager | null;
+}
+
+interface tiktokHashtagMentions extends TiktokHashtagMention {
+  engager?: PrismaTiktokEngager | null;
+}
+
 interface HashtagMentions extends Hashtag {
-  instagramMentions: InstagramHashtagMention[];
+  instagramMentions: instagramHashtagMentions[];
   instagramMentionsComments: InstagramHashtagMentionComment[];
-  tiktokMentions: TiktokHashtagMention[];
+  tiktokMentions: tiktokHashtagMentions[];
   tiktokMentionsComments: TiktokHashtagCommentData[];
 }
 
 export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
   const hashtagMentions = [];
   const newData: {
-    instagramMentions: InstagramHashtagMention[];
+    instagramMentions: instagramHashtagMentions[];
     instagramMentionsComments: InstagramHashtagMentionComment[];
     tiktokMentions: TiktokHashtagMention[];
     tiktokMentionsComments: TiktokHashtagCommentData[];
@@ -53,6 +63,7 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
   );
 
   const tiktokDataWithEngagement = [];
+  const tiktokEngagers: any[] = [];
 
   for (const key in tiktokMentions) {
     const timeDiff =
@@ -94,9 +105,35 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
       sentimentSum !== 0 && comments.length !== 0
         ? sentimentSum / comments.length
         : 300;
+
+    const engagerExists = tiktokEngagers.find(
+      (engager) => engager !== null && engager.id === tiktokMentions[key].id
+    );
+
+    if (engagerExists) {
+      tiktokEngagers[tiktokEngagers.indexOf(engagerExists)] = {
+        sentiment: engagerExists.sentiment + sentimentSum / comments.length,
+        ...engagerExists,
+        posts: engagerExists.posts + 1,
+        lastPost:
+          instagramMentions[key].pubDate > engagerExists.lastPost
+            ? instagramMentions[key].pubDate
+            : engagerExists.lastPost,
+        engagement: engagerExists.engagement + engagementSum,
+      };
+    } else {
+      tiktokEngagers.push({
+        ...instagramMentions[key].engager,
+        posts: 1,
+        lastPost: instagramMentions[key].pubDate,
+        sentiment: sentimentSum / comments.length,
+        engagement: engagementSum,
+      });
+    }
   }
 
   const instagramDataWithEngagement = [];
+  const instagramEngagers: any[] = [];
 
   for (const key in instagramMentions) {
     const timeDiff =
@@ -109,18 +146,21 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
       (comment) => comment.post_id === instagramMentions[key].id
     );
 
+    const engagementSum =
+      instagramMentions[key].commentCount * 1 +
+      instagramMentions[key].likeCount * 0.5;
+
+    const formattedComments = comments.map((comment) => {
+      const { ownerUsername, ...rest } = comment;
+      return {
+        ...rest,
+        username: ownerUsername,
+      };
+    });
+
     let sentimentSum = 0;
 
-    const formattedComments = [];
-
     for (const comment of comments) {
-      const { ownerUsername, sentimentAnalysis, likeCount, ...rest } = comment;
-      formattedComments.push({
-        ...rest,
-        likeCount,
-        sentimentAnalysis,
-        username: ownerUsername,
-      });
       sentimentSum += comment.sentimentAnalysis;
     }
 
@@ -129,6 +169,31 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
       comments: formattedComments,
       sentiment: sentimentSum / comments.length,
     });
+
+    const engagerExists = instagramEngagers.find(
+      (engager) => engager.username === instagramMentions[key].engager?.username
+    );
+
+    if (engagerExists) {
+      instagramEngagers[instagramEngagers.indexOf(engagerExists)] = {
+        sentiment: engagerExists.sentiment + sentimentSum / comments.length,
+        ...engagerExists,
+        posts: engagerExists.posts + 1,
+        lastPost:
+          instagramMentions[key].pubDate > engagerExists.lastPost
+            ? instagramMentions[key].pubDate
+            : engagerExists.lastPost,
+        engagement: engagerExists.engagement + engagementSum,
+      };
+    } else {
+      instagramEngagers.push({
+        ...instagramMentions[key].engager,
+        posts: 1,
+        lastPost: instagramMentions[key].pubDate,
+        sentiment: sentimentSum / comments.length,
+        engagement: engagementSum,
+      });
+    }
 
     instagramSentiment +=
       sentimentSum !== 0 && comments.length !== 0
@@ -268,6 +333,22 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
   //   });
   // }
 
+  const instagramInfluencers = instagramEngagers
+    .map((item) => ({
+      ...item,
+      sentiment: Number((item.sentiment / item.posts).toFixed(2)),
+    }))
+    .sort((a, b) => b.followers - a.followers)
+    .slice(0, 15);
+
+  const tiktokInfluencers = tiktokEngagers
+    .map((item) => ({
+      ...item,
+      sentiment: Number((item.sentiment / item.posts).toFixed(2)),
+    }))
+    .sort((a, b) => b.followers - a.followers)
+    .slice(0, 15);
+
   const finalData = {
     commentData: {
       sentimentEvolution: {
@@ -299,9 +380,41 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
         instagram: instagramMentionsCommentsFormatted.engagers,
       },
     },
+    influencers: {
+      instagram: instagramInfluencers,
+      tiktok: tiktokInfluencers,
+    },
+    authors: {
+      instagram: instagramEngagers.map((item) => ({
+        ...item,
+        sentiment: Number((item.sentiment / item.posts).toFixed(2)),
+      })),
+      tiktok: tiktokEngagers.map((item) => ({
+        ...item,
+        sentiment: Number((item.sentiment / item.posts).toFixed(2)),
+      })),
+    },
     mentionQuantity: {
       tiktok: tiktokMentions.length,
       instagram: instagramMentions.length,
+    },
+    engagers: {
+      instagram: {
+        positive: instagramMentionsCommentsFormatted.engagers.filter(
+          (item) => item.sentiment > 550
+        ),
+        negative: instagramMentionsCommentsFormatted.engagers.filter(
+          (item) => item.sentiment < 350
+        ),
+      },
+      tiktok: {
+        positive: tiktokCommentFormatted.engagers.filter(
+          (item) => item.sentiment > 550
+        ),
+        negative: tiktokCommentFormatted.engagers.filter(
+          (item) => item.sentiment < 350
+        ),
+      },
     },
     // mentionsByDay: {
     //   tiktok: tiktokMentionsByDay,
