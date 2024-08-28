@@ -65,8 +65,6 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
   const tiktokDataWithEngagement = [];
   const tiktokEngagers: any[] = [];
 
-  console.log(instagramMentions);
-
   for (const key in tiktokMentions) {
     const timeDiff =
       Math.abs(Date.now() - new Date(tiktokMentions[key].date).getTime()) /
@@ -179,8 +177,6 @@ export const hashtagMentionsFormatter = (data: HashtagMentions[]) => {
         (engager) =>
           engager.username === instagramMentions[key].engager?.username
       );
-
-      console.log(engagerExists);
 
       if (engagerExists) {
         instagramEngagers[instagramEngagers.indexOf(engagerExists)] = {

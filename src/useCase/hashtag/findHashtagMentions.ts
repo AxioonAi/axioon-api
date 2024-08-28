@@ -26,18 +26,17 @@ export class FindHashtagMentionsUseCase {
     });
 
     const formattedHashtags = hashtagMentionsFormatter(hashtags);
-
     const instagramComments: { text: string; sentimentAnalysis: number }[] =
-      hashtags
-        .map((hashtag) => {
-          return hashtag.instagramMentionsComments.map((comment) => comment);
+      formattedHashtags.posts.instagram
+        .map((post) => {
+          return post.comments.map((comment) => comment);
         })
         .flat();
 
     const tiktokComments: { text: string; sentimentAnalysis: number }[] =
-      hashtags
-        .map((hashtag) => {
-          return hashtag.tiktokMentionsComments.map((comment) => comment);
+      formattedHashtags.posts.tiktok
+        .map((post) => {
+          return post.comments.map((comment) => comment);
         })
         .flat();
 

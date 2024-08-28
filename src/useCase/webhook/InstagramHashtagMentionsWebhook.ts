@@ -22,7 +22,6 @@ export class InstagramHashtagMentionsWebhookUseCase {
   async execute({
     records,
   }: InstagramHashtagMentionsWebhookUseCaseRequest): Promise<void> {
-    console.log(records);
     const data =
       await this.awsNotificationRepository.S3InstagramHashtagMentionsNotification(
         {
