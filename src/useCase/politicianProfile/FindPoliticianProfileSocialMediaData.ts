@@ -66,6 +66,7 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
     const formatTiktokData = tiktokData && tiktokDataFormatter(tiktokData);
     const formatInstagramData =
       instagramData && instagramDataFormatter(instagramData);
+    console.log("aqui");
     const formatFacebookData =
       facebookData && FacebookDataFormatter(facebookData);
 

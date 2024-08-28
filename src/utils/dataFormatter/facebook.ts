@@ -45,7 +45,6 @@ export const FacebookDataFormatter = (data: {
 
   const commentStatisticsData = commentFormatter(facebookPostComments);
   const oldPostDateDiff = mostOldPostDiffCalculator(facebookPosts);
-
   const dataWithEngagement = [];
 
   const postEngagementData = {
@@ -182,6 +181,8 @@ export const FacebookDataFormatter = (data: {
     posts: 0,
   };
 
+  console.log(commentStatisticsFinalData);
+
   const profileEvolution = [
     {
       name: "Seguidores",
@@ -201,21 +202,24 @@ export const FacebookDataFormatter = (data: {
     {
       name: "Sentimento",
       value: commentStatisticsData.currentSentiment,
-      trendingUp:
-        commentStatisticsData.sentimentEvolution[0].value >
-        commentStatisticsFinalData.sentimentEvolution[
-          commentStatisticsFinalData.sentimentEvolution.length - 1
-        ].value,
-      trendingValue: Number(
-        (
-          ((commentStatisticsFinalData.sentimentEvolution[
+      trendingUp: commentStatisticsData.sentimentEvolution[0]
+        ? commentStatisticsData.sentimentEvolution[0].value >
+          commentStatisticsFinalData.sentimentEvolution[
             commentStatisticsFinalData.sentimentEvolution.length - 1
-          ].value -
-            commentStatisticsData.sentimentEvolution[0].value) /
-            commentStatisticsData.sentimentEvolution[0].value) *
-          100
-        ).toFixed(0)
-      ),
+          ].value
+        : false,
+      trendingValue: commentStatisticsData.sentimentEvolution[0]
+        ? Number(
+            (
+              ((commentStatisticsFinalData.sentimentEvolution[
+                commentStatisticsFinalData.sentimentEvolution.length - 1
+              ].value -
+                commentStatisticsData.sentimentEvolution[0].value) /
+                commentStatisticsData.sentimentEvolution[0].value) *
+              100
+            ).toFixed(0)
+          )
+        : 0,
     },
     {
       name: "Publicações",
@@ -224,6 +228,7 @@ export const FacebookDataFormatter = (data: {
       trendingValue: 0,
     },
   ];
+  console.log("aqui 2");
 
   return {
     commentsStatistics: commentStatisticsFinalData,
