@@ -1,7 +1,7 @@
 import { HashtagMonitoringRepository } from "@/repositories/hashtagMonitoringRepository";
 import { HashtagRepository } from "@/repositories/hashtagRepository";
 interface createHashtagUseCaseRequest {
-  hashtag: string;
+  hashtags: string[];
   userId: string;
 }
 
@@ -14,38 +14,40 @@ export class CreateHashtagUseCase {
   ) {}
 
   async execute({
-    hashtag,
+    hashtags,
     userId,
   }: createHashtagUseCaseRequest): Promise<createHashtagUseCaseResponse> {
-    const hashtagAlreadyExists = await this.hashtagRepository.findByHashtag(
-      hashtag
-    );
+    for (const hashtag of hashtags) {
+      const hashtagAlreadyExists = await this.hashtagRepository.findByHashtag(
+        hashtag
+      );
 
-    if (hashtagAlreadyExists) {
-      const monitoringAlreadyExists =
-        await this.hashtagMonitoringRepository.findByUserIdAndHashtagId({
-          hashtag_id: hashtagAlreadyExists.id,
-          user_id: userId,
-        });
+      if (hashtagAlreadyExists) {
+        const monitoringAlreadyExists =
+          await this.hashtagMonitoringRepository.findByUserIdAndHashtagId({
+            hashtag_id: hashtagAlreadyExists.id,
+            user_id: userId,
+          });
 
-      if (!monitoringAlreadyExists) {
-        await this.hashtagMonitoringRepository.create({
-          hashtag_id: hashtagAlreadyExists.id,
-          user_id: userId,
-        });
+        if (!monitoringAlreadyExists) {
+          await this.hashtagMonitoringRepository.create({
+            hashtag_id: hashtagAlreadyExists.id,
+            user_id: userId,
+          });
+        }
+
+        return {};
       }
 
-      return {};
+      const hashtagCreated = await this.hashtagRepository.create({
+        hashtag,
+      });
+
+      await this.hashtagMonitoringRepository.create({
+        hashtag_id: hashtagCreated.id,
+        user_id: userId,
+      });
     }
-
-    const hashtagCreated = await this.hashtagRepository.create({
-      hashtag,
-    });
-
-    await this.hashtagMonitoringRepository.create({
-      hashtag_id: hashtagCreated.id,
-      user_id: userId,
-    });
 
     return {};
   }

@@ -11,7 +11,7 @@ export const createHashtagController = async (
   const createHashtagUseCase = makeCreateHashtag();
 
   await createHashtagUseCase.execute({
-    hashtag: data.hashtag,
+    hashtags: data.hashtag,
     userId: request.user.sub,
   });
 
