@@ -30,6 +30,7 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
     endDate,
     medias,
   }: FindPoliticianProfileSocialMediaDataUseCaseRequest): Promise<FindPoliticianProfileSocialMediaDataUseCaseResponse> {
+    console.log(medias.tiktok);
     const [youtubeData, tiktokData, instagramData, facebookData] =
       await Promise.all([
         medias.youtube
@@ -61,6 +62,8 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
             })
           : null,
       ]);
+
+    console.log(tiktokData);
 
     const formatYoutubeData = youtubeData && youtubeDataFormatter(youtubeData);
     const formatTiktokData = tiktokData && tiktokDataFormatter(tiktokData);

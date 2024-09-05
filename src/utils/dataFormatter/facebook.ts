@@ -181,8 +181,6 @@ export const FacebookDataFormatter = (data: {
     posts: 0,
   };
 
-  console.log(commentStatisticsFinalData);
-
   const profileEvolution = [
     {
       name: "Seguidores",
@@ -228,7 +226,6 @@ export const FacebookDataFormatter = (data: {
       trendingValue: 0,
     },
   ];
-  console.log("aqui 2");
 
   return {
     commentsStatistics: commentStatisticsFinalData,

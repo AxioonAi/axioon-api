@@ -20,9 +20,6 @@ export class FacebookAdsWebhookUseCase {
       await this.awsNotificationRepository.S3FacebookAdsNotification({
         records,
       });
-    console.log(" advertisingData", advertisingData);
-    console.log(" deliveryRegionData", deliveryRegionData);
-    console.log(" demographicDistributionData", demographicDistributionData);
     await this.metaAdvertisingLibRepository.createMany(advertisingData);
     await this.metaAdvertisingLibDeliveryByRegionRepository.createMany(
       deliveryRegionData
