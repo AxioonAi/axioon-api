@@ -192,6 +192,9 @@ export const mentionsFormatter = (data: MentionsData) => {
       ),
     },
     commentsByGender: formattedComments.commentByGender,
+    currentSentiment: {
+      instagram: formattedComments.currentSentiment,
+    },
     commentsBySentiment: formattedComments.commentBySentiment,
     staticData: {
       engagement: instagramData.authorData.reduce(
