@@ -33,8 +33,6 @@ export class TiktokProfileWebhookUseCase {
         ids
       );
 
-    console.log(data.profileData);
-
     const notifications = users.map((user) => {
       return {
         user_id: user.user_id,

@@ -4,6 +4,7 @@ import { FacebookDataFormatter } from "@/utils/dataFormatter/facebook";
 import { instagramDataFormatter } from "@/utils/dataFormatter/instagram";
 import { tiktokDataFormatter } from "@/utils/dataFormatter/tiktok";
 import { youtubeDataFormatter } from "@/utils/dataFormatter/youtube";
+import moment from "moment";
 
 interface FindPoliticianProfileSocialMediaDataUseCaseRequest {
   profileId: string;
@@ -30,43 +31,43 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
     endDate,
     medias,
   }: FindPoliticianProfileSocialMediaDataUseCaseRequest): Promise<FindPoliticianProfileSocialMediaDataUseCaseResponse> {
-    console.log(medias.tiktok);
+    console.log("startDate", startDate);
+    console.log("endDate", endDate);
     const [youtubeData, tiktokData, instagramData, facebookData] =
       await Promise.all([
         medias.youtube
           ? this.politicianProfileRepository.findYoutubeStatistics({
               id: profileId,
-              gte: startDate,
-              lte: endDate,
+              gte: moment(startDate).startOf("day").toDate(),
+              lte: moment(endDate).endOf("day").add(1, "d").toDate(),
             })
           : null,
         medias.tiktok
           ? this.politicianProfileRepository.findTiktokStatistics({
               id: profileId,
-              gte: startDate,
-              lte: endDate,
+              gte: moment(startDate).startOf("day").toDate(),
+              lte: moment(endDate).endOf("day").add(1, "d").toDate(),
             })
           : null,
         medias.instagram
           ? this.politicianProfileRepository.findInstagramStatistics({
               id: profileId,
-              gte: startDate,
-              lte: endDate,
+              gte: moment(startDate).startOf("day").toDate(),
+              lte: moment(endDate).endOf("day").add(1, "d").toDate(),
             })
           : null,
         medias.facebook
           ? this.politicianProfileRepository.findFacebookStatistics({
               id: profileId,
-              gte: startDate,
-              lte: endDate,
+              gte: moment(startDate).startOf("day").toDate(),
+              lte: moment(endDate).endOf("day").add(1, "d").toDate(),
             })
           : null,
       ]);
 
-    console.log(tiktokData);
-
     const formatYoutubeData = youtubeData && youtubeDataFormatter(youtubeData);
     const formatTiktokData = tiktokData && tiktokDataFormatter(tiktokData);
+
     const formatInstagramData =
       instagramData && instagramDataFormatter(instagramData);
     const formatFacebookData =

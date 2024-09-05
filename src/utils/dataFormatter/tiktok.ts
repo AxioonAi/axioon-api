@@ -4,7 +4,7 @@ import moment from "moment";
 
 export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
   const { tiktokData, tiktokVideoData, tiktokComments } = data;
-
+  console.log("tiktokData", tiktokData);
   const baseData = tiktokData[0];
   if (!baseData) {
     return null;
@@ -167,19 +167,21 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
     {
       name: "Sentimento",
       value: commentStatisticsData.currentSentiment,
-      trendingUp:
-        commentStatisticsData.sentimentEvolution[0].value >
-        commentStatisticsFinalData.sentimentEvolution[
-          commentStatisticsFinalData.sentimentEvolution.length - 1
-        ].value,
-      trendingValue: Number(
-        (
-          ((commentStatisticsFinalData.sentimentEvolution[
+      trendingUp: commentStatisticsData.sentimentEvolution[0]
+        ? commentStatisticsData.sentimentEvolution[0].value >
+          commentStatisticsFinalData.sentimentEvolution[
             commentStatisticsFinalData.sentimentEvolution.length - 1
-          ].value -
-            commentStatisticsData.sentimentEvolution[0].value) /
-            commentStatisticsData.sentimentEvolution[0].value) *
-          100
+          ].value
+        : true,
+      trendingValue: Number(
+        (commentStatisticsFinalData.sentimentEvolution[0]
+          ? ((commentStatisticsFinalData.sentimentEvolution[
+              commentStatisticsFinalData.sentimentEvolution.length - 1
+            ].value -
+              commentStatisticsData.sentimentEvolution[0].value) /
+              commentStatisticsData.sentimentEvolution[0].value) *
+            100
+          : 0
         ).toFixed(0)
       ),
     },

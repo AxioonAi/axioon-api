@@ -6,15 +6,11 @@ export class PrismaTiktokBaseDataRepository
   implements TiktokBaseDataRepository
 {
   async createMany(data: TiktokBaseDataCreateInterface[]) {
-    console.log("entrou aqui");
-    console.log(data);
     try {
       await prisma.tiktokBaseData.createMany({
         data,
       });
-    } catch (error) {
-      console.log("error", error);
-    }
+    } catch (error) {}
 
     return;
   }

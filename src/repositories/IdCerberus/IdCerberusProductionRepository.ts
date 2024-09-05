@@ -6,7 +6,6 @@ import {
 
 export class IdCerberusProductionRepository implements IdCerberusRepository {
   async findData(cpf: string) {
-    console.log("entrou");
     const [
       financial_data,
       address,
@@ -26,9 +25,6 @@ export class IdCerberusProductionRepository implements IdCerberusRepository {
       IdCerberusAPI({ cpf, service: "SERVICE_ACTIVE_DEBT_PF" }),
       IdCerberusAPI({ cpf, service: "service_protest_clearance_certificate" }),
     ]);
-    console.log("saiu");
-
-    console.log("financial_data", financial_data);
 
     const formattedData: IdCerberusResponseInterface = {
       federalCrime: "federalCrime.result.status",
