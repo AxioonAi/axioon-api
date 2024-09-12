@@ -29,6 +29,7 @@ export const mentionsFormatter = (data: MentionsData) => {
         sentimentClassification: sentiment,
         title: item.news.title,
         url: item.news.url,
+        websiteLogo: item.news.website ? item.news.website.website_logo : "",
         date: item.news.last_update,
         websiteName: item.news.website ? item.news.website.name : "",
       });
@@ -416,6 +417,7 @@ interface newsData {
     sentimentClassification: string;
     title: string;
     url: string;
+    websiteLogo?: string | null;
     date: Date;
     websiteName: string;
   }[];
