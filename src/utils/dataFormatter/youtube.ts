@@ -23,6 +23,7 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
     like: 0,
     comments: 0,
     views: 0,
+    engagement: 0,
   };
 
   for (const key in youtubeVideoData) {
@@ -63,6 +64,7 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
       100 /
       (baseData.channel_total_subs / 1000);
 
+    videoEngagementData.engagement += engagement;
     dataWithEngagement.push({
       ...youtubeVideoData[key],
       engagement,
@@ -150,19 +152,9 @@ export const youtubeDataFormatter = (data: YoutubeDataFormatterInterface) => {
       trendingValue: 0,
     },
     {
-      name: "Publicações",
-      value: youtubeBaseData[0].channel_total_videos,
-      trendingUp:
-        youtubeBaseData[0].channel_total_videos >
-        youtubeBaseData[youtubeBaseData.length - 1].channel_total_videos,
-      trendingValue: Number(
-        (
-          ((youtubeBaseData[youtubeBaseData.length - 1].channel_total_videos -
-            youtubeBaseData[0].channel_total_videos) /
-            youtubeBaseData[0].channel_total_videos) *
-          100
-        ).toFixed(0)
-      ),
+      name: "Engajamento",
+      value: videoEngagementData.engagement,
+      trendingUp: true,
     },
   ];
 

@@ -52,6 +52,7 @@ export const instagramDataFormatter = (data: {
   const postEngagementData = {
     like: 0,
     comments: 0,
+    engagement: 0,
   };
 
   for (const key in instagramPosts) {
@@ -91,6 +92,8 @@ export const instagramDataFormatter = (data: {
       (engagementSum * dateDiffRelation) /
       100 /
       (currentInstagramData.followers / 1000);
+
+    postEngagementData.engagement += engagement;
 
     dataWithEngagement.push({
       ...instagramPosts[key],
@@ -230,19 +233,9 @@ export const instagramDataFormatter = (data: {
       ),
     },
     {
-      name: "Publicações",
-      value: instagramData[0].posts_count,
-      trendingUp:
-        instagramData[0].posts_count >
-        instagramData[instagramData.length - 1].posts_count,
-      trendingValue: Number(
-        (
-          ((instagramData[instagramData.length - 1].posts_count -
-            instagramData[0].posts_count) /
-            instagramData[0].posts_count) *
-          100
-        ).toFixed(0)
-      ),
+      name: "Engajamento",
+      value: postEngagementData.engagement,
+      trendingUp: true,
     },
   ];
 

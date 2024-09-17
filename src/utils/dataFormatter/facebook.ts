@@ -51,6 +51,7 @@ export const FacebookDataFormatter = (data: {
     like: 0,
     comments: 0,
     shares: 0,
+    engagement: 0,
   };
 
   for (const key in facebookPosts) {
@@ -84,6 +85,7 @@ export const FacebookDataFormatter = (data: {
       100 /
       (currentFacebookData.followers_count / 1000);
 
+    postEngagementData.engagement += engagement;
     dataWithEngagement.push({
       ...facebookPosts[key],
       engagement,
@@ -220,10 +222,9 @@ export const FacebookDataFormatter = (data: {
         : 0,
     },
     {
-      name: "Publicações",
-      value: 0,
+      name: "Engajamento",
+      value: mostRankedPost.engagement,
       trendingUp: true,
-      trendingValue: 0,
     },
   ];
 

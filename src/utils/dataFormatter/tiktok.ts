@@ -18,6 +18,7 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
     like: 0,
     comments: 0,
     views: 0,
+    engagement: 0,
   };
 
   for (const key in tiktokVideoData) {
@@ -58,6 +59,7 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
     const engagement =
       (engagementSum * dataDiffRelation) / (baseData.fans * timeDiff);
 
+    videoEngagementData.engagement += engagement;
     dataWithEngagement.push({
       ...tiktokVideoData[key],
       engagement,
@@ -186,17 +188,9 @@ export const tiktokDataFormatter = (data: TiktokDataFormatterInterface) => {
       ),
     },
     {
-      name: "Publicações",
-      value: tiktokData[0].videos,
-      trendingUp:
-        tiktokData[0].videos > tiktokData[tiktokData.length - 1].videos,
-      trendingValue: Number(
-        (
-          ((tiktokData[tiktokData.length - 1].videos - tiktokData[0].videos) /
-            tiktokData[0].videos) *
-          100
-        ).toFixed(0)
-      ),
+      name: "Engajamento",
+      value: videoEngagementData.engagement,
+      trendingUp: true,
     },
   ];
 
