@@ -18,7 +18,7 @@ export async function politicianProfileRoutes(app: FastifyInstance) {
 
   app.post("/profile/exists", politicianProfileExistsController);
   app.post("/profile", createPoliticianProfileController);
-  app.put("/profile", editPoliticianProfileController);
+  app.put("/profile/:id", editPoliticianProfileController);
 
   app.get(
     "/profile/advertising/:id",
