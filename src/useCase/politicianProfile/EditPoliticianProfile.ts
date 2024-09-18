@@ -13,8 +13,8 @@ interface EditPoliticianProfileUseCaseRequest {
   tiktok?: string | null;
   facebook?: string | null;
   social_name?: string | null;
-  campaign_name?: string;
-  full_name?: string;
+  campaign_name?: string | null;
+  full_name?: string | null;
 }
 
 interface EditPoliticianProfileUseCaseResponse {

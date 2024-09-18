@@ -9,6 +9,8 @@ export const editPoliticianProfileController = async (
 ) => {
   const { id } = ZodIdParamsSchema.parse(request.params);
 
+  console.log(request.body);
+
   const data = ZodEditPoliticianProfileBodySchema.parse(request.body);
 
   const editPoliticianProfileUseCase = makeEditPoliticianProfile();
