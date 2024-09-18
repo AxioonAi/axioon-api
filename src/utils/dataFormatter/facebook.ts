@@ -138,7 +138,6 @@ export const FacebookDataFormatter = (data: {
       },
     ],
   };
-
   const followersEvolution = data.facebookData.map((item) => {
     return {
       date: item.date,
@@ -223,7 +222,7 @@ export const FacebookDataFormatter = (data: {
     },
     {
       name: "Engajamento",
-      value: mostRankedPost.engagement,
+      value: postEngagementData.engagement,
       trendingUp: true,
     },
   ];

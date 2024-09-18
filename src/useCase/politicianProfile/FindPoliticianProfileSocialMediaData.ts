@@ -31,8 +31,6 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
     endDate,
     medias,
   }: FindPoliticianProfileSocialMediaDataUseCaseRequest): Promise<FindPoliticianProfileSocialMediaDataUseCaseResponse> {
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
     const [youtubeData, tiktokData, instagramData, facebookData] =
       await Promise.all([
         medias.youtube
@@ -72,6 +70,7 @@ export class FindPoliticianProfileSocialMediaDataUseCase {
       instagramData && instagramDataFormatter(instagramData);
     const formatFacebookData =
       facebookData && FacebookDataFormatter(facebookData);
+    console.log("aqui");
 
     const wordCloud = CommentWordCount({
       tiktokComments: (tiktokData && tiktokData.tiktokComments) || [],
