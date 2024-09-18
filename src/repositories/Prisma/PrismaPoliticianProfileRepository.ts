@@ -110,9 +110,9 @@ export class PrismaPoliticianProfileRepository
     id: string,
     data: {
       instagram?: string | undefined;
-      youtube?: string | undefined;
-      tiktok?: string | undefined;
-      facebook?: string | undefined;
+      youtube?: string | undefined | null;
+      tiktok?: string | undefined | null;
+      facebook?: string | undefined | null;
     }
   ) {
     return await prisma.politicianProfile.update({

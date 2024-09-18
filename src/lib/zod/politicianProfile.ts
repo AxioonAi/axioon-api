@@ -7,12 +7,12 @@ export const ZodFindPoliticianProfileByCpfBodySchema = z.object({
 export const ZodCreatePoliticianProfileBodySchema = z.object({
   social_name: z.string(),
   full_name: z.string(),
-  cpf: z.string(),
+  cpf: z.string().optional().nullable(),
   role: z.string(),
   instagram: z.string(),
-  youtube: z.string().optional(),
-  tiktok: z.string().optional(),
-  facebook: z.string().optional(),
+  youtube: z.string().optional().nullable(),
+  tiktok: z.string().optional().nullable(),
+  facebook: z.string().optional().nullable(),
   campaign_name: z.string().optional(),
   city: z.object({
     name: z.string(),

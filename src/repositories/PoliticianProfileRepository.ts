@@ -54,10 +54,10 @@ export interface PoliticianProfileRepository {
   update(
     id: string,
     data: {
-      instagram?: string;
-      youtube?: string;
-      tiktok?: string;
-      facebook?: string;
+      instagram?: string | null;
+      youtube?: string | null;
+      tiktok?: string | null;
+      facebook?: string | null;
     }
   ): Promise<PoliticianProfile>;
   profileExists(data: {

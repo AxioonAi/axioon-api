@@ -7,12 +7,12 @@ import { PoliticianProfile, Role } from "@prisma/client";
 
 interface EditPoliticianProfileUseCaseRequest {
   profileId: string;
-  cpf?: string;
+  cpf?: string | null;
   instagram?: string;
-  youtube?: string;
-  tiktok?: string;
-  facebook?: string;
-  social_name?: string;
+  youtube?: string | null;
+  tiktok?: string | null;
+  facebook?: string | null;
+  social_name?: string | null;
   campaign_name?: string;
   full_name?: string;
 }
