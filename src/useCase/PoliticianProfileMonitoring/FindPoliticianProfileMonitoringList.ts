@@ -29,6 +29,7 @@ export class FindPoliticianProfileMonitoringListUseCase {
         facebook: profile.politicianProfile.facebook,
         youtube: profile.politicianProfile.youtube,
         tiktok: profile.politicianProfile.tiktok,
+        cpf: profile.politicianProfile.cpf,
         city: `${profile.politicianProfile.city.name} - ${profile.politicianProfile.city.state}`,
         image:
           profile.politicianProfile.instagramData.length < 0
