@@ -33,7 +33,7 @@ export async function politicianProfileRoutes(app: FastifyInstance) {
   app.get("/profile/legal/:id", findPoliticianProfileLegalDetailsController);
   app.get("/profile/media/:id", findPoliticianProfileSocialMediaDataController);
   app.get("/profile/engagement", fetchAllProfilesEngagementController);
-  app.put("/profile/:id", createPoliticianProfileMonitoringController);
+  app.post("/profile/:id", createPoliticianProfileMonitoringController);
   app.delete("/profile/monitoring/:id", removeProfileMonitoringController);
 }
 
