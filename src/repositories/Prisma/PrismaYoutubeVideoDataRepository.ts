@@ -3,54 +3,60 @@ import { prisma } from "@/lib/prisma";
 import { YoutubeVideoDataRepository } from "../YoutubeVideoDataRepository";
 
 export class PrismaYoutubeVideoDataRepository
-	implements YoutubeVideoDataRepository
+  implements YoutubeVideoDataRepository
 {
-	async createMany(data: YoutubeVideoCreateInterface[]) {
-		const idExists = data.map((item) => item.id);
+  async createMany(data: YoutubeVideoCreateInterface[]) {
+    const filterDuplicated = data.filter((item, index) => {
+      return data.findIndex((obj) => obj.id === item.id) === index;
+    });
 
-		const videoExists = await prisma.youtubeVideoData.findMany({
-			where: {
-				id: {
-					in: idExists,
-				},
-			},
-		});
+    console.log(filterDuplicated);
 
-		const createVideoData: YoutubeVideoCreateInterface[] = [];
-		const updateVideoData: YoutubeVideoCreateInterface[] = [];
+    const idExists = filterDuplicated.map((item) => item.id);
 
-		for (const item of data) {
-			if (!videoExists.find((video) => video.id === item.id)) {
-				createVideoData.push(item);
-			} else {
-				updateVideoData.push(item);
-			}
-		}
+    const videoExists = await prisma.youtubeVideoData.findMany({
+      where: {
+        id: {
+          in: idExists,
+        },
+      },
+    });
 
-		await prisma.$transaction([
-			prisma.youtubeVideoData.createMany({ data: createVideoData }),
-			...updateVideoData.map((update: YoutubeVideoCreateInterface) =>
-				prisma.youtubeVideoData.update({
-					where: {
-						id: update.id,
-					},
-					data: update,
-				}),
-			),
-		]);
+    const createVideoData: YoutubeVideoCreateInterface[] = [];
+    const updateVideoData: YoutubeVideoCreateInterface[] = [];
 
-		return;
-	}
+    for (const item of filterDuplicated) {
+      if (!videoExists.find((video) => video.id === item.id)) {
+        createVideoData.push(item);
+      } else {
+        updateVideoData.push(item);
+      }
+    }
 
-	async videoExists(id: string[]) {
-		const videoExists = await prisma.youtubeVideoData.findMany({
-			where: {
-				id: {
-					in: id,
-				},
-			},
-		});
+    await prisma.$transaction([
+      prisma.youtubeVideoData.createMany({ data: createVideoData }),
+      ...updateVideoData.map((update: YoutubeVideoCreateInterface) =>
+        prisma.youtubeVideoData.update({
+          where: {
+            id: update.id,
+          },
+          data: update,
+        })
+      ),
+    ]);
 
-		return videoExists.map((video) => video.id);
-	}
+    return;
+  }
+
+  async videoExists(id: string[]) {
+    const videoExists = await prisma.youtubeVideoData.findMany({
+      where: {
+        id: {
+          in: id,
+        },
+      },
+    });
+
+    return videoExists.map((video) => video.id);
+  }
 }

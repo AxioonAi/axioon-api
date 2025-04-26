@@ -71,16 +71,16 @@ export interface AwsNotificationInstagramPostResponseInterface {
 }
 
 export interface AwsNotificationYoutubeVideoAwsDataInterface {
-  id: string;
-  title: string;
-  text: string;
-  url: string;
-  duration: string;
-  date: string;
-  thumbnailUrl: string;
-  viewCount: number;
-  commentsCount: number;
-  likes: number;
+  video_id: string;
+  video_title: string;
+  video_text: string;
+  video_url: string;
+  video_duration: string;
+  video_date: string;
+  video_thumbnail: string;
+  video_views: number;
+  video_comments: number;
+  video_likes: number;
   channel_id: string;
 }
 

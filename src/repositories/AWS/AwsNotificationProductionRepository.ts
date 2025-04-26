@@ -42,12 +42,12 @@ import { env } from "@/env";
 import { AwsError } from "@/helper/errors/AwsError";
 import { Status } from "@prisma/client";
 import axios from "axios";
+import { randomUUID } from "crypto";
 import moment from "moment";
 import {
   AwsNotificationRepository,
   S3NotificationInterface,
 } from "../AwsNotificationRepository";
-import { randomUUID } from "crypto";
 
 export class AwsNotificationProductionRepository
   implements AwsNotificationRepository
@@ -295,18 +295,18 @@ export class AwsNotificationProductionRepository
     const formattedData: AwsNotificationYoutubeVideoResponseInterface[] =
       awsData
         .map((item) => {
-          if (item.channel_id) {
+          if (item.channel_id && item.channel_id.length === 36) {
             return {
-              id: item.id,
-              title: item.title,
-              url: item.url,
-              duration: item.duration || "0",
-              viewCount: item.viewCount,
-              commentsCount: item.commentsCount,
-              likes: item.likes ? item.likes : 0,
-              date: moment(item.date.replace("~", "")).toDate(),
-              description: item.text,
-              imgUrl: item.thumbnailUrl,
+              id: item.video_id,
+              title: item.video_title,
+              url: item.video_url,
+              duration: item.video_duration || "0",
+              viewCount: item.video_views,
+              commentsCount: item.video_comments ? item.video_comments : 0,
+              likes: item.video_likes ? item.video_likes : 0,
+              date: moment(item.video_date.replace("~", "")).toDate(),
+              description: item.video_text,
+              imgUrl: item.video_thumbnail,
               politician_id: item.channel_id,
             };
           }
@@ -544,7 +544,7 @@ export class AwsNotificationProductionRepository
         };
       }
 
-      if (formattedData[item.tiktok_id]) {
+      if (formattedData[item.tiktok_id] && item.id) {
         formattedData[item.tiktok_id].videos = [
           ...formattedData[item.tiktok_id].videos,
           {

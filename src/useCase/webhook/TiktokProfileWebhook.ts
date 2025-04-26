@@ -26,8 +26,6 @@ export class TiktokProfileWebhookUseCase {
         records,
       });
 
-    console.log(data);
-
     const ids = data.profileData.map((item) => item.politician_id);
 
     const users =
