@@ -81,7 +81,12 @@ export async function gptCommentProcess(item: {
               : finalAnswer.gender === "Feminino"
               ? SexType.FEMALE
               : SexType.UNKNOWN,
-          sentimentAnalysis: finalAnswer.sentimentAnalysis,
+          sentimentAnalysis:
+            finalAnswer.sentimentAnalysis > 1000
+              ? 1000
+              : finalAnswer.sentimentAnalysis < 100
+              ? 100
+              : finalAnswer.sentimentAnalysis,
         };
       }
     } catch (err) {

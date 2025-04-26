@@ -24,6 +24,8 @@ export class InstagramProfileWebhookUseCase {
         records,
       });
 
+    console.log("data: ", data);
+
     const ids = data.map((item) => item.politician_id);
 
     const users =

@@ -2,6 +2,10 @@ import fastifyCors from "@fastify/cors";
 import fastifyJwt from "@fastify/jwt";
 import fastify from "fastify";
 import { env } from "./env";
+import { aiChatRoutes } from "./http/controller/aiChat/routes";
+import { ElectoralHistoryRoutes } from "./http/controller/electoralHistory/routes";
+import { hashtagRoutes } from "./http/controller/hashtag/routes";
+import { legalDataRoutes } from "./http/controller/legalData/routes";
 import { notificationRoutes } from "./http/controller/notification/routes";
 import { politicalGroupRoutes } from "./http/controller/politicalGroup/routes";
 import {
@@ -15,23 +19,9 @@ import { subUserRoutes } from "./http/controller/subUser/routes";
 import { tutorialVideoRoutes } from "./http/controller/tutorialVideo/routes";
 import { userRoutes } from "./http/controller/user/routes";
 import { webhookRoutes } from "./http/controller/webhook/routes";
-import { fastifyErrorHandler } from "./lib/fastify";
 import { WebsiteRoutes } from "./http/controller/website/routes";
-import { hashtagRoutes } from "./http/controller/hashtag/routes";
-import { ElectoralHistoryRoutes } from "./http/controller/electoralHistory/routes";
+import { fastifyErrorHandler } from "./lib/fastify";
 import { prisma } from "./lib/prisma";
-import {
-  InstagramEngager,
-  InstagramMention,
-  InstagramMentionComment,
-  InstagramPostComment,
-  Prisma,
-  TiktokCommentData,
-  TiktokEngager,
-} from "@prisma/client";
-import { randomUUID } from "crypto";
-import { aiChatRoutes } from "./http/controller/aiChat/routes";
-import { legalDataRoutes } from "./http/controller/legalData/routes";
 export const app = fastify();
 
 app.register(fastifyCors, {
@@ -67,55 +57,10 @@ app.setErrorHandler(fastifyErrorHandler);
 app.register(WebsiteRoutes);
 app.register(politicianProfileMonitoringListRoutes);
 
-app.get("/create-engagers", async (request, reply) => {
-  const mentions = await prisma.instagramMention.findMany({
-    where: {
-      instagramEngagerId: null,
+app.get("/test", async (request, reply) => {
+  await prisma.website.updateMany({
+    data: {
+      state_capital_id: "e47cb59a-8591-4085-93f2-4c2f358349c0",
     },
   });
-
-  const engagers: Prisma.InstagramEngagerUncheckedCreateInput[] = [];
-  const mentionsToUpdate: InstagramMention[] = [];
-  for (const mention of mentions) {
-    const engagerExists = engagers.find(
-      (engager) => engager.username === mention.ownerUsername
-    );
-
-    if (!engagerExists) {
-      const id = randomUUID();
-      engagers.push({
-        username: mention.ownerUsername,
-        followers: 0,
-        id,
-        name: mention.ownerUsername,
-      });
-
-      mentionsToUpdate.push({
-        ...mention,
-        instagramEngagerId: id,
-      });
-    } else {
-      mentionsToUpdate.push({
-        ...mention,
-        instagramEngagerId: engagerExists.id || null,
-      });
-    }
-  }
-
-  await prisma.instagramEngager.createMany({
-    data: engagers,
-  });
-
-  mentionsToUpdate.forEach(async (mention) => {
-    await prisma.instagramMention.update({
-      where: {
-        id: mention.id,
-      },
-      data: {
-        instagramEngagerId: mention.instagramEngagerId,
-      },
-    });
-  });
-
-  return;
 });
