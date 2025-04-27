@@ -386,6 +386,8 @@ export class AwsNotificationProductionRepository
           throw new AwsError();
         });
 
+    console.log(awsData);
+
     const mentionData: AwsNotificationInstagramMentionResponseInterface[] = [];
 
     for (const item of awsData) {
@@ -395,7 +397,7 @@ export class AwsNotificationProductionRepository
           postUrl: item.url,
           description: item.caption,
           commentCount: item.commentsCount,
-          likeCount: item.likesCount,
+          likeCount: item.likesCount ? item.likesCount : 1,
           pubDate: item.timestamp,
           viewCount: item.type === "video" ? item.videoViewCount : 0,
           playCount: item.type === "video" ? item.videoPlayCount : 0,
@@ -405,7 +407,7 @@ export class AwsNotificationProductionRepository
           politician_id: item.instagram_id,
           ownerFullName: item.ownerFullName,
           ownerUsername: item.ownerUsername,
-          hashtags: item.hashtags.join(" "),
+          hashtags: item.hashtags && item.hashtags.join(" "),
         });
       }
     }

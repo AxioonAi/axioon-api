@@ -60,7 +60,13 @@ app.register(politicianProfileMonitoringListRoutes);
 app.get("/test", async (request, reply) => {
   await prisma.website.updateMany({
     data: {
-      state_capital_id: "e47cb59a-8591-4085-93f2-4c2f358349c0",
+      state_capital_id: "85d08d06-871e-4772-883c-4e065b1c4922",
+    },
+  });
+
+  await prisma.politicianProfile.updateMany({
+    data: {
+      city_id: "85d08d06-871e-4772-883c-4e065b1c4922",
     },
   });
 });

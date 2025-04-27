@@ -24,6 +24,8 @@ export class InstagramMentionsWebhookUseCase {
         records,
       });
 
+    console.log(data);
+
     const mentionExists = await this.instagramMentionRepository.mentionExists(
       data.map((item) => item.id)
     );
