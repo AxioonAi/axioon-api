@@ -760,7 +760,7 @@ export class AwsNotificationProductionRepository
           id: item.id,
           postUrl: item.facebookUrl,
           text: item.text,
-          likeCount: item.likesCount,
+          likeCount: item.likesCount ? Number(item.likesCount) : 0,
           date: item.date,
           username: item.profileName,
           post_id: item.facebookId,

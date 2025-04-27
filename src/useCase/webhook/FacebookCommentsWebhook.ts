@@ -46,7 +46,11 @@ export class FacebookCommentsWebhookUseCase {
       }
     }
 
-    await this.facebookCommentsRepository.createMany(createData);
+    const uniqueComments = createData.filter(
+      (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+    );
+
+    await this.facebookCommentsRepository.createMany(uniqueComments);
 
     return;
   }

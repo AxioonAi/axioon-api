@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "FacebookPostComments" ALTER COLUMN "likeCount" DROP NOT NULL,
+ALTER COLUMN "likeCount" SET DEFAULT 0,
+ALTER COLUMN "likeCount" SET DATA TYPE DOUBLE PRECISION;

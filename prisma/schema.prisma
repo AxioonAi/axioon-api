@@ -188,7 +188,7 @@ model FacebookPostComments {
   id                String   @unique @default(uuid())
   postUrl           String
   text              String
-  likeCount         Int
+  likeCount         Float?   @default(0)
   date              DateTime
   username          String
   post_id           String
